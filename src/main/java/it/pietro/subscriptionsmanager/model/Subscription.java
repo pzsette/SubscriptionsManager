@@ -5,10 +5,10 @@ import java.util.Objects;
 public class Subscription {
 	private String id;
 	private String name;
-	private Float price;
+	private Double price;
 	private String repetition;
 	
-	public Subscription(String id, String name, Float price, String repetition) {
+	public Subscription(String id, String name, Double price, String repetition) {
 		this.id = id;
 		this.name = name;
 		this.price = price;
@@ -31,11 +31,11 @@ public class Subscription {
 		this.name = name;
 	}
 
-	public Float getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(Float price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
