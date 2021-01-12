@@ -1,7 +1,5 @@
 package it.pietro.subscriptionsmanager.controller;
 
-import java.util.List;
-
 import it.pietro.subscriptionsmanager.model.Subscription;
 import it.pietro.subscriptionsmanager.repository.SubscriptionRepository;
 import it.pietro.subscriptionsmanager.view.SubscriptionView;
@@ -18,6 +16,10 @@ public class SubscriptionController {
 	
 	public void allSubscriptions() {
 		view.showAllSubscriptions(repository.findAll());
+	}
+	
+	public void addSubscription(Subscription sub) {
+		repository.save(sub);
 	}
 
 }

@@ -27,7 +27,7 @@ public class SubscriptionControllerTest {
 	@InjectMocks
 	private SubscriptionController controller;
 	
-	private static final Subscription SUBSCRPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Month");
+	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Month");
 	
 	@Before
 	public void setUp() throws Exception {
@@ -36,10 +36,16 @@ public class SubscriptionControllerTest {
 
 	@Test
 	public void testAllSubscriptionsRetrieval() {
-		List<Subscription> subscriptions = Collections.singletonList(SUBSCRPTION_FIXTURE);
+		List<Subscription> subscriptions = Collections.singletonList(SUBSCRIPTION_FIXTURE);
 		when(repository.findAll()).thenReturn(subscriptions);
 		controller.allSubscriptions();
 		verify(view).showAllSubscriptions(subscriptions);	
+	}
+	
+	@Test
+	public void testAddSubscriptionWhenSubscriptionDoesNotAlreadyExist() {
+		controller.addSubscription(SUBSCRIPTION_FIXTURE);
+		verify(repository).save(SUBSCRIPTION_FIXTURE);
 	}
 
 }
