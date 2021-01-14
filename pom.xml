@@ -19,6 +19,7 @@
 		<mockito.version>3.5.13</mockito.version>
 		<jacoco.version>0.8.6</jacoco.version>
 		<coveralls.version>4.3.0</coveralls.version>
+		<sonar.version>3.7.0.1746</sonar.version>
 		
 		<sonar.projectKey>pzsette_SubscriptionsManager</sonar.projectKey>
 		<sonar.organization>pzsette777</sonar.organization>
@@ -72,6 +73,20 @@
 					<groupId>org.eluder.coveralls</groupId>
 					<artifactId>coveralls-maven-plugin</artifactId>
 					<version>${coveralls.version}</version>
+					
+					<dependencies>
+						<dependency>
+	                    	<groupId>javax.xml.bind</groupId>
+							<artifactId>jaxb-api</artifactId>
+	                        <version>2.3.1</version>
+	                     </dependency>
+					</dependencies>
+				</plugin>
+				
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>${sonar.version}</version>
 				</plugin>
 				
 			</plugins>
