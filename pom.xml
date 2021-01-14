@@ -30,6 +30,10 @@
 			${project.build.directory}/failsafe-reports
 		</sonar.junit.reportPaths>
 		
+		<sonar.coverage.exclusions>
+			**/model/*.*
+		</sonar.coverage.exclusions>
+		
 	</properties>
 
 	<dependencies>
@@ -59,6 +63,9 @@
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
 					<version>${jacoco.version}</version>
+					<configuration>
+						<exclude>**/model/*.*</exclude>
+					</configuration>
  					<executions>
 						<execution>
 							<goals>
