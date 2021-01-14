@@ -20,12 +20,15 @@ jobs:
     - name: Cache Maven packages
       uses: actions/cache@v2
       with:
-        path: ~/.m2
+        path: |
+            ~/.m2
+            ~/.sonar/cache
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     - name: Build with Maven
-      run: mvn -f pom.xml clean verify $ACTIVE_PROFILES $ADDITIONAL_MAVEN_ARGS $COVERALLS_TOKEN
+      run: mvn -f pom.xml clean verify $ACTIVE_PROFILES $ADDITIONAL_MAVEN_ARGS $COVERALLS_TOKEN sonar:sonar
       env:
         ACTIVE_PROFILES: -Pjacoco
         ADDITIONAL_MAVEN_ARGS: coveralls:report
         COVERALLS_TOKEN: -DrepoToken=${{secrets.COVERALLS_TOKEN}}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
