@@ -32,3 +32,4 @@ jobs:
         ADDITIONAL_MAVEN_ARGS: coveralls:report
         COVERALLS_TOKEN: -DrepoToken=${{secrets.COVERALLS_TOKEN}}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
