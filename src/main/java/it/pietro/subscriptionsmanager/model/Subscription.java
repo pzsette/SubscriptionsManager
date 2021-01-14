@@ -66,5 +66,10 @@ public class Subscription {
 		Subscription other = (Subscription) o;
 		return Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(price, other.price) && Objects.equals(repetition, other.repetition);
 	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name, price, repetition);
+	}
 
 }

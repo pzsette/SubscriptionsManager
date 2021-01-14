@@ -19,6 +19,21 @@
 		<mockito.version>3.5.13</mockito.version>
 		<jacoco.version>0.8.6</jacoco.version>
 		<coveralls.version>4.3.0</coveralls.version>
+		<sonar.version>3.7.0.1746</sonar.version>
+		
+		<sonar.projectKey>pzsette_SubscriptionsManager</sonar.projectKey>
+		<sonar.organization>pzsette777</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
+		<sonar.junit.reportPaths>
+			${project.build.directory}/surefire-reports,
+			${project.build.directory}/failsafe-reports
+		</sonar.junit.reportPaths>
+		
+		<sonar.coverage.exclusions>
+			**/model/*.*
+		</sonar.coverage.exclusions>
+		
 	</properties>
 
 	<dependencies>
@@ -42,12 +57,17 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-			
+		
 				<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
 					<version>${jacoco.version}</version>
+					<configuration>
+						<excludes>
+							<exclude>**/model/*.*</exclude>
+						</excludes>
+					</configuration>
  					<executions>
 						<execution>
 							<goals>
@@ -62,10 +82,25 @@
 					<groupId>org.eluder.coveralls</groupId>
 					<artifactId>coveralls-maven-plugin</artifactId>
 					<version>${coveralls.version}</version>
+					
+					<dependencies>
+						<dependency>
+	                    	<groupId>javax.xml.bind</groupId>
+							<artifactId>jaxb-api</artifactId>
+	                        <version>2.3.1</version>
+	                     </dependency>
+					</dependencies>
+				</plugin>
+				
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>${sonar.version}</version>
 				</plugin>
 				
 			</plugins>
 		</pluginManagement>
+		
 	</build>
 	
 	<profiles>
