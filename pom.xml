@@ -57,14 +57,16 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-			
+		
 				<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
 					<version>${jacoco.version}</version>
 					<configuration>
-						<exclude>**/model/*.*</exclude>
+						<excludes>
+							<exclude>**/model/*.*</exclude>
+						</excludes>
 					</configuration>
  					<executions>
 						<execution>
@@ -98,6 +100,7 @@
 				
 			</plugins>
 		</pluginManagement>
+		
 	</build>
 	
 	<profiles>
