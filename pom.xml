@@ -20,6 +20,7 @@
 		<jacoco.version>0.8.6</jacoco.version>
 		<coveralls.version>4.3.0</coveralls.version>
 		<sonar.version>3.7.0.1746</sonar.version>
+		<pit.version>1.5.2</pit.version>
 		
 		<sonar.projectKey>pzsette_SubscriptionsManager</sonar.projectKey>
 		<sonar.organization>pzsette777</sonar.organization>
@@ -57,7 +58,21 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-		
+				
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<version>${pit.version}</version>
+					<configuration>
+						<excludedClasses>
+							<param>it.pietro.subscriptionsmanager.model.*</param>
+						</excludedClasses>
+						<mutators>
+							<mutator>DEFAULTS</mutator>
+						</mutators>
+						<mutationThreshold>90</mutationThreshold>
+					</configuration>
+				</plugin>
 				<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
 				<plugin>
 					<groupId>org.jacoco</groupId>
@@ -77,12 +92,10 @@
 						</execution>
 					</executions>
 				</plugin>
-				
 				<plugin>
 					<groupId>org.eluder.coveralls</groupId>
 					<artifactId>coveralls-maven-plugin</artifactId>
 					<version>${coveralls.version}</version>
-					
 					<dependencies>
 						<dependency>
 	                    	<groupId>javax.xml.bind</groupId>
@@ -91,16 +104,13 @@
 	                     </dependency>
 					</dependencies>
 				</plugin>
-				
 				<plugin>
 					<groupId>org.sonarsource.scanner.maven</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
 					<version>${sonar.version}</version>
 				</plugin>
-				
 			</plugins>
 		</pluginManagement>
-		
 	</build>
 	
 	<profiles>
@@ -116,7 +126,26 @@
 				</plugins>
 			</build>
 		</profile>
-	
+		
+		<profile>
+			<id>mutation-testing</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-maven</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>mutationCoverage</goal>
+								</goals>
+								<phase>verify</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
-
+	
 </project>
