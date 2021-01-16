@@ -21,6 +21,7 @@
 		<coveralls.version>4.3.0</coveralls.version>
 		<sonar.version>3.7.0.1746</sonar.version>
 		<pit.version>1.5.2</pit.version>
+		<exec.version>3.0.0</exec.version>
 		
 		<sonar.projectKey>pzsette_SubscriptionsManager</sonar.projectKey>
 		<sonar.organization>pzsette777</sonar.organization>
@@ -39,6 +40,7 @@
 
 	<dependencies>
   
+  		<!-- JUNIT -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -46,6 +48,7 @@
 			<scope>test</scope>
 		</dependency>
     
+    	<!-- MOCKITO -->
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
@@ -58,22 +61,28 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				
+			
+				<!-- PIT -->	
 				<plugin>
 					<groupId>org.pitest</groupId>
 					<artifactId>pitest-maven</artifactId>
 					<version>${pit.version}</version>
 					<configuration>
 						<excludedClasses>
+							<param>it.pietro.subscriptionsmanager.App</param>
 							<param>it.pietro.subscriptionsmanager.model.*</param>
 						</excludedClasses>
+						<targetTest>
+							<param>*Test</param>
+						</targetTest>
 						<mutators>
 							<mutator>DEFAULTS</mutator>
 						</mutators>
 						<mutationThreshold>90</mutationThreshold>
 					</configuration>
 				</plugin>
-				<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+				
+				<!-- JACOCO -->
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
@@ -81,6 +90,7 @@
 					<configuration>
 						<excludes>
 							<exclude>**/model/*.*</exclude>
+							<exclude>**/subscriptionsmanager/*.class</exclude>
 						</excludes>
 					</configuration>
  					<executions>
@@ -92,6 +102,8 @@
 						</execution>
 					</executions>
 				</plugin>
+				
+				<!-- COVERALLS -->
 				<plugin>
 					<groupId>org.eluder.coveralls</groupId>
 					<artifactId>coveralls-maven-plugin</artifactId>
@@ -104,17 +116,68 @@
 	                     </dependency>
 					</dependencies>
 				</plugin>
+				
+				<!-- SONAR -->
 				<plugin>
 					<groupId>org.sonarsource.scanner.maven</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
 					<version>${sonar.version}</version>
 				</plugin>
+				
+				<!-- MAVEN ASSEMBLY -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+							<configuration>
+								<descriptorRefs>
+									<descriptorRef>jar-with-dependencies</descriptorRef>
+								</descriptorRefs>
+								<archive>
+									<manifest>
+										<mainClass>it.pietro.subscriptionsmanager.App</mainClass>
+									</manifest>
+								</archive>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				
+				<!-- EXEC PLUGIN -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>${exec.version}</version>
+					<executions>
+						<execution>
+							<id>run-jar-with-dependencies</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>exec</goal>
+							</goals>
+							<configuration>
+								<executable>java</executable>
+								<arguments>
+									<argument>-jar</argument>
+									<argument>${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar</argument>
+								</arguments>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				
 			</plugins>
 		</pluginManagement>
 	</build>
 	
 	<profiles>
 	
+		<!-- JACOCO PROFILE -->
 		<profile>
 			<id>jacoco</id>
 			<build>
@@ -127,6 +190,7 @@
 			</build>
 		</profile>
 		
+		<!-- PIT PROFILE -->
 		<profile>
 			<id>mutation-testing</id>
 			<build>
