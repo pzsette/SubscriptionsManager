@@ -34,7 +34,7 @@
 		
 		<sonar.coverage.exclusions>
 			**/model/*.*
-			**/subscriptionsmanager/*.class
+			**/App.*
 		</sonar.coverage.exclusions>
 		
 	</properties>
