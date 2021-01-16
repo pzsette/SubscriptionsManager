@@ -33,7 +33,7 @@
 		</sonar.junit.reportPaths>
 		
 		<sonar.coverage.exclusions>
-			**/model/*.*
+			**/model/*.*,
 			**/App.*
 		</sonar.coverage.exclusions>
 		
