@@ -3,14 +3,12 @@
 
 name: Java CI with Maven
 
-on:
-  [push, pull_request]
+on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    name: Test on Java13
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 13
@@ -25,7 +23,7 @@ jobs:
             ~/.sonar/cache
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
-    - name: Build with Maven
+    - name: Run with Maven
       run: mvn -f pom.xml clean verify $ACTIVE_PROFILES $ADDITIONAL_MAVEN_ARGS $COVERALLS_TOKEN
       env:
         ACTIVE_PROFILES: -Pjacoco,mutation-testing
