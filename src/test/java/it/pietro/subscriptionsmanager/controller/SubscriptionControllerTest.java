@@ -47,5 +47,16 @@ public class SubscriptionControllerTest {
 		controller.addSubscription(SUBSCRIPTION_FIXTURE);
 		verify(repository).save(SUBSCRIPTION_FIXTURE);
 	}
+	
+	@Test
+	public void testAddSubscriptionWhenSubscriptionDoesAlreayExist() {
+		Subscription newSub = new Subscription("1", "Netflix", 1.0, "Month");
+		when(repository.findById("1"))
+			.thenReturn(SUBSCRIPTION_FIXTURE);
+		controller.addSubscription(newSub);
+		verify(view)
+			.showError("Already existing student with id 1", SUBSCRIPTION_FIXTURE);
+		verifyNoMoreInteractions(ignoreStubs(repository));
+	}
 
 }

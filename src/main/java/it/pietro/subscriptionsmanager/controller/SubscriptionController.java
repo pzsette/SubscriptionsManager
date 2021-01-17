@@ -19,7 +19,15 @@ public class SubscriptionController {
 	}
 	
 	public void addSubscription(Subscription sub) {
+		Subscription subInDB = repository.findById(sub.getId());
+		if (subInDB != null)  {
+			view.showError("Already existing student with id "+subInDB.getId(), subInDB);
+			return;
+		}
 		repository.save(sub);
+		view.subscriptionAdded(sub);
 	}
+	
+	
 
 }
