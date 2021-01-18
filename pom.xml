@@ -24,6 +24,7 @@
 		<exec.version>3.0.0</exec.version>
 		<mongo-java-driver.version>3.12.7</mongo-java-driver.version>
 		<logback.version>1.2.3</logback.version>
+		<mongo-java-server.version>1.11.1</mongo-java-server.version>
 		
 		<sonar.projectKey>pzsette_SubscriptionsManager</sonar.projectKey>
 		<sonar.organization>pzsette777</sonar.organization>
@@ -66,10 +67,19 @@
 			<version>${mongo-java-driver.version}</version>
         </dependency>
         
+        
+        <!-- LOGBACK -->
         <dependency>
         	<groupId>ch.qos.logback</groupId>
         	<artifactId>logback-classic</artifactId>
         	<version>1.2.3</version>
+        </dependency>
+        
+        <!-- MONGO JAVA SERVER -->
+        <dependency>
+        	<groupId>de.bwaldvogel</groupId>
+        	<artifactId>mongo-java-server</artifactId>
+        	<version>${mongo-java-server.version}</version>
         </dependency>
 		
 	</dependencies>
