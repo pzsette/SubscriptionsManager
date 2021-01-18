@@ -22,6 +22,8 @@
 		<sonar.version>3.7.0.1746</sonar.version>
 		<pit.version>1.5.2</pit.version>
 		<exec.version>3.0.0</exec.version>
+		<mongo-java-driver.version>3.12.7</mongo-java-driver.version>
+		<logback.version>1.2.3</logback.version>
 		
 		<sonar.projectKey>pzsette_SubscriptionsManager</sonar.projectKey>
 		<sonar.organization>pzsette777</sonar.organization>
@@ -56,6 +58,19 @@
 			<version>${mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- MONGO JAVA DRIVER -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>${mongo-java-driver.version}</version>
+        </dependency>
+        
+        <dependency>
+        	<groupId>ch.qos.logback</groupId>
+        	<artifactId>logback-classic</artifactId>
+        	<version>1.2.3</version>
+        </dependency>
 		
 	</dependencies>
 	
