@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import java.util.Collections;
 import java.util.List;
 
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -45,7 +46,9 @@ public class SubscriptionControllerTest {
 	@Test
 	public void testAddSubscriptionWhenSubscriptionDoesNotAlreadyExist() {
 		controller.addSubscription(SUBSCRIPTION_FIXTURE);
-		verify(repository).save(SUBSCRIPTION_FIXTURE);
+		InOrder inorder = inOrder(repository, view);
+		inorder.verify(repository).save(SUBSCRIPTION_FIXTURE);
+		inorder.verify(view).subscriptionAdded(SUBSCRIPTION_FIXTURE);
 	}
 	
 	@Test
@@ -58,5 +61,26 @@ public class SubscriptionControllerTest {
 			.showError("Already existing student with id 1", SUBSCRIPTION_FIXTURE);
 		verifyNoMoreInteractions(ignoreStubs(repository));
 	}
+	
+	@Test
+	public void testDeleteSubscriptionWhenSubscritpionExists() {
+		when(repository.findById(SUBSCRIPTION_FIXTURE.getId()))
+			.thenReturn(SUBSCRIPTION_FIXTURE);
+		controller.deleteSubscription(SUBSCRIPTION_FIXTURE);
+		InOrder inorder = inOrder(repository, view);
+		inorder.verify(repository).delete(SUBSCRIPTION_FIXTURE.getId());
+		inorder.verify(view).subscriptionRemoved(SUBSCRIPTION_FIXTURE);
+	}
+	
+	@Test
+	public void testDeleteSubscriptionWhenSubscriptionDoesNotExist() {
+		when(repository.findById(SUBSCRIPTION_FIXTURE.getId()))
+			.thenReturn(null);
+		controller.deleteSubscription(SUBSCRIPTION_FIXTURE);
+		verify(view)
+			.showError("No existing subscription with id "+SUBSCRIPTION_FIXTURE.getId(), SUBSCRIPTION_FIXTURE);
+		verifyNoMoreInteractions(ignoreStubs(repository));
+	}
+	
 
 }
