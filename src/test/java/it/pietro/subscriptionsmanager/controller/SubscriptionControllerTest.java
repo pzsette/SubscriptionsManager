@@ -1,6 +1,5 @@
 package it.pietro.subscriptionsmanager.controller;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Collections;
