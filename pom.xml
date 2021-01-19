@@ -97,7 +97,7 @@
 		<pluginManagement>
 			<plugins>
 			
-				<!-- PIT -->	
+				<!-- PIT PLUGIN -->	
 				<plugin>
 					<groupId>org.pitest</groupId>
 					<artifactId>pitest-maven</artifactId>
@@ -117,7 +117,7 @@
 					</configuration>
 				</plugin>
 				
-				<!-- JACOCO -->
+				<!-- JACOCO PLUGIN -->
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
@@ -138,7 +138,7 @@
 					</executions>
 				</plugin>
 				
-				<!-- COVERALLS -->
+				<!-- COVERALLS PLUGIN -->
 				<plugin>
 					<groupId>org.eluder.coveralls</groupId>
 					<artifactId>coveralls-maven-plugin</artifactId>
@@ -152,14 +152,14 @@
 					</dependencies>
 				</plugin>
 				
-				<!-- SONAR -->
+				<!-- SONAR PLUGIN -->
 				<plugin>
 					<groupId>org.sonarsource.scanner.maven</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
 					<version>${sonar.version}</version>
 				</plugin>
 				
-				<!-- MAVEN ASSEMBLY -->
+				<!-- MAVEN ASSEMBLY PLUGIN -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
@@ -206,6 +206,27 @@
 					</executions>
 				</plugin>
 				
+				<!-- BUILD HELPER PLUGIN -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>${build-helper.version}</version>
+					<executions>
+						<execution>
+							<id>add-test-source</id>
+							<phase>generate-test-sources</phase>
+							<goals>
+								<goal>add-test-source</goal>
+							</goals>
+							<configuration>
+								<sources>
+									<source>src/it/java</source>
+								</sources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
 			</plugins>
 		</pluginManagement>
 	</build>
