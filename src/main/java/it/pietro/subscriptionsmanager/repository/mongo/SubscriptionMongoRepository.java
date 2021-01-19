@@ -30,10 +30,6 @@ public class SubscriptionMongoRepository implements SubscriptionRepository {
 			.map(this::fromDocumentToStudent)
 			.collect(Collectors.toList());		
 	}
-	
-	private Subscription fromDocumentToStudent(Document d) {
-		return new Subscription(""+d.get("id"), ""+d.get("name"), (Double) d.get("price"), ""+d.get("repetition"));
-	}
 
 	@Override
 	public Subscription findById(String id) {
@@ -52,6 +48,10 @@ public class SubscriptionMongoRepository implements SubscriptionRepository {
 				.append("name", sub.getName())
 				.append("price", sub.getPrice())
 				.append("repetition", sub.getRepetition()));
+	}
+	
+	private Subscription fromDocumentToStudent(Document d) {
+		return new Subscription(""+d.get("id"), ""+d.get("name"), (Double) d.get("price"), ""+d.get("repetition"));
 	}
 
 	@Override

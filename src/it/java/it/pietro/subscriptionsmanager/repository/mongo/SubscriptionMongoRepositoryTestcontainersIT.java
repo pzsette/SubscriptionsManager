@@ -2,6 +2,10 @@ package it.pietro.subscriptionsmanager.repository.mongo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
@@ -50,9 +54,9 @@ public class SubscriptionMongoRepositoryTestcontainersIT {
 	
 	
 	@Test
-	public void testFindAllWhenDBIsNotEmpty() {
-		addTestSubscriptiontToDatabase(SUBSCRIPTION_FIXTURE);
-		addTestSubscriptiontToDatabase(SUBSCRIPTION_FIXTURE2);
+	public void testFindAll() {
+		addTestSubscriptionToDatabase(SUBSCRIPTION_FIXTURE);
+		addTestSubscriptionToDatabase(SUBSCRIPTION_FIXTURE2);
 		assertThat(repository.findAll())
 			.containsExactly(
 				SUBSCRIPTION_FIXTURE,
@@ -60,30 +64,41 @@ public class SubscriptionMongoRepositoryTestcontainersIT {
 	}
 	
 	@Test
-	public void testFindAllWhenDBIsEmpty() {
-		assertThat(repository.findAll()).isEmpty();
-	}
-	
-	@Test
 	public void testFindById() {
-		addTestSubscriptiontToDatabase(SUBSCRIPTION_FIXTURE);
+		addTestSubscriptionToDatabase(SUBSCRIPTION_FIXTURE);
 		assertThat(repository.findById(SUBSCRIPTION_FIXTURE.getId()))
 			.isEqualTo(SUBSCRIPTION_FIXTURE);
 	}
 	
-	@Test 
-	void testFindByIdWhenSubNotInDB() {
-		assertThat(repository.findById(SUBSCRIPTION_FIXTURE.getId()))
-			.isNull();		
+	@Test
+	public void testSave() {
+		repository.save(SUBSCRIPTION_FIXTURE);
+		assertThat(readAllSubscriptionFormDB())
+			.containsExactly(SUBSCRIPTION_FIXTURE);
 	}
 	
-	private void addTestSubscriptiontToDatabase(Subscription sub) {
+	@Test
+	public void testDelete() {
+		addTestSubscriptionToDatabase(SUBSCRIPTION_FIXTURE);
+		repository.delete(SUBSCRIPTION_FIXTURE.getId());
+		assertThat(readAllSubscriptionFormDB())
+			.isEmpty();
+	}
+	
+	private void addTestSubscriptionToDatabase(Subscription sub) {
 		collection.insertOne(
 				new Document()
 					.append("id", sub.getId())
 					.append("name", sub.getName())
 					.append("price", sub.getPrice())
 					.append("repetition", sub.getRepetition()));
+	}
+	
+	private List<Subscription> readAllSubscriptionFormDB() {
+		return StreamSupport
+				.stream(collection.find().spliterator(), false)
+				.map(d -> new Subscription(""+d.get("id"), ""+d.get("name"), (double)d.get("price"), ""+d.get("repetition")))
+				.collect(Collectors.toList());
 	}
 
 }
