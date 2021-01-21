@@ -21,7 +21,6 @@ public class SubscriptionMongoRepository implements SubscriptionRepository {
 				.getDatabase(dbName)
 				.getCollection(collectionName);
 	}
-	
 
 	@Override
 	public List<Subscription> findAll() {
@@ -29,10 +28,6 @@ public class SubscriptionMongoRepository implements SubscriptionRepository {
 			.stream(collection.find().spliterator(), false)
 			.map(this::fromDocumentToStudent)
 			.collect(Collectors.toList());		
-	}
-	
-	private Subscription fromDocumentToStudent(Document d) {
-		return new Subscription(""+d.get("id"), ""+d.get("name"), (Double) d.get("price"), ""+d.get("repetition"));
 	}
 
 	@Override
@@ -52,6 +47,10 @@ public class SubscriptionMongoRepository implements SubscriptionRepository {
 				.append("name", sub.getName())
 				.append("price", sub.getPrice())
 				.append("repetition", sub.getRepetition()));
+	}
+	
+	private Subscription fromDocumentToStudent(Document d) {
+		return new Subscription(""+d.get("id"), ""+d.get("name"), (Double) d.get("price"), ""+d.get("repetition"));
 	}
 
 	@Override

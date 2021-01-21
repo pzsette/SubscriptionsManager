@@ -63,6 +63,6 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     - name: Build with Maven
-      run: mvn -f pom.xml clean verify $ACTIVE_PROFILES
+      run: mvn -f pom.xml -Dmaven.compiler.source=${{matrix.java}} -Dmaven.compiler.target=${{matrix.java}} clean verify $ACTIVE_PROFILES
       env:
         ACTIVE_PROFILES: -Pjacoco,mutation-testing
