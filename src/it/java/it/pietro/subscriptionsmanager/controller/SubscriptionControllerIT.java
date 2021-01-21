@@ -69,8 +69,6 @@ public class SubscriptionControllerIT {
 		controller.deleteSubscription(SUBSCRIPTION_FIXTURE);
 		verify(view)
 			.subscriptionRemoved(SUBSCRIPTION_FIXTURE);
-		/*verify(view)
-			.updatePricelbl()*/
 	}
 
 }
