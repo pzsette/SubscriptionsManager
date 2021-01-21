@@ -15,7 +15,7 @@ public class SubscriptionSpending {
 			} else if( sub.getRepetition() == "Monthly") {
 				price += sub.getPrice();
 			} else {
-				price = sub.getPrice()/12;
+				price += sub.getPrice()/12;
 			}
 		}
 		return price;

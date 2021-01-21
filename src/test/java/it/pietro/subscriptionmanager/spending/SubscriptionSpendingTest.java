@@ -12,7 +12,7 @@ public class SubscriptionSpendingTest {
 	
 	Subscription MONTHLY_SUB_FIXTURE = new Subscription("0", "Netflix", 1.0, "Monthly");
 	Subscription WEEKLY_SUB_FIXTURE = new Subscription("1", "Magazine", 2.0, "Weekly");
-	Subscription ANNUAL_SUB_FIXTURE = new Subscription("2", "Gym", 200.0, "Annual");
+	Subscription ANNUAL_SUB_FIXTURE = new Subscription("2", "Gym", 120.0, "Annual");
 	
 	private SubscriptionSpending spending = new SubscriptionSpending();
 
@@ -38,6 +38,12 @@ public class SubscriptionSpendingTest {
 	public void testComputeSpndingWhenThereIsOneAnnualSubscription() {
 		assertThat(spending.computeSpending(asList(ANNUAL_SUB_FIXTURE)))
 			.isEqualTo(ANNUAL_SUB_FIXTURE.getPrice()/12);
+	}
+	
+	@Test
+	public void testComputeSpendingWhenThereAreDifferentaSubscripitons() {
+		assertThat(spending.computeSpending(asList(WEEKLY_SUB_FIXTURE, MONTHLY_SUB_FIXTURE, ANNUAL_SUB_FIXTURE)))
+			.isEqualTo(19.0);
 	}
 
 }
