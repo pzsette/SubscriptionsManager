@@ -5,6 +5,10 @@ import it.pietro.subscriptionsmanager.model.Subscription;
 
 public class SubscriptionSpending {
 	
+	private SubscriptionSpending() {
+		throw new IllegalStateException("Utility class");
+	}
+	
 	public static double computeSpending(List<Subscription> subs) {
 		Double price = 0.0;
 		for(Subscription sub : subs) {

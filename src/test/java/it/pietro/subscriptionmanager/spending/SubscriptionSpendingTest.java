@@ -17,7 +17,7 @@ public class SubscriptionSpendingTest {
 	@Test
 	public void testComputeSpendindWhenThereAreNoSubscrptions() {
 		List<Subscription> subs = Collections.emptyList();
-		assertThat(SubscriptionSpending.computeSpending(subs)).isEqualTo(0);
+		assertThat(SubscriptionSpending.computeSpending(subs)).isZero();
 	}
 	
 	@Test
