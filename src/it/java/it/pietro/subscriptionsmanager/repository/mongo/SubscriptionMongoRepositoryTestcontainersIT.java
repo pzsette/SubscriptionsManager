@@ -10,7 +10,7 @@ import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.MongoDBContainer;
 import org.junit.Test;
 
 import com.mongodb.MongoClient;
@@ -22,11 +22,8 @@ import it.pietro.subscriptionsmanager.model.Subscription;
 
 public class SubscriptionMongoRepositoryTestcontainersIT {
 
-	@SuppressWarnings("rawtypes")
 	@ClassRule
-	public static final GenericContainer mongo =
-		new GenericContainer("mongo:4.2.3")
-			.withExposedPorts(27017);
+	public static final MongoDBContainer mongo =new MongoDBContainer("mongo:4.2.3").withExposedPorts(27017);
 	
 	private MongoClient client;
 	private SubscriptionMongoRepository repository;

@@ -21,7 +21,6 @@ public class SubscriptionMongoRepository implements SubscriptionRepository {
 				.getDatabase(dbName)
 				.getCollection(collectionName);
 	}
-	
 
 	@Override
 	public List<Subscription> findAll() {
