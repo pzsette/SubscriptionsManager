@@ -12,8 +12,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>13</maven.compiler.source>
+		<maven.compiler.target>13</maven.compiler.target>
 		
 		<junit.version>4.13.1</junit.version>
 		<mockito.version>3.5.13</mockito.version>
@@ -29,6 +29,7 @@
 		<build-helper.version>3.0.0</build-helper.version>
 		<testcontainer.version>1.15.1</testcontainer.version>
 		<maven-failsafe.version>2.22.2</maven-failsafe.version>
+		<assertj-swing.version>3.17.1</assertj-swing.version>
 	
 		<sonar.projectKey>pzsette_SubscriptionsManager</sonar.projectKey>
 		<sonar.organization>pzsette777</sonar.organization>
@@ -93,10 +94,19 @@
 			<scope>test</scope>
 		</dependency>
 		
+		<!-- MONGODB TESTCONTAINER -->
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>mongodb</artifactId>
 			<version>${testcontainer.version}</version>
+		</dependency>
+		
+		<!-- ASSERTJ SWING -->
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-swing-junit</artifactId>
+			<version>${assertj-swing.version}</version>
+			<scope>test</scope>
 		</dependency>
 		
 	</dependencies>

@@ -1,4 +1,4 @@
-package it.pietro.subscriptionmanager.spending;
+package it.pietro.subscriptionsmanager.spending;
 import static org.assertj.core.api.Assertions.assertThat;
 import static java.util.Arrays.asList;
 
@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 import it.pietro.subscriptionsmanager.model.Subscription;
+import it.pietro.subscriptionsmanager.spending.SubscriptionSpending;
 
 public class SubscriptionSpendingTest {
 	

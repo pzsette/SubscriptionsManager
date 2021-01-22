@@ -1,4 +1,4 @@
-package it.pietro.subscriptionmanager.spending;
+package it.pietro.subscriptionsmanager.spending;
 
 import java.util.List;
 import it.pietro.subscriptionsmanager.model.Subscription;
