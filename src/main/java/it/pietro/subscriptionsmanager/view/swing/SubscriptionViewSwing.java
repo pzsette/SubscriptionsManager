@@ -1,11 +1,11 @@
 package it.pietro.subscriptionsmanager.view.swing;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
@@ -13,18 +13,33 @@ import java.awt.Insets;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.Dimension;
+import javax.swing.SwingConstants;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+import it.pietro.subscriptionsmanager.model.Subscription;
 
 public class SubscriptionViewSwing extends JFrame {
+	
+	private JList<Subscription> listSubscriptions;
+	private DefaultListModel<Subscription> listSubscriptionsModel;
 
 	private JPanel contentPane;
 	private JTextField nameTextField;
 	private JTextField idTextField;
 	private JTextField priceTextField;
 	private String[] repetition = {"Weekly", "Monthly", "Annual"};
+	
+	public DefaultListModel<Subscription> getListSubscriptionModel() {
+		return listSubscriptionsModel;
+	}
 
 	/**
 	 * Launch the application.
@@ -46,6 +61,9 @@ public class SubscriptionViewSwing extends JFrame {
 	 * Create the frame.
 	 */
 	public SubscriptionViewSwing() {
+		
+		listSubscriptionsModel = new DefaultListModel<>();
+		
 		setMinimumSize(new Dimension(500, 330));
 		setTitle("Subscriptions manager");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,21 +74,24 @@ public class SubscriptionViewSwing extends JFrame {
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[]{61, 137, 69, 140, 0};
-		gbl_contentPane.rowHeights = new int[]{0, 121, 30, 0, 30, 0, 0, 0};
+		gbl_contentPane.rowHeights = new int[]{0, 121, 30, 0, 30, 0, 15, 0};
 		gbl_contentPane.columnWeights = new double[]{0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
 		
-		JLabel spendingTextLabel = new JLabel("Total monthly spending");
+		JLabel spendingTextLabel = new JLabel("Total monthly spending:");
+		spendingTextLabel.setName("spendingTextLabel");
+		spendingTextLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_spendingTextLabel = new GridBagConstraints();
+		gbc_spendingTextLabel.fill = GridBagConstraints.HORIZONTAL;
 		gbc_spendingTextLabel.gridwidth = 3;
-		gbc_spendingTextLabel.anchor = GridBagConstraints.EAST;
 		gbc_spendingTextLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_spendingTextLabel.gridx = 0;
 		gbc_spendingTextLabel.gridy = 0;
 		contentPane.add(spendingTextLabel, gbc_spendingTextLabel);
 		
 		JLabel amountTextLabel = new JLabel("0");
+		amountTextLabel.setName("amountTextLabel");
 		GridBagConstraints gbc_amountTextLabel = new GridBagConstraints();
 		gbc_amountTextLabel.fill = GridBagConstraints.HORIZONTAL;
 		gbc_amountTextLabel.insets = new Insets(0, 0, 5, 0);
@@ -87,12 +108,13 @@ public class SubscriptionViewSwing extends JFrame {
 		gbc_scrollPane.gridy = 1;
 		contentPane.add(scrollPane, gbc_scrollPane);
 		
-		JList list = new JList();
+		JList list = new JList(listSubscriptionsModel);
 		scrollPane.setViewportView(list);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setName("subscriptionList");
 		
 		JButton deleteBtn = new JButton("Delete selected");
+		deleteBtn.setEnabled(false);
 		deleteBtn.setName("deleteBtn");
 		GridBagConstraints gbc_deleteBtn = new GridBagConstraints();
 		gbc_deleteBtn.insets = new Insets(0, 0, 5, 0);
@@ -102,13 +124,17 @@ public class SubscriptionViewSwing extends JFrame {
 		contentPane.add(deleteBtn, gbc_deleteBtn);
 		
 		JLabel idTextLabel = new JLabel("id");
+		idTextLabel.setName("idTextLabel");
+		idTextLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_idTextLabel = new GridBagConstraints();
+		gbc_idTextLabel.fill = GridBagConstraints.HORIZONTAL;
 		gbc_idTextLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_idTextLabel.gridx = 0;
 		gbc_idTextLabel.gridy = 3;
 		contentPane.add(idTextLabel, gbc_idTextLabel);
 		
 		idTextField = new JTextField();
+		idTextField.setName("idTextField");
 		GridBagConstraints gbc_idTextField = new GridBagConstraints();
 		gbc_idTextField.insets = new Insets(0, 0, 5, 5);
 		gbc_idTextField.fill = GridBagConstraints.HORIZONTAL;
@@ -118,7 +144,7 @@ public class SubscriptionViewSwing extends JFrame {
 		idTextField.setColumns(10);
 		
 		JLabel nameTextLabel = new JLabel("name");
-		nameTextLabel.setName("idTextField");
+		nameTextLabel.setName("nameTextLabel");
 		GridBagConstraints gbc_nameTextLabel = new GridBagConstraints();
 		gbc_nameTextLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_nameTextLabel.gridx = 2;
@@ -126,6 +152,7 @@ public class SubscriptionViewSwing extends JFrame {
 		contentPane.add(nameTextLabel, gbc_nameTextLabel);
 		
 		nameTextField = new JTextField();
+		nameTextField.setName("nameTextField");
 		GridBagConstraints gbc_nameTextField = new GridBagConstraints();
 		gbc_nameTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_nameTextField.insets = new Insets(0, 0, 5, 0);
@@ -135,7 +162,7 @@ public class SubscriptionViewSwing extends JFrame {
 		nameTextField.setColumns(10);
 		
 		priceTextField = new JTextField();
-		priceTextField.setName("nameTextField");
+		priceTextField.setName("priceTextField");
 		GridBagConstraints gbc_priceTextField = new GridBagConstraints();
 		gbc_priceTextField.insets = new Insets(0, 0, 5, 5);
 		gbc_priceTextField.fill = GridBagConstraints.HORIZONTAL;
@@ -145,15 +172,17 @@ public class SubscriptionViewSwing extends JFrame {
 		priceTextField.setColumns(10);
 		
 		JLabel priceTextLabel = new JLabel("price");
-		priceTextLabel.setName("priceTextField");
+		priceTextLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		priceTextLabel.setName("priceTextLabel");
 		GridBagConstraints gbc_priceTextLabel = new GridBagConstraints();
-		gbc_priceTextLabel.fill = GridBagConstraints.VERTICAL;
+		gbc_priceTextLabel.fill = GridBagConstraints.BOTH;
 		gbc_priceTextLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_priceTextLabel.gridx = 0;
 		gbc_priceTextLabel.gridy = 4;
 		contentPane.add(priceTextLabel, gbc_priceTextLabel);
 		
 		JLabel repetitionTextLabel = new JLabel("repetition");
+		repetitionTextLabel.setName("repetitionTextLabel");
 		GridBagConstraints gbc_repetitionTextLabel = new GridBagConstraints();
 		gbc_repetitionTextLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_repetitionTextLabel.gridx = 2;
@@ -161,6 +190,7 @@ public class SubscriptionViewSwing extends JFrame {
 		contentPane.add(repetitionTextLabel, gbc_repetitionTextLabel);
 		
 		JComboBox repetitionDropDown = new JComboBox(repetition);
+		repetitionDropDown.setName("repetitionDropDown");
 		GridBagConstraints gbc_repetitionDropDown = new GridBagConstraints();
 		gbc_repetitionDropDown.fill = GridBagConstraints.HORIZONTAL;
 		gbc_repetitionDropDown.insets = new Insets(0, 0, 5, 0);
@@ -169,6 +199,7 @@ public class SubscriptionViewSwing extends JFrame {
 		contentPane.add(repetitionDropDown, gbc_repetitionDropDown);
 		
 		JButton addBtn = new JButton("Add subscription");
+		addBtn.setEnabled(false);
 		addBtn.setName("addBtn");
 		addBtn.setAutoscrolls(true);
 		GridBagConstraints gbc_addBtn = new GridBagConstraints();
@@ -181,15 +212,37 @@ public class SubscriptionViewSwing extends JFrame {
 		gbc_repetitionTextLabel.gridx = 3;
 		gbc_repetitionTextLabel.gridy = 4;
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.fill = GridBagConstraints.VERTICAL;
-		gbc_lblNewLabel.gridwidth = 4;
-		gbc_lblNewLabel.gridx = 0;
-		gbc_lblNewLabel.gridy = 6;
-		contentPane.add(lblNewLabel, gbc_lblNewLabel);
+		JLabel errorLbl = new JLabel(" ");
+		errorLbl.setForeground(Color.RED);
+		errorLbl.setName("errorLbl");
+		errorLbl.setDoubleBuffered(true);
+		errorLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		GridBagConstraints gbc_errorLbl = new GridBagConstraints();
+		gbc_errorLbl.fill = GridBagConstraints.BOTH;
+		gbc_errorLbl.gridwidth = 4;
+		gbc_errorLbl.gridx = 0;
+		gbc_errorLbl.gridy = 6;
+		contentPane.add(errorLbl, gbc_errorLbl);
 		
+		KeyAdapter btnAddEnabler = new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				addBtn.setEnabled(
+						!idTextField.getText().trim().isEmpty() &&
+						!nameTextField.getText().trim().isEmpty() &&
+						!priceTextField.getText().trim().isEmpty());
+			}
+		};
 		
+		idTextField.addKeyListener(btnAddEnabler);
+		nameTextField.addKeyListener(btnAddEnabler);
+		priceTextField.addKeyListener(btnAddEnabler);
+		
+		list.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				deleteBtn.setEnabled(list.getSelectedIndex() != -1);
+			}
+		});
 	}
-
 }
