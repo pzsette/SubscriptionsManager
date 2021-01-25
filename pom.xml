@@ -138,6 +138,26 @@
 			</plugin>
 			
 			<!-- BUILD HELPER PLUGIN -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>${build-helper.version}</version>
+				<executions>
+					<execution>
+					<id>add-test-source</id>
+					<phase>generate-test-sources</phase>
+					<goals>
+						<goal>add-test-source</goal>
+					</goals>
+					<configuration>
+						<sources>
+							<source>src/it/java</source>
+							<source>src/e2e/java</source>
+						</sources>
+					</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			
 			
 			<!-- MAVEN FAILSAFE PLUGIN -->
