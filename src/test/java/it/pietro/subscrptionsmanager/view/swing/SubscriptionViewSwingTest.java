@@ -1,5 +1,8 @@
 package it.pietro.subscrptionsmanager.view.swing;
 
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
@@ -9,8 +12,8 @@ import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import it.pietro.subscriptionsmanager.model.Subscription;
 import it.pietro.subscriptionsmanager.view.swing.SubscriptionViewSwing;
+import it.pietro.subscriptionsmanager.model.Subscription;
 
 @RunWith(GUITestRunner.class)
 public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
@@ -18,6 +21,9 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	private FrameFixture window;
 	
 	private SubscriptionViewSwing swingView;
+	
+	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Monthly");
+	private static final Subscription SUBSCRIPTION_FIXTURE2 = new Subscription("2", "Test", 1.0, "Weekly");
 
 	@Override
 	protected void onSetUp() throws Exception {
@@ -66,12 +72,57 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testDeleteButtonShouldBeEnabledOnlyWhenASubscriptionIsSelected() {
 		GuiActionRunner.execute(() ->
-			swingView.getListSubscriptionModel().addElement(new Subscription("1", "Netflix", 1.0, "Monthly")));
+			swingView.getListSubscriptionModel().addElement(SUBSCRIPTION_FIXTURE));
 		window.list("subscriptionList").selectItem(0);
 		window.button(JButtonMatcher.withName("deleteBtn")).requireEnabled();
 		window.list("subscriptionList").clearSelection();
 		window.button(JButtonMatcher.withName("deleteBtn")).requireDisabled();
-		
-		
+	}
+	
+	@Test
+	public void testShowAllSubscriptionsShouldAddSubsDescriptionToTheList() {
+		GuiActionRunner.execute(() -> 
+			swingView.showAllSubscriptions(asList(SUBSCRIPTION_FIXTURE,SUBSCRIPTION_FIXTURE2)));
+		String[] listContents = window.list().contents();
+		assertThat(listContents)
+			.containsExactly(SUBSCRIPTION_FIXTURE.toString(),SUBSCRIPTION_FIXTURE2.toString());
+	}
+	
+	@Test
+	public void testShowErrorShouldShowTheMessageInTheErrorLabel() {
+		GuiActionRunner.execute(
+				() -> swingView.showError("error message", SUBSCRIPTION_FIXTURE)
+		);
+		window.label("errorLbl")
+			.requireText("error message: "+SUBSCRIPTION_FIXTURE);
+	}
+	
+	@Test
+	public void testSubscriptionAddedShouldAddTheSubToTheListAndResetErrorLabel() {
+		GuiActionRunner.execute(
+				() -> swingView.subscriptionAdded(SUBSCRIPTION_FIXTURE));
+		String[] listContents = window.list().contents();
+		assertThat(listContents).containsExactly(SUBSCRIPTION_FIXTURE.toString());
+		window.label("errorLbl").requireText(" ");
+	}
+	
+	@Test
+	public void testSubscriptionRemovedShouldAddTheSubToTheListAndResetErrorLabel() {
+		GuiActionRunner.execute(
+				() -> {
+					swingView.getListSubscriptionModel().addElement(SUBSCRIPTION_FIXTURE);
+					swingView.getListSubscriptionModel().addElement(SUBSCRIPTION_FIXTURE2);
+					swingView.subscriptionRemoved(SUBSCRIPTION_FIXTURE);
+				});
+		String[] listContents = window.list().contents();
+		assertThat(listContents).containsExactly(SUBSCRIPTION_FIXTURE2.toString());
+		window.label("errorLbl").requireText(" ");
+	}
+	
+	@Test
+	public void testAddSubscriptionShouldUpdateAmountTextLabel() {
+		GuiActionRunner.execute(
+				() -> swingView.subscriptionAdded(SUBSCRIPTION_FIXTURE));
+		window.label(JLabelMatcher.withName("amountTextLabel")).requireText("1.0");
 	}
 }

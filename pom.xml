@@ -21,12 +21,11 @@
 		<coveralls.version>4.3.0</coveralls.version>
 		<sonar.version>3.7.0.1746</sonar.version>
 		<pit.version>1.5.2</pit.version>
-		<exec.version>3.0.0</exec.version>
 		<mongo-java-driver.version>3.12.7</mongo-java-driver.version>
 		<logback.version>1.2.3</logback.version>
 		<mongo-java-server.version>1.11.1</mongo-java-server.version>
 		<assertj.version>3.15.0</assertj.version>
-		<build-helper.version>3.0.0</build-helper.version>
+		<build-helper.version>3.2.0</build-helper.version>
 		<testcontainer.version>1.15.1</testcontainer.version>
 		<maven-failsafe.version>2.22.2</maven-failsafe.version>
 		<assertj-swing.version>3.17.1</assertj-swing.version>
@@ -139,25 +138,7 @@
 			</plugin>
 			
 			<!-- BUILD HELPER PLUGIN -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>${build-helper.version}</version>
-				<executions>
-					<execution>
-						<id>add-test-source</id>
-						<phase>generate-test-sources</phase>
-						<goals>
-							<goal>add-test-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/it/java</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>	
+			
 			
 			<!-- MAVEN FAILSAFE PLUGIN -->
 			<plugin>
@@ -202,10 +183,14 @@
 						<excludedClasses>
 							<param>it.pietro.subscriptionsmanager.App</param>
 							<param>it.pietro.subscriptionsmanager.model.*</param>
+							<param>it.pietro.subscriptionsmanager.view.swing.*</param>
 						</excludedClasses>
 						<targetTest>
 							<param>*Test</param>
 						</targetTest>
+						<excludedTestClasses>
+							<param>it.pietro.subscrptionsmanager.view.swing.SubscriptionViewSwingTest</param>
+						</excludedTestClasses>
 						<mutators>
 							<mutator>STRONGER</mutator>
 						</mutators>
@@ -255,28 +240,6 @@
 					<version>${sonar.version}</version>
 				</plugin>
 				
-				<!-- EXEC PLUGIN -->
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>exec-maven-plugin</artifactId>
-					<version>${exec.version}</version>
-					<executions>
-						<execution>
-							<id>run-jar-with-dependencies</id>
-							<phase>verify</phase>
-							<goals>
-								<goal>exec</goal>
-							</goals>
-							<configuration>
-								<executable>java</executable>
-								<arguments>
-									<argument>-jar</argument>
-									<argument>${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar</argument>
-								</arguments>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

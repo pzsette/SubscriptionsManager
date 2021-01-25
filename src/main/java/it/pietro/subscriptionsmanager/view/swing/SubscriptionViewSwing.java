@@ -13,7 +13,6 @@ import java.awt.Insets;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -23,21 +22,29 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import it.pietro.subscriptionsmanager.model.Subscription;
+import it.pietro.subscriptionsmanager.view.SubscriptionView;
+import it.pietro.subscriptionsmanager.spending.SubscriptionSpending;
 
-public class SubscriptionViewSwing extends JFrame {
+public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private JList<Subscription> listSubscriptions;
-	private DefaultListModel<Subscription> listSubscriptionsModel;
+	//private DefaultListModel<Subscription> listSubscriptionsModel;
+	private CustomListModel<Subscription> listSubscriptionsModel;
 
 	private JPanel contentPane;
 	private JTextField nameTextField;
 	private JTextField idTextField;
 	private JTextField priceTextField;
+	private JLabel errorLbl;
+	private JLabel amountTextLabel;
 	private String[] repetition = {"Weekly", "Monthly", "Annual"};
 	
-	public DefaultListModel<Subscription> getListSubscriptionModel() {
+	public CustomListModel<Subscription> getListSubscriptionModel() {
 		return listSubscriptionsModel;
 	}
 
@@ -62,7 +69,7 @@ public class SubscriptionViewSwing extends JFrame {
 	 */
 	public SubscriptionViewSwing() {
 		
-		listSubscriptionsModel = new DefaultListModel<>();
+		listSubscriptionsModel = new CustomListModel<>();
 		
 		setMinimumSize(new Dimension(500, 330));
 		setTitle("Subscriptions manager");
@@ -90,7 +97,7 @@ public class SubscriptionViewSwing extends JFrame {
 		gbc_spendingTextLabel.gridy = 0;
 		contentPane.add(spendingTextLabel, gbc_spendingTextLabel);
 		
-		JLabel amountTextLabel = new JLabel("0");
+		amountTextLabel = new JLabel("0");
 		amountTextLabel.setName("amountTextLabel");
 		GridBagConstraints gbc_amountTextLabel = new GridBagConstraints();
 		gbc_amountTextLabel.fill = GridBagConstraints.HORIZONTAL;
@@ -108,10 +115,10 @@ public class SubscriptionViewSwing extends JFrame {
 		gbc_scrollPane.gridy = 1;
 		contentPane.add(scrollPane, gbc_scrollPane);
 		
-		JList list = new JList(listSubscriptionsModel);
-		scrollPane.setViewportView(list);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setName("subscriptionList");
+		listSubscriptions = new JList<Subscription>(listSubscriptionsModel);
+		scrollPane.setViewportView(listSubscriptions);
+		listSubscriptions.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listSubscriptions.setName("subscriptionList");
 		
 		JButton deleteBtn = new JButton("Delete selected");
 		deleteBtn.setEnabled(false);
@@ -189,7 +196,7 @@ public class SubscriptionViewSwing extends JFrame {
 		gbc_repetitionTextLabel.gridy = 4;
 		contentPane.add(repetitionTextLabel, gbc_repetitionTextLabel);
 		
-		JComboBox repetitionDropDown = new JComboBox(repetition);
+		JComboBox<String> repetitionDropDown = new JComboBox<String>(repetition);
 		repetitionDropDown.setName("repetitionDropDown");
 		GridBagConstraints gbc_repetitionDropDown = new GridBagConstraints();
 		gbc_repetitionDropDown.fill = GridBagConstraints.HORIZONTAL;
@@ -212,7 +219,7 @@ public class SubscriptionViewSwing extends JFrame {
 		gbc_repetitionTextLabel.gridx = 3;
 		gbc_repetitionTextLabel.gridy = 4;
 		
-		JLabel errorLbl = new JLabel(" ");
+		errorLbl = new JLabel(" ");
 		errorLbl.setForeground(Color.RED);
 		errorLbl.setName("errorLbl");
 		errorLbl.setDoubleBuffered(true);
@@ -238,11 +245,39 @@ public class SubscriptionViewSwing extends JFrame {
 		nameTextField.addKeyListener(btnAddEnabler);
 		priceTextField.addKeyListener(btnAddEnabler);
 		
-		list.addListSelectionListener(new ListSelectionListener() {
+		listSubscriptions.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				deleteBtn.setEnabled(list.getSelectedIndex() != -1);
+				deleteBtn.setEnabled(listSubscriptions.getSelectedIndex() != -1);
 			}
 		});
+	}
+
+	@Override
+	public void showAllSubscriptions(List<Subscription> subs) {
+		subs.stream().forEach(listSubscriptionsModel::addElement);	
+	}
+
+	@Override
+	public void showError(String message, Subscription sub) {
+		errorLbl.setText(message+": "+sub);
+	}
+
+	@Override
+	public void subscriptionAdded(Subscription sub) {
+		listSubscriptionsModel.addElement(sub);
+		updateAmountLabel();
+		errorLbl.setText(" ");
+	}
+
+	@Override
+	public void subscriptionRemoved(Subscription sub) {
+		listSubscriptionsModel.removeElement(sub);
+		updateAmountLabel();
+		errorLbl.setText(" ");
+	}
+	
+	private void updateAmountLabel() {
+		amountTextLabel.setText(Double.toString(SubscriptionSpending.computeSpending(listSubscriptionsModel.getList())));
 	}
 }

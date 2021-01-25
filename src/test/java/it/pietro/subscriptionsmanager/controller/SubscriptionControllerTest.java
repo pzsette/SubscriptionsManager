@@ -80,6 +80,4 @@ public class SubscriptionControllerTest {
 			.showError("No existing subscription with id "+SUBSCRIPTION_FIXTURE.getId(), SUBSCRIPTION_FIXTURE);
 		verifyNoMoreInteractions(ignoreStubs(repository));
 	}
-	
-
 }
