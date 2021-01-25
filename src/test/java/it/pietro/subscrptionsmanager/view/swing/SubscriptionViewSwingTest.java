@@ -125,4 +125,15 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 				() -> swingView.subscriptionAdded(SUBSCRIPTION_FIXTURE));
 		window.label(JLabelMatcher.withName("amountTextLabel")).requireText("1.0");
 	}
+	
+	@Test
+	public void testRemoveSubscriptionShouldUpdateAmountTextLabel() {
+		GuiActionRunner.execute(
+				() -> {
+					swingView.getListSubscriptionModel().addElement(SUBSCRIPTION_FIXTURE);
+					swingView.getListSubscriptionModel().addElement(SUBSCRIPTION_FIXTURE2);
+					swingView.subscriptionRemoved(SUBSCRIPTION_FIXTURE);
+				});
+		window.label(JLabelMatcher.withName("amountTextLabel")).requireText("4.0");
+	}
 }
