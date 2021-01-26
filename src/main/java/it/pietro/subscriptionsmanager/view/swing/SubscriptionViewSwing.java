@@ -27,22 +27,27 @@ import java.util.List;
 import it.pietro.subscriptionsmanager.model.Subscription;
 import it.pietro.subscriptionsmanager.view.SubscriptionView;
 import it.pietro.subscriptionsmanager.spending.SubscriptionSpending;
+import it.pietro.subscriptionsmanager.controller.SubscriptionController;
 
 public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 	
 	private static final long serialVersionUID = 1L;
 	
+	private transient SubscriptionController controller;
+	
 	private JList<Subscription> listSubscriptions;
-	//private DefaultListModel<Subscription> listSubscriptionsModel;
 	private CustomListModel<Subscription> listSubscriptionsModel;
 
-	private JPanel contentPane;
-	private JTextField nameTextField;
-	private JTextField idTextField;
-	private JTextField priceTextField;
-	private JLabel errorLbl;
-	private JLabel amountTextLabel;
-	private String[] repetition = {"Weekly", "Monthly", "Annual"};
+	private final JLabel amountTextLabel;
+	private final JPanel contentPane;
+	private final JTextField nameTextField;
+	private final JTextField idTextField;
+	private final JTextField priceTextField;
+	private final JComboBox<String> repetitionDropDown;
+	private final JButton addBtn;
+	private final JLabel errorLbl;
+	
+	private final String[] repetition = {"Weekly", "Monthly", "Annual"};
 	
 	public CustomListModel<Subscription> getListSubscriptionModel() {
 		return listSubscriptionsModel;
@@ -86,6 +91,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		gbl_contentPane.rowWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
 		
+		//SPENDING TEXT LABEL
 		JLabel spendingTextLabel = new JLabel("Total monthly spending:");
 		spendingTextLabel.setName("spendingTextLabel");
 		spendingTextLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -97,6 +103,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		gbc_spendingTextLabel.gridy = 0;
 		contentPane.add(spendingTextLabel, gbc_spendingTextLabel);
 		
+		//AMOUNT TEXT LABEL
 		amountTextLabel = new JLabel("0");
 		amountTextLabel.setName("amountTextLabel");
 		GridBagConstraints gbc_amountTextLabel = new GridBagConstraints();
@@ -106,6 +113,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		gbc_amountTextLabel.gridy = 0;
 		contentPane.add(amountTextLabel, gbc_amountTextLabel);
 		
+		//SCROLL PANE
 		JScrollPane scrollPane = new JScrollPane();
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
@@ -115,11 +123,13 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		gbc_scrollPane.gridy = 1;
 		contentPane.add(scrollPane, gbc_scrollPane);
 		
+		//JLIST SUBSCRIPTIONS
 		listSubscriptions = new JList<Subscription>(listSubscriptionsModel);
 		scrollPane.setViewportView(listSubscriptions);
 		listSubscriptions.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listSubscriptions.setName("subscriptionList");
 		
+		//DELETE BUTTON
 		JButton deleteBtn = new JButton("Delete selected");
 		deleteBtn.setEnabled(false);
 		deleteBtn.setName("deleteBtn");
@@ -130,6 +140,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		gbc_deleteBtn.gridy = 2;
 		contentPane.add(deleteBtn, gbc_deleteBtn);
 		
+		//ID TEXT LABEL
 		JLabel idTextLabel = new JLabel("id");
 		idTextLabel.setName("idTextLabel");
 		idTextLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -140,6 +151,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		gbc_idTextLabel.gridy = 3;
 		contentPane.add(idTextLabel, gbc_idTextLabel);
 		
+		//ID TEXT FIELD
 		idTextField = new JTextField();
 		idTextField.setName("idTextField");
 		GridBagConstraints gbc_idTextField = new GridBagConstraints();
@@ -150,6 +162,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		contentPane.add(idTextField, gbc_idTextField);
 		idTextField.setColumns(10);
 		
+		//NAME TEXT LABEL
 		JLabel nameTextLabel = new JLabel("name");
 		nameTextLabel.setName("nameTextLabel");
 		GridBagConstraints gbc_nameTextLabel = new GridBagConstraints();
@@ -158,6 +171,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		gbc_nameTextLabel.gridy = 3;
 		contentPane.add(nameTextLabel, gbc_nameTextLabel);
 		
+		//NAME TEXT FIELD
 		nameTextField = new JTextField();
 		nameTextField.setName("nameTextField");
 		GridBagConstraints gbc_nameTextField = new GridBagConstraints();
@@ -168,16 +182,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		contentPane.add(nameTextField, gbc_nameTextField);
 		nameTextField.setColumns(10);
 		
-		priceTextField = new JTextField();
-		priceTextField.setName("priceTextField");
-		GridBagConstraints gbc_priceTextField = new GridBagConstraints();
-		gbc_priceTextField.insets = new Insets(0, 0, 5, 5);
-		gbc_priceTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_priceTextField.gridx = 1;
-		gbc_priceTextField.gridy = 4;
-		contentPane.add(priceTextField, gbc_priceTextField);
-		priceTextField.setColumns(10);
-		
+		//PRICE TEXT LABEL
 		JLabel priceTextLabel = new JLabel("price");
 		priceTextLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		priceTextLabel.setName("priceTextLabel");
@@ -188,6 +193,18 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		gbc_priceTextLabel.gridy = 4;
 		contentPane.add(priceTextLabel, gbc_priceTextLabel);
 		
+		//PRICE TEXT FIELD
+		priceTextField = new JTextField();
+		priceTextField.setName("priceTextField");
+		GridBagConstraints gbc_priceTextField = new GridBagConstraints();
+		gbc_priceTextField.insets = new Insets(0, 0, 5, 5);
+		gbc_priceTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_priceTextField.gridx = 1;
+		gbc_priceTextField.gridy = 4;
+		contentPane.add(priceTextField, gbc_priceTextField);
+		priceTextField.setColumns(10);
+		
+		//REPETITION TEXT LABEL
 		JLabel repetitionTextLabel = new JLabel("repetition");
 		repetitionTextLabel.setName("repetitionTextLabel");
 		GridBagConstraints gbc_repetitionTextLabel = new GridBagConstraints();
@@ -196,7 +213,8 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		gbc_repetitionTextLabel.gridy = 4;
 		contentPane.add(repetitionTextLabel, gbc_repetitionTextLabel);
 		
-		JComboBox<String> repetitionDropDown = new JComboBox<String>(repetition);
+		//REPETITION COMBO BOX
+		repetitionDropDown = new JComboBox<String>(repetition);
 		repetitionDropDown.setName("repetitionDropDown");
 		GridBagConstraints gbc_repetitionDropDown = new GridBagConstraints();
 		gbc_repetitionDropDown.fill = GridBagConstraints.HORIZONTAL;
@@ -205,7 +223,8 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		gbc_repetitionDropDown.gridy = 4;
 		contentPane.add(repetitionDropDown, gbc_repetitionDropDown);
 		
-		JButton addBtn = new JButton("Add subscription");
+		//ADD BUTTON
+		addBtn = new JButton("Add subscription");
 		addBtn.setEnabled(false);
 		addBtn.setName("addBtn");
 		addBtn.setAutoscrolls(true);
@@ -219,6 +238,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		gbc_repetitionTextLabel.gridx = 3;
 		gbc_repetitionTextLabel.gridy = 4;
 		
+		//ERROR LABEL
 		errorLbl = new JLabel(" ");
 		errorLbl.setForeground(Color.RED);
 		errorLbl.setName("errorLbl");
@@ -236,6 +256,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 			public void keyReleased(KeyEvent e) {
 				addBtn.setEnabled(
 						!idTextField.getText().trim().isEmpty() &&
+						isDouble(priceTextField.getText().trim()) &&
 						!nameTextField.getText().trim().isEmpty() &&
 						!priceTextField.getText().trim().isEmpty());
 			}
@@ -244,6 +265,16 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		idTextField.addKeyListener(btnAddEnabler);
 		nameTextField.addKeyListener(btnAddEnabler);
 		priceTextField.addKeyListener(btnAddEnabler);
+		
+		addBtn.addActionListener(e -> {
+			controller.addSubscription(
+					new Subscription(
+							idTextField.getText(),
+							nameTextField.getText(),
+							Double.parseDouble(priceTextField.getText()),
+							repetitionDropDown.getSelectedItem().toString())
+					);
+		});
 		
 		listSubscriptions.addListSelectionListener(new ListSelectionListener() {
 			@Override
@@ -256,11 +287,6 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 	@Override
 	public void showAllSubscriptions(List<Subscription> subs) {
 		subs.stream().forEach(listSubscriptionsModel::addElement);	
-	}
-
-	@Override
-	public void showError(String message, Subscription sub) {
-		errorLbl.setText(message+": "+sub);
 	}
 
 	@Override
@@ -277,7 +303,30 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		errorLbl.setText(" ");
 	}
 	
+	@Override
+	public void showSubscriptionAlreadyExistsError(Subscription sub) {
+		errorLbl.setText("Error: Already existing subscription with id "+sub.getId());	
+	}
+	
+	@Override
+	public void showNonExistingSubscritptionError(Subscription sub) {
+		errorLbl.setText("Error: No existing subscription with id "+sub.getId());
+	}
+	
 	private void updateAmountLabel() {
 		amountTextLabel.setText(Double.toString(SubscriptionSpending.computeSpending(listSubscriptionsModel.getList())));
+	}
+	
+	public void setController(SubscriptionController controller) {
+		this.controller = controller;
+	}
+	
+	private boolean isDouble(String value) {
+		try {
+			Double.parseDouble(value);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 }

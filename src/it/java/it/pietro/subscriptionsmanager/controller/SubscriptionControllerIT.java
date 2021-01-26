@@ -12,7 +12,6 @@ import org.mockito.MockitoAnnotations;
 import org.testcontainers.containers.MongoDBContainer;
 
 import com.mongodb.MongoClient;
-
 import com.mongodb.ServerAddress;
 
 import it.pietro.subscriptionsmanager.model.Subscription;
@@ -70,5 +69,4 @@ public class SubscriptionControllerIT {
 		verify(view)
 			.subscriptionRemoved(SUBSCRIPTION_FIXTURE);
 	}
-
 }

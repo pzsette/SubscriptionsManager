@@ -3,6 +3,7 @@ package it.pietro.subscrptionsmanager.view.swing;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
@@ -36,25 +37,27 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
+	@GUITest
 	public void testControlsInitialState() {
 		window.label(JLabelMatcher.withName("spendingTextLabel"));
-		window.label(JLabelMatcher.withName("amountTextLabel"));
-		window.list("subscriptionList");
+		window.label(JLabelMatcher.withName("amountTextLabel")).requireText("0");
+		window.list("subscriptionList").requireItemCount(0).requireNoSelection();
 		window.button(JButtonMatcher.withName("deleteBtn")).requireDisabled();
 		window.label(JLabelMatcher.withName("idTextLabel"));
-		window.textBox("idTextField");
+		window.textBox("idTextField").requireEmpty();
 		window.label(JLabelMatcher.withName("nameTextLabel"));
-		window.textBox("nameTextField");
+		window.textBox("nameTextField").requireEmpty();
 		window.label(JLabelMatcher.withName("priceTextLabel"));
 		window.textBox("priceTextField");
 		window.label(JLabelMatcher.withName("repetitionTextLabel"));
-		window.comboBox("repetitionDropDown");
+		window.comboBox("repetitionDropDown").requireSelection("Weekly");
 		window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
-		window.label(JLabelMatcher.withName("errorLbl"));
+		window.label(JLabelMatcher.withName("errorLbl")).requireText(" ");
 	}
 	
 	@Test
-	public void testWhenhenSubFieldsAreNotEmptyTheAddButtonShouldBeEnabled() {
+	@GUITest
+	public void testWhenSubFieldsAreNotEmptyTheAddButtonShouldBeEnabled() {
 		window.textBox("idTextField").enterText("1");
 		window.textBox("nameTextField").enterText("Netflix");
 		window.textBox("priceTextField").enterText("1");
@@ -62,6 +65,16 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
+	@GUITest
+	public void testWhenPriceFieldIsNotFilledWithDoubleTheAddButtonShouldBeDisabled() {
+		window.textBox("idTextField").enterText("1");
+		window.textBox("nameTextField").enterText("Netflix");
+		window.textBox("priceTextField").enterText("ppp");
+		window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
+	}
+	
+	@Test
+	@GUITest
 	public void testWhenThereAreBlankFieldsAddButtonShouldBeDisabled() {
 		window.textBox("idTextField").enterText("1");
 		window.textBox("nameTextField").enterText(" ");
@@ -70,6 +83,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
+	@GUITest
 	public void testDeleteButtonShouldBeEnabledOnlyWhenASubscriptionIsSelected() {
 		GuiActionRunner.execute(() ->
 			swingView.getListSubscriptionModel().addElement(SUBSCRIPTION_FIXTURE));
@@ -80,6 +94,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
+	@GUITest
 	public void testShowAllSubscriptionsShouldAddSubsDescriptionToTheList() {
 		GuiActionRunner.execute(() -> 
 			swingView.showAllSubscriptions(asList(SUBSCRIPTION_FIXTURE,SUBSCRIPTION_FIXTURE2)));
@@ -89,15 +104,27 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
-	public void testShowErrorShouldShowTheMessageInTheErrorLabel() {
+	@GUITest
+	public void testErrorForNoExistingSubscription() {
 		GuiActionRunner.execute(
-				() -> swingView.showError("error message", SUBSCRIPTION_FIXTURE)
+				() -> swingView.showNonExistingSubscritptionError(SUBSCRIPTION_FIXTURE)
 		);
 		window.label("errorLbl")
-			.requireText("error message: "+SUBSCRIPTION_FIXTURE);
+			.requireText("Error: No existing subscription with id "+SUBSCRIPTION_FIXTURE.getId());
 	}
 	
 	@Test
+	@GUITest
+	public void testErrorForAlreadyExistingSubscription() {
+		GuiActionRunner.execute(
+				() -> swingView.showSubscriptionAlreadyExistsError(SUBSCRIPTION_FIXTURE)
+		);
+		window.label("errorLbl")
+			.requireText("Error: Already existing subscription with id "+SUBSCRIPTION_FIXTURE.getId());
+	}
+	
+	@Test
+	@GUITest
 	public void testSubscriptionAddedShouldAddTheSubToTheListAndResetErrorLabel() {
 		GuiActionRunner.execute(
 				() -> swingView.subscriptionAdded(SUBSCRIPTION_FIXTURE));
@@ -107,6 +134,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
+	@GUITest
 	public void testSubscriptionRemovedShouldAddTheSubToTheListAndResetErrorLabel() {
 		GuiActionRunner.execute(
 				() -> {
@@ -120,6 +148,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
+	@GUITest
 	public void testAddSubscriptionShouldUpdateAmountTextLabel() {
 		GuiActionRunner.execute(
 				() -> swingView.subscriptionAdded(SUBSCRIPTION_FIXTURE));
@@ -127,6 +156,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
+	@GUITest
 	public void testRemoveSubscriptionShouldUpdateAmountTextLabel() {
 		GuiActionRunner.execute(
 				() -> {

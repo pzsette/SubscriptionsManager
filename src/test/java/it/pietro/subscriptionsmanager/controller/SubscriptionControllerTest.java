@@ -57,7 +57,7 @@ public class SubscriptionControllerTest {
 			.thenReturn(SUBSCRIPTION_FIXTURE);
 		controller.addSubscription(newSub);
 		verify(view)
-			.showError("Already existing student with id 1", SUBSCRIPTION_FIXTURE);
+			.showSubscriptionAlreadyExistsError(SUBSCRIPTION_FIXTURE);
 		verifyNoMoreInteractions(ignoreStubs(repository));
 	}
 	
@@ -77,7 +77,7 @@ public class SubscriptionControllerTest {
 			.thenReturn(null);
 		controller.deleteSubscription(SUBSCRIPTION_FIXTURE);
 		verify(view)
-			.showError("No existing subscription with id "+SUBSCRIPTION_FIXTURE.getId(), SUBSCRIPTION_FIXTURE);
+			.showNonExistingSubscritptionError(SUBSCRIPTION_FIXTURE);
 		verifyNoMoreInteractions(ignoreStubs(repository));
 	}
 }
