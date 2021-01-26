@@ -1,6 +1,7 @@
 package it.pietro.subscrptionsmanager.view.swing;
 
 import static java.util.Arrays.asList;
+import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.assertj.swing.annotation.GUITest;
@@ -8,16 +9,24 @@ import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
+import org.assertj.swing.fixture.JButtonFixture;
+import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import it.pietro.subscriptionsmanager.view.swing.SubscriptionViewSwing;
+import it.pietro.subscriptionsmanager.controller.SubscriptionController;
 import it.pietro.subscriptionsmanager.model.Subscription;
 
 @RunWith(GUITestRunner.class)
 public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
+	
+	@Mock
+	private SubscriptionController controller;
 	
 	private FrameFixture window;
 	
@@ -29,7 +38,9 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	@Override
 	protected void onSetUp() throws Exception {
 		GuiActionRunner.execute(() -> {
+			MockitoAnnotations.openMocks(this);
 			swingView = new SubscriptionViewSwing();
+			swingView.setController(controller);
 			return swingView;
 		});
 		window = new FrameFixture(robot(), swingView);
@@ -71,6 +82,37 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		window.textBox("nameTextField").enterText("Netflix");
 		window.textBox("priceTextField").enterText("ppp");
 		window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
+	}
+	
+	@Test
+	@GUITest
+	public void testWhenIdOrNameOrPriceAreNotFilledTheAddButtonShouldBeDisabled() {
+		JButtonFixture addBtn = window.button(JButtonMatcher.withName("addBtn"));
+
+		JTextComponentFixture idTextField = window.textBox("idTextField");
+		JTextComponentFixture nameTextField = window.textBox("nameTextField");
+		JTextComponentFixture priceTextField = window.textBox("priceTextField");
+		
+		idTextField.enterText("1");
+		window.textBox("priceTextField").enterText("7.0");
+		nameTextField.enterText(" ");
+		addBtn.requireDisabled();
+		
+		idTextField.enterText("");
+		nameTextField.enterText("");
+		
+		idTextField.enterText(" ");
+		nameTextField.enterText("Test");
+		addBtn.requireDisabled();
+		
+		idTextField.enterText("");
+		nameTextField.enterText("");
+		
+		idTextField.enterText("1");
+		nameTextField.enterText("Test");
+		priceTextField.enterText(" ");
+		
+		addBtn.requireDisabled();	
 	}
 	
 	@Test
@@ -165,5 +207,26 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 					swingView.subscriptionRemoved(SUBSCRIPTION_FIXTURE);
 				});
 		window.label(JLabelMatcher.withName("amountTextLabel")).requireText("4.0");
+	}
+	
+	@Test
+	@GUITest
+	public void testAddButtonShouldDelegateToController() {
+		window.textBox("idTextField").enterText("1");
+		window.textBox("nameTextField").enterText("Netflix");
+		window.textBox("priceTextField").enterText("1");
+		window.comboBox("repetitionDropDown").selectItem("Monthly");
+		window.button(JButtonMatcher.withName("addBtn")).click();
+		verify(controller).addSubscription(new Subscription("1", "Netflix", 1.0, "Monthly"));
+	}
+	
+	@Test
+	@GUITest
+	public void testDeleteButtonShouldDelegateController() {
+		GuiActionRunner.execute(
+				() -> swingView.getListSubscriptionModel().addElement(SUBSCRIPTION_FIXTURE));
+		window.list("subscriptionList").selectItem(0);
+		window.button(JButtonMatcher.withName("deleteBtn")).click();
+		verify(controller).deleteSubscription(SUBSCRIPTION_FIXTURE);
 	}
 }

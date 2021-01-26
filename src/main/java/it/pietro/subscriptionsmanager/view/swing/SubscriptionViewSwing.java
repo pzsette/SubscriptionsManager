@@ -276,6 +276,10 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 					);
 		});
 		
+		deleteBtn.addActionListener(e -> {
+			controller.deleteSubscription(listSubscriptions.getSelectedValue());
+		});
+		
 		listSubscriptions.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {

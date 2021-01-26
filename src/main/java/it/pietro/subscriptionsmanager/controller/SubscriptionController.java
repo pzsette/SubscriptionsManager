@@ -31,7 +31,7 @@ public class SubscriptionController {
 	public void deleteSubscription(Subscription sub) {
 		Subscription subInDB = repository.findById(sub.getId());
 		if (subInDB == null) {
-			view.showSubscriptionAlreadyExistsError(subInDB);
+			view.showNonExistingSubscritptionError(sub);
 			return;
 		}
 		repository.delete(sub.getId());
