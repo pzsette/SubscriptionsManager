@@ -77,7 +77,6 @@ public class SubscriptionViewSwingIT extends AssertJSwingJUnitTestCase {
 		window.textBox("priceTextField").enterText("1");
 		window.comboBox("repetitionDropDown").selectItem("Monthly");
 		window.button(JButtonMatcher.withName("addBtn")).click();
-		System.out.println(repository.findAll());
 		assertThat(window.list().contents())
 			.containsExactly(SUBSCRIPTION_FIXTURE.toString());
 	}
@@ -92,6 +91,22 @@ public class SubscriptionViewSwingIT extends AssertJSwingJUnitTestCase {
 		window.button("addBtn").click();
 		assertThat(window.list().contents()).isEmpty();
 		window.label("errorLbl").requireText("Error: Already existing subscription with id 1");
+	}
+	
+	@Test @GUITest
+	public void testDeleteButtonSuccess() {
+		GuiActionRunner.execute(() -> controller.addSubscription(SUBSCRIPTION_FIXTURE));
+		window.list().selectItem(0);
+		window.button("deleteBtn").click();
+		assertThat(window.list().contents()).isEmpty();
+	}
+	
+	@Test @GUITest
+	public void testDeleteButtonError() {
+		GuiActionRunner.execute(() -> swingView.getListSubscriptionModel().addElement(SUBSCRIPTION_FIXTURE));
+		window.list().selectItem(0);
+		window.button("deleteBtn").click();
+		window.label("errorLbl").requireText("Error: No existing subscription with id 1");
 	}
 
 }
