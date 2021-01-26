@@ -111,7 +111,6 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		idTextField.enterText("1");
 		nameTextField.enterText("Test");
 		priceTextField.enterText(" ");
-		
 		addBtn.requireDisabled();	
 	}
 	
@@ -217,7 +216,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		window.textBox("priceTextField").enterText("1");
 		window.comboBox("repetitionDropDown").selectItem("Monthly");
 		window.button(JButtonMatcher.withName("addBtn")).click();
-		verify(controller).addSubscription(new Subscription("1", "Netflix", 1.0, "Monthly"));
+		verify(controller).addSubscription(SUBSCRIPTION_FIXTURE);
 	}
 	
 	@Test

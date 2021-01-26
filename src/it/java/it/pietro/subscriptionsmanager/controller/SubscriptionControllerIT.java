@@ -32,7 +32,7 @@ public class SubscriptionControllerIT {
 	private static final String DB_NAME = "subscriptionsmanager";
 	private static final String DB_COLLECTION = "subscriptions";
 	
-	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Month");
+	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Monthly");
 	
 	@Before
 	public void setUp() {
