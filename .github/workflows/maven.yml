@@ -23,19 +23,19 @@ jobs:
     - name: Cache Maven packages
       uses: actions/cache@v2
       with:
-        path: |
-            ~/.m2
-            ~/.sonar/cache
+        path: ~/.sonar/cache
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     - name: Run with Maven
-      run: mvn -f pom.xml clean verify $ACTIVE_PROFILES $ADDITIONAL_MAVEN_ARGS $COVERALLS_TOKEN
-      env:
-        ACTIVE_PROFILES: -Pjacoco,mutation-testing
-        ADDITIONAL_MAVEN_ARGS: coveralls:report sonar:sonar
-        COVERALLS_TOKEN: -DrepoToken=${{secrets.COVERALLS_TOKEN}}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: GabrielBB/xvfb-action@v1
+      with:
+        run: mvn -B -f pom.xml clean verify $ACTIVE_PROFILES $ADDITIONAL_MAVEN_ARGS $COVERALLS_TOKEN
+        env:
+            ACTIVE_PROFILES: -Pjacoco,mutation-testing
+            ADDITIONAL_MAVEN_ARGS: coveralls:report sonar:sonar
+            COVERALLS_TOKEN: -DrepoToken=${{secrets.COVERALLS_TOKEN}}
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
   build-on-pr-merge:
     if: startsWith(github.event.head_commit.message, 'Merge pull request')
@@ -57,9 +57,7 @@ jobs:
     - name: Cache Maven packages
       uses: actions/cache@v2
       with:
-        path: |
-            ~/.m2
-            ~/.sonar/cache
+        path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     - name: Build with Maven
