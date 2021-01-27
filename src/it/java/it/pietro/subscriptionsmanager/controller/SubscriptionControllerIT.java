@@ -12,7 +12,6 @@ import org.mockito.MockitoAnnotations;
 import org.testcontainers.containers.MongoDBContainer;
 
 import com.mongodb.MongoClient;
-
 import com.mongodb.ServerAddress;
 
 import it.pietro.subscriptionsmanager.model.Subscription;
@@ -33,7 +32,7 @@ public class SubscriptionControllerIT {
 	private static final String DB_NAME = "subscriptionsmanager";
 	private static final String DB_COLLECTION = "subscriptions";
 	
-	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Month");
+	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Monthly");
 	
 	@Before
 	public void setUp() {
@@ -70,5 +69,4 @@ public class SubscriptionControllerIT {
 		verify(view)
 			.subscriptionRemoved(SUBSCRIPTION_FIXTURE);
 	}
-
 }

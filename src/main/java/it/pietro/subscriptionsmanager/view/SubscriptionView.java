@@ -7,10 +7,11 @@ public interface SubscriptionView {
 	
 	void showAllSubscriptions(List<Subscription> subs);
 	
-	void showError(String message, Subscription sub);
+	void showSubscriptionAlreadyExistsError(Subscription sub);
+	
+	void showNonExistingSubscritptionError(Subscription sub);
 	
 	void subscriptionAdded(Subscription sub);
 	
 	void subscriptionRemoved(Subscription sub);
-	
 }

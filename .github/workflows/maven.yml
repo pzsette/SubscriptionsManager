@@ -23,19 +23,27 @@ jobs:
     - name: Cache Maven packages
       uses: actions/cache@v2
       with:
-        path: |
-            ~/.m2
-            ~/.sonar/cache
+        path: ~/.sonar/cache
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     - name: Run with Maven
-      run: mvn -f pom.xml clean verify $ACTIVE_PROFILES $ADDITIONAL_MAVEN_ARGS $COVERALLS_TOKEN
+      run: |
+          xvfb-run --server-args="-screen 0, 1280x720x24" -a \
+          mvn -B -f pom.xml clean verify \
+          $ENABLED_PROFILES $ADDITIONAL_MAVEN_ARGS \
+          -D repoToken=$COVERALLS_TOKEN \
+          -D sonar.host.url=$SONAR_URL \
+          -D sonar.organization=$SONAR_ORGANIZATION \
+          -D sonar.projectKey=$SONAR_PROJECT
       env:
-        ACTIVE_PROFILES: -Pjacoco,mutation-testing
-        ADDITIONAL_MAVEN_ARGS: coveralls:report sonar:sonar
-        COVERALLS_TOKEN: -DrepoToken=${{secrets.COVERALLS_TOKEN}}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ENABLED_PROFILES: -P jacoco,mutation-testing
+          ADDITIONAL_MAVEN_ARGS: coveralls:report sonar:sonar
+          COVERALLS_TOKEN: ${{secrets.COVERALLS_TOKEN}}
+          SONAR_URL: https://sonarcloud.io
+          SONAR_ORGANIZATION: pzsette777
+          SONAR_PROJECT: pzsette_SubscriptionsManager
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
   build-on-pr-merge:
     if: startsWith(github.event.head_commit.message, 'Merge pull request')
@@ -57,12 +65,13 @@ jobs:
     - name: Cache Maven packages
       uses: actions/cache@v2
       with:
-        path: |
-            ~/.m2
-            ~/.sonar/cache
+        path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
+        
     - name: Build with Maven
-      run: mvn -f pom.xml -Dmaven.compiler.source=${{matrix.java}} -Dmaven.compiler.target=${{matrix.java}} clean verify $ACTIVE_PROFILES
+      run: |
+          xvfb-run --server-args="-screen 0, 1280x720x24" -a \
+          mvn -f pom.xml -Dmaven.compiler.source=${{matrix.java}} -Dmaven.compiler.target=${{matrix.java}} clean verify $ACTIVE_PROFILES
       env:
         ACTIVE_PROFILES: -Pjacoco,mutation-testing

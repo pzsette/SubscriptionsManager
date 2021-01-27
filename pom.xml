@@ -12,8 +12,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>13</maven.compiler.source>
+		<maven.compiler.target>13</maven.compiler.target>
 		
 		<junit.version>4.13.1</junit.version>
 		<mockito.version>3.5.13</mockito.version>
@@ -21,14 +21,14 @@
 		<coveralls.version>4.3.0</coveralls.version>
 		<sonar.version>3.7.0.1746</sonar.version>
 		<pit.version>1.5.2</pit.version>
-		<exec.version>3.0.0</exec.version>
 		<mongo-java-driver.version>3.12.7</mongo-java-driver.version>
 		<logback.version>1.2.3</logback.version>
 		<mongo-java-server.version>1.11.1</mongo-java-server.version>
 		<assertj.version>3.15.0</assertj.version>
-		<build-helper.version>3.0.0</build-helper.version>
+		<build-helper.version>3.2.0</build-helper.version>
 		<testcontainer.version>1.15.1</testcontainer.version>
 		<maven-failsafe.version>2.22.2</maven-failsafe.version>
+		<assertj-swing.version>3.17.1</assertj-swing.version>
 	
 		<sonar.projectKey>pzsette_SubscriptionsManager</sonar.projectKey>
 		<sonar.organization>pzsette777</sonar.organization>
@@ -42,6 +42,7 @@
 		<sonar.coverage.exclusions>
 			**/model/*.*,
 			**/App.*
+			**/view/swing/**.java
 		</sonar.coverage.exclusions>
 		
 	</properties>
@@ -93,10 +94,19 @@
 			<scope>test</scope>
 		</dependency>
 		
+		<!-- MONGODB TESTCONTAINER -->
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>mongodb</artifactId>
 			<version>${testcontainer.version}</version>
+		</dependency>
+		
+		<!-- ASSERTJ SWING -->
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-swing-junit</artifactId>
+			<version>${assertj-swing.version}</version>
+			<scope>test</scope>
 		</dependency>
 		
 	</dependencies>
@@ -135,19 +145,21 @@
 				<version>${build-helper.version}</version>
 				<executions>
 					<execution>
-						<id>add-test-source</id>
-						<phase>generate-test-sources</phase>
-						<goals>
-							<goal>add-test-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/it/java</source>
-							</sources>
-						</configuration>
+					<id>add-test-source</id>
+					<phase>generate-test-sources</phase>
+					<goals>
+						<goal>add-test-source</goal>
+					</goals>
+					<configuration>
+						<sources>
+							<source>src/it/java</source>
+							<source>src/e2e/java</source>
+						</sources>
+					</configuration>
 					</execution>
 				</executions>
-			</plugin>	
+			</plugin>
+			
 			
 			<!-- MAVEN FAILSAFE PLUGIN -->
 			<plugin>
@@ -192,10 +204,14 @@
 						<excludedClasses>
 							<param>it.pietro.subscriptionsmanager.App</param>
 							<param>it.pietro.subscriptionsmanager.model.*</param>
+							<param>it.pietro.subscriptionsmanager.view.swing.*</param>
 						</excludedClasses>
 						<targetTest>
 							<param>*Test</param>
 						</targetTest>
+						<excludedTestClasses>
+							<param>it.pietro.subscriptionsmanager.view.swing.*</param>
+						</excludedTestClasses>
 						<mutators>
 							<mutator>STRONGER</mutator>
 						</mutators>
@@ -245,28 +261,6 @@
 					<version>${sonar.version}</version>
 				</plugin>
 				
-				<!-- EXEC PLUGIN -->
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>exec-maven-plugin</artifactId>
-					<version>${exec.version}</version>
-					<executions>
-						<execution>
-							<id>run-jar-with-dependencies</id>
-							<phase>verify</phase>
-							<goals>
-								<goal>exec</goal>
-							</goals>
-							<configuration>
-								<executable>java</executable>
-								<arguments>
-									<argument>-jar</argument>
-									<argument>${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar</argument>
-								</arguments>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

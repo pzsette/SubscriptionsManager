@@ -1,4 +1,4 @@
-package it.pietro.subscriptionmanager.spending;
+package it.pietro.subscriptionsmanager.spending;
 import static org.assertj.core.api.Assertions.assertThat;
 import static java.util.Arrays.asList;
 
