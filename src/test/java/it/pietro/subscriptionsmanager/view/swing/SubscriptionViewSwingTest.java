@@ -1,4 +1,4 @@
-package it.pietro.subscrptionsmanager.view.swing;
+package it.pietro.subscriptionsmanager.view.swing;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
@@ -9,8 +9,6 @@ import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
-import org.assertj.swing.fixture.JButtonFixture;
-import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
@@ -18,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import it.pietro.subscriptionsmanager.view.swing.SubscriptionViewSwing;
 import it.pietro.subscriptionsmanager.controller.SubscriptionController;
 import it.pietro.subscriptionsmanager.model.Subscription;
 
@@ -86,32 +83,29 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	
 	@Test
 	@GUITest
-	public void testWhenIdOrNameOrPriceAreNotFilledTheAddButtonShouldBeDisabled() {
-		JButtonFixture addBtn = window.button(JButtonMatcher.withName("addBtn"));
+	public void testWhenNameIsNotFilledTheAddButtonShouldBeDisabled() {
+	  window.textBox("idTextField").enterText(" ");
+	  window.textBox("priceTextField").enterText("7.0");
+	  window.textBox("nameTextField").enterText("Test");
+	  window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
+	}
 
-		JTextComponentFixture idTextField = window.textBox("idTextField");
-		JTextComponentFixture nameTextField = window.textBox("nameTextField");
-		JTextComponentFixture priceTextField = window.textBox("priceTextField");
-		
-		idTextField.enterText("1");
-		window.textBox("priceTextField").enterText("7.0");
-		nameTextField.enterText(" ");
-		addBtn.requireDisabled();
-		
-		idTextField.enterText("");
-		nameTextField.enterText("");
-		
-		idTextField.enterText(" ");
-		nameTextField.enterText("Test");
-		addBtn.requireDisabled();
-		
-		idTextField.enterText("");
-		nameTextField.enterText("");
-		
-		idTextField.enterText("1");
-		nameTextField.enterText("Test");
-		priceTextField.enterText(" ");
-		addBtn.requireDisabled();	
+	@Test
+	@GUITest
+	public void testWheIdIsNotFilledTheAddButtonShouldBeDisabled() {
+	  window.textBox("idTextField").enterText("1");
+	  window.textBox("priceTextField").enterText(" ");
+	  window.textBox("nameTextField").enterText("Test");
+	  window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
+	}
+
+	@Test
+	@GUITest
+	public void testWhenPriceIsNotFilledTheAddButtonShouldBeDisabled() {
+	  window.textBox("idTextField").enterText("2");
+	  window.textBox("priceTextField").enterText("7.0");
+	  window.textBox("nameTextField").enterText(" ");
+	  window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
 	}
 	
 	@Test

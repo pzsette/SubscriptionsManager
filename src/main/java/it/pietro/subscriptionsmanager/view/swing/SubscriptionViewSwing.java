@@ -255,10 +255,10 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				addBtn.setEnabled(
-						!idTextField.getText().trim().isEmpty() &&
+						!priceTextField.getText().trim().isEmpty() &&
 						isDouble(priceTextField.getText().trim()) &&
 						!nameTextField.getText().trim().isEmpty() &&
-						!priceTextField.getText().trim().isEmpty());
+						!idTextField.getText().trim().isEmpty());
 			}
 		};
 		

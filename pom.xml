@@ -42,6 +42,7 @@
 		<sonar.coverage.exclusions>
 			**/model/*.*,
 			**/App.*
+			**/view/swing/**.java
 		</sonar.coverage.exclusions>
 		
 	</properties>
@@ -209,7 +210,7 @@
 							<param>*Test</param>
 						</targetTest>
 						<excludedTestClasses>
-							<param>it.pietro.subscrptionsmanager.view.swing.SubscriptionViewSwingTest</param>
+							<param>it.pietro.subscriptionsmanager.view.swing.*</param>
 						</excludedTestClasses>
 						<mutators>
 							<mutator>STRONGER</mutator>
