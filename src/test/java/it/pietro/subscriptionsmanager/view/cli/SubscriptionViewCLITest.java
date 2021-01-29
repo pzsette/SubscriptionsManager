@@ -24,8 +24,8 @@ public class SubscriptionViewCLITest {
 	
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-	private final PrintStream originalOut = System.out;
-	private final PrintStream originalErr = System.err;
+	//private final PrintStream originalOut = System.out;
+	//private final PrintStream originalErr = System.err;
 	
 	SubscriptionViewCLI cliView; 
 
@@ -35,7 +35,7 @@ public class SubscriptionViewCLITest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
-		cliView = new SubscriptionViewCLI();
+		cliView = new SubscriptionViewCLI(new PrintStream(outContent));
 		cliView.setController(controller);
 	    System.setOut(new PrintStream(outContent));
 	    System.setErr(new PrintStream(errContent));

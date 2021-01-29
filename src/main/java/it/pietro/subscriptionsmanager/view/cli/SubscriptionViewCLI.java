@@ -1,5 +1,6 @@
 package it.pietro.subscriptionsmanager.view.cli;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -15,55 +16,58 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	private SubscriptionController controller;
 	private Scanner scanner;
 	
+	private PrintStream output;
+	
 	public List<Subscription> getList() {
 		return list;
 	}
 	
-	public SubscriptionViewCLI() {
+	public SubscriptionViewCLI(PrintStream output) {
+		this.output = output;
 		list = new ArrayList<>();
 	}
 	
 	public static void main(String[] args) {
-		SubscriptionViewCLI view = new SubscriptionViewCLI();
+		SubscriptionViewCLI view = new SubscriptionViewCLI(System.out);
 		view.runView();
 	};
 
 	@Override
 	public void showAllSubscriptions(List<Subscription> subs) {
 		if (subs.size() == 0) {
-			System.out.println("No subscriptions added");
+			output.println("No subscriptions added");
 		} else {
-			System.out.println("All subscriptions:");
+			output.println("All subscriptions:");
 			for (Subscription sub : subs) {
-				System.out.println(sub.toString());
+				output.println(sub.toString());
 			}
 		}
 	}
 
 	@Override
 	public void showSubscriptionAlreadyExistsError(Subscription sub) {
-		System.out.println("Error: Already existing subscription with id "+sub.getId());
+		output.println("Error: Already existing subscription with id "+sub.getId());
 	}
 
 	@Override
 	public void showNonExistingSubscritptionError(Subscription sub) {
-		System.out.println("Error: No existing subscription with id "+sub.getId());
+		output.println("Error: No existing subscription with id "+sub.getId());
 	}
 
 	@Override
 	public void subscriptionAdded(Subscription sub) {
 		list.add(sub);
-		System.out.println(sub.toString()+" added");
+		output.println(sub.toString()+" added");
 	}
 
 	@Override
 	public void subscriptionRemoved(Subscription sub) {
 		list.remove(sub);
-		System.out.println(sub.toString()+" removed");
+		output.println(sub.toString()+" removed");
 	}
 	
 	public void showSpending() {
-		System.out.println("Total monthly spending: "+(SubscriptionSpending.computeSpending(list)));
+		output.println("Total monthly spending: "+(SubscriptionSpending.computeSpending(list)));
 	}
 	
 	public void setController(SubscriptionController controller) {
@@ -71,24 +75,24 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	}
 	
 	public void showOptions() {
-		System.out.println("1) Show all subscriptions");
-		System.out.println("2) Show total spending");
-		System.out.println("3) Add subscription");
-		System.out.println("4) Delete subscription");
-		System.out.println("5) Exit");
+		output.println("1) Show all subscriptions");
+		output.println("2) Show total spending");
+		output.println("3) Add subscription");
+		output.println("4) Delete subscription");
+		output.println("5) Exit");
 	}
 	
 	public void addSubscription() {
-		System.out.println("Insert id:");
+		output.println("Insert id:");
 		String id = scanner.nextLine();
-		System.out.println("Insert name:");
+		output.println("Insert name:");
 		String name = scanner.nextLine();
-		System.out.println("Insert price:");
+		output.println("Insert price:");
 		String price = scanner.nextLine();
-		System.out.println("Choose repetition:");
-		System.out.println("1) Weekly");
-		System.out.println("2) Monthly");
-		System.out.println("3) Annual");
+		output.println("Choose repetition:");
+		output.println("1) Weekly");
+		output.println("2) Monthly");
+		output.println("3) Annual");
 		int repetitionChoose = Integer.parseInt(scanner.nextLine());
 		String repetition;
 		switch (repetitionChoose) {
@@ -102,16 +106,16 @@ public class SubscriptionViewCLI implements SubscriptionView {
 			repetition = "Annual";
 			break;
 		default:
-			System.out.println("Invalid digit");
+			output.println("Invalid digit");
 			return;
 		}
 		controller.addSubscription(new Subscription(id, name, Double.valueOf(price), repetition));
 	}
 	
 	public void deleteSubscription() {
-		System.out.println("Insert id of subscription to delete:");
+		output.println("Insert id of subscription to delete:");
 		String id = scanner.nextLine();
-		System.out.println(id);
+		output.println(id);
 		Subscription subToDelete = list
 				.stream()
 				.filter(x -> x.getId().equals(id))
@@ -122,16 +126,24 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	
 	public void runView() {
 		scanner = new Scanner(System.in);
-		System.out.println("SUBSCRIPTIONS MANAGER");
+		output.println("SUBSCRIPTIONS MANAGER");
 		boolean exit = false;
 		while (!exit) {
 			showOptions();
-			int choose;
-			System.out.print("Choose operation...");
-			try {
-			 choose = Integer.parseInt(scanner.nextLine());
-			} catch (NumberFormatException e) {
-				choose = 7;
+			int choose = 0;
+			boolean validInput = false;
+			while(!validInput) {
+				output.println("Choose operation...");
+				try {
+				 choose = Integer.parseInt(scanner.nextLine());
+				 if (choose > 0 && choose < 6) {
+					 validInput = true;
+				 } else {
+					 output.println("Input should be between 1 and 5"); 
+				 }
+				} catch (NumberFormatException e) {
+					output.println("Invalid digit");
+				}
 			}
 			switch(choose) {
 			case 1:
@@ -148,10 +160,11 @@ public class SubscriptionViewCLI implements SubscriptionView {
 				break;
 			case 5:
 				exit = true;
+				break;
 			default:
-				System.out.println("Invalid digit");
+				break;
 			}
 		}
-		System.out.print("Goodbye!");
+		output.print("Goodbye!");
 	}
 }
