@@ -43,32 +43,23 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	@Override
 	public void showSubscriptionAlreadyExistsError(Subscription sub) {
 		System.out.println("Error: Already existing subscription with id "+sub.getId());
-
 	}
 
 	@Override
 	public void showNonExistingSubscritptionError(Subscription sub) {
-		try(Scanner sc = new Scanner(System.in)){
-			int a= sc.nextInt();
-			if (a==1) {
-				System.out.println("Hai scelto 1");
-			} else {
-				System.out.print("Non hai scelto 1");
-			}
-		}
+		System.out.println("Error: No existing subscription with id "+sub.getId());
 	}
 
 	@Override
 	public void subscriptionAdded(Subscription sub) {
 		list.add(sub);
-		System.out.println("Subscription "+sub.toString()+" added");
-
+		System.out.println(sub.toString()+" added");
 	}
 
 	@Override
 	public void subscriptionRemoved(Subscription sub) {
 		list.remove(sub);
-		System.out.println("Subscription "+sub.toString()+" removed");
+		System.out.println(sub.toString()+" removed");
 	}
 	
 	public void showSpending() {
@@ -84,6 +75,7 @@ public class SubscriptionViewCLI implements SubscriptionView {
 		System.out.println("2) Show total spending");
 		System.out.println("3) Add subscription");
 		System.out.println("4) Delete subscription");
+		System.out.println("5) Exit");
 	}
 	
 	public void addSubscription() {
@@ -131,24 +123,35 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	public void runView() {
 		scanner = new Scanner(System.in);
 		System.out.println("SUBSCRIPTIONS MANAGER");
-		showOptions();
-		System.out.print("Choose operation...");
-		int choose = Integer.parseInt(scanner.nextLine());
-		switch(choose) {
-		case 1:
-			showAllSubscriptions(list);
-			break;
-		case 2:
-			showSpending();
-			break;
-		case 3:	
-			addSubscription();
-			break;
-		case 4:
-			deleteSubscription();
-			break;
-		default:
-			System.out.println("Invalid digit");
+		boolean exit = false;
+		while (!exit) {
+			showOptions();
+			int choose;
+			System.out.print("Choose operation...");
+			try {
+			 choose = Integer.parseInt(scanner.nextLine());
+			} catch (NumberFormatException e) {
+				choose = 7;
+			}
+			switch(choose) {
+			case 1:
+				showAllSubscriptions(list);
+				break;
+			case 2:
+				showSpending();
+				break;
+			case 3:	
+				addSubscription();
+				break;
+			case 4:
+				deleteSubscription();
+				break;
+			case 5:
+				exit = true;
+			default:
+				System.out.println("Invalid digit");
+			}
 		}
+		System.out.print("Goodbye!");
 	}
 }

@@ -44,36 +44,52 @@ public class SubscriptionViewCLITest {
 	@Test
 	public void testShowAllSubscriptions() {
 		cliView.showAllSubscriptions(asList(SUBSCRIPTION_FIXTURE,SUBSCRIPTION_FIXTURE2));
+		String input = "1\n5";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		assertThat(outContent.toString())
-			.isEqualTo("All subscriptions:\n"+SUBSCRIPTION_FIXTURE.toString()+"\n"+SUBSCRIPTION_FIXTURE2.toString()+"\n");
+			.contains("All subscriptions:\n"+SUBSCRIPTION_FIXTURE.toString()+"\n"+SUBSCRIPTION_FIXTURE2.toString()+"\n");
 	}
 	
 	@Test
 	public void testShowAllSubscriptionWhenThereAreNoSubsAdded() {
-		cliView.showAllSubscriptions(Collections.emptyList());
+		String input = "1\n5";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
 		assertThat(outContent.toString())
-			.isEqualTo("No subscriptions added\n");
+			.contains("No subscriptions added\n");
 	}
 	
 	@Test
-	public void testSpendingWhenThereAreNoSubAdded() {
-		cliView.showSpending();
+	public void testShowSpendingWhenThereAreNoSubAdded() {
+		String input = "2\n5";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
 		assertThat(outContent.toString())
-			.isEqualTo("Total monthly spending: 0.0\n");
+			.contains("Total monthly spending: 0.0\n");
 	}
 	
 	@Test
 	public void testSpendindWhenThereAreSubsAdded() {
 		cliView.getList().add(SUBSCRIPTION_FIXTURE);
 		cliView.getList().add(SUBSCRIPTION_FIXTURE2);
-		cliView.showSpending();
+		String input = "2\n5";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
 		assertThat(outContent.toString())
-			.isEqualTo("Total monthly spending: 5.0\n");
+			.contains("Total monthly spending: 5.0\n");
+	}
+	
+	@Test
+	public void testExit() {
+		String input = "5";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
+		assertThat(outContent.toString()).contains("Goodbye!");
 	}
 	
 	@Test
 	public void testAddSubscriptionShouldDelegateToController() {
-		String input = "3\n1\nNetflix\n1.0\n2\n";
+		String input = "3\n1\nNetflix\n1.0\n2\n5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		verify(controller).addSubscription(SUBSCRIPTION_FIXTURE);
@@ -82,9 +98,37 @@ public class SubscriptionViewCLITest {
 	@Test
 	public void testDeleteSubscriptionShouldDelegateToController() {
 		cliView.getList().add(SUBSCRIPTION_FIXTURE);
-		String input = "4\n1";
+		String input = "4\n1\n5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		verify(controller).deleteSubscription(SUBSCRIPTION_FIXTURE);
+	}
+	
+	@Test
+	public void testshowSubscriptionAlreadyExistsError() {
+		cliView.showSubscriptionAlreadyExistsError(SUBSCRIPTION_FIXTURE);
+		assertThat(outContent.toString())
+			.isEqualTo("Error: Already existing subscription with id 1\n");
+	}
+	
+	@Test
+	public void testshowNonExistingSubscritptionError() {
+		cliView.showNonExistingSubscritptionError(SUBSCRIPTION_FIXTURE);
+		assertThat(outContent.toString())
+			.isEqualTo("Error: No existing subscription with id 1\n");	
+	}
+	
+	@Test
+	public void testSubscriptionAdded() {
+		cliView.subscriptionAdded(SUBSCRIPTION_FIXTURE);
+		assertThat(outContent.toString())
+			.isEqualTo("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] added\n");	
+	}
+	
+	@Test
+	public void testSubscriptionRemoved() {
+		cliView.subscriptionRemoved(SUBSCRIPTION_FIXTURE);
+		assertThat(outContent.toString())
+			.isEqualTo("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] removed\n");		
 	}
 }
