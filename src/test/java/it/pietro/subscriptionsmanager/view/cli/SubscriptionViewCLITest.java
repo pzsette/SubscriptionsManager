@@ -31,7 +31,7 @@ public class SubscriptionViewCLITest {
 
 	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Monthly");
 	private static final Subscription SUBSCRIPTION_FIXTURE2 = new Subscription("2", "Test", 1.0, "Weekly");
-	
+	 
 	@Before
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);

@@ -62,5 +62,44 @@ public class SubscriptionViewCLIIT {
 			.hasToString("All subscriptions:\n"+SUBSCRIPTION_FIXTURE.toString()+"\n"+SUBSCRIPTION_FIXTURE2.toString()+"\n");
 	}
 	
+	@Test
+	public void testAddSubscriptionSucces() {
+		String input = "3\n1\nNetflix\n1.0\n2\n5\n";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
+		assertThat(outContent.toString())
+			.contains("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] added");
+	}
+	
+	@Test
+	public void testAddSubscriptionError() {
+		repository.save(SUBSCRIPTION_FIXTURE);
+		String input = "3\n1\nTestFail\n1.0\n2\n5\n";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
+		assertThat(outContent.toString())
+			.contains("Error: Already existing subscription with id 1");
+	}
+	
+	@Test
+	public void testRemoveSubscriptionSucces() {
+		controller.addSubscription(SUBSCRIPTION_FIXTURE);
+		String input = "4\n1\n5";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
+		assertThat(outContent.toString())
+			.contains("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] removed");	
+	}
+	
+	@Test
+	public void testRemoveSubscriptionError() {
+		cliView.getList().add(SUBSCRIPTION_FIXTURE);
+		String input = "4\n1\n5";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
+		assertThat(outContent.toString())
+			.contains("Error: No existing subscription with id 1");	
+	}
+	
 	
 }
