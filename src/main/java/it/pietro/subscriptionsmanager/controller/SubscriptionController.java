@@ -28,14 +28,14 @@ public class SubscriptionController {
 		view.subscriptionAdded(sub);
 	}
 	
-	public void deleteSubscription(Subscription sub) {
-		Subscription subInDB = repository.findById(sub.getId());
+	public void deleteSubscription(String id) {
+		Subscription subInDB = repository.findById(id);
 		if (subInDB == null) {
-			view.showNonExistingSubscritptionError(sub);
+			view.showNonExistingSubscritptionError(id);
 			return;
 		}
-		repository.delete(sub.getId());
-		view.subscriptionRemoved(sub);
+		repository.delete(id);
+		view.subscriptionRemoved(subInDB);
 	}
 
 }

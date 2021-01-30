@@ -81,7 +81,6 @@ public class SubscriptionViewCLITest {
 			.contains("Input should be between 1 and 4");
 	}*/
 	
-	
 	@Test
 	public void testSpendindWhenThereAreSubsAdded() {
 		cliView.getList().add(SUBSCRIPTION_FIXTURE);
@@ -115,7 +114,7 @@ public class SubscriptionViewCLITest {
 		String input = "4\n1\n5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
-		verify(controller).deleteSubscription(SUBSCRIPTION_FIXTURE);
+		verify(controller).deleteSubscription(SUBSCRIPTION_FIXTURE.getId());
 	}
 	
 	@Test
@@ -127,7 +126,7 @@ public class SubscriptionViewCLITest {
 	
 	@Test
 	public void testshowNonExistingSubscritptionError() {
-		cliView.showNonExistingSubscritptionError(SUBSCRIPTION_FIXTURE);
+		cliView.showNonExistingSubscritptionError("1");
 		assertThat(outContent.toString())
 			.isEqualTo("Error: No existing subscription with id 1\n");	
 	}

@@ -65,7 +65,7 @@ public class SubscriptionControllerIT {
 	@Test
 	public void testDeleteSubscription() {
 		repository.save(SUBSCRIPTION_FIXTURE);
-		controller.deleteSubscription(SUBSCRIPTION_FIXTURE);
+		controller.deleteSubscription(SUBSCRIPTION_FIXTURE.getId());
 		verify(view)
 			.subscriptionRemoved(SUBSCRIPTION_FIXTURE);
 	}

@@ -28,10 +28,10 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	}
 
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		SubscriptionViewCLI view = new SubscriptionViewCLI( System.out);
 		view.runView();
-	};
+	};*/
 
 	@Override
 	public void showAllSubscriptions(List<Subscription> subs) {
@@ -51,8 +51,8 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	}
 
 	@Override
-	public void showNonExistingSubscritptionError(Subscription sub) {
-		output.println("Error: No existing subscription with id "+sub.getId());
+	public void showNonExistingSubscritptionError(String id) {
+		output.println("Error: No existing subscription with id "+id);
 	}
 
 	@Override
@@ -150,16 +150,10 @@ public class SubscriptionViewCLI implements SubscriptionView {
 		return choice;
 	}
 	
-	public void deleteSubscription() {
+	private void deleteSubscription() {
 		output.println("Insert id of subscription to delete:");
 		String id = scanner.nextLine();
-		output.println(id);
-		Subscription subToDelete = list
-				.stream()
-				.filter(x -> x.getId().equals(id))
-				.findFirst()
-				.get();
-		controller.deleteSubscription(subToDelete);
+		controller.deleteSubscription(id);
 	}
 	
 	public void runView() {

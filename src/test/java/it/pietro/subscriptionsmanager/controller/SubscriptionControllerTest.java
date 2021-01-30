@@ -65,7 +65,7 @@ public class SubscriptionControllerTest {
 	public void testDeleteSubscriptionWhenSubscritpionExists() {
 		when(repository.findById(SUBSCRIPTION_FIXTURE.getId()))
 			.thenReturn(SUBSCRIPTION_FIXTURE);
-		controller.deleteSubscription(SUBSCRIPTION_FIXTURE);
+		controller.deleteSubscription(SUBSCRIPTION_FIXTURE.getId());
 		InOrder inorder = inOrder(repository, view);
 		inorder.verify(repository).delete(SUBSCRIPTION_FIXTURE.getId());
 		inorder.verify(view).subscriptionRemoved(SUBSCRIPTION_FIXTURE);
@@ -75,9 +75,9 @@ public class SubscriptionControllerTest {
 	public void testDeleteSubscriptionWhenSubscriptionDoesNotExist() {
 		when(repository.findById(SUBSCRIPTION_FIXTURE.getId()))
 			.thenReturn(null);
-		controller.deleteSubscription(SUBSCRIPTION_FIXTURE);
+		controller.deleteSubscription(SUBSCRIPTION_FIXTURE.getId());
 		verify(view)
-			.showNonExistingSubscritptionError(SUBSCRIPTION_FIXTURE);
+			.showNonExistingSubscritptionError(SUBSCRIPTION_FIXTURE.getId());
 		verifyNoMoreInteractions(ignoreStubs(repository));
 	}
 }

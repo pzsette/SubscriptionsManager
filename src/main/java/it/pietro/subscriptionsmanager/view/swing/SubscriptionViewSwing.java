@@ -58,7 +58,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -70,7 +70,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the frame.
@@ -280,7 +280,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		});
 		
 		deleteBtn.addActionListener(e -> {
-			controller.deleteSubscription(listSubscriptions.getSelectedValue());
+			controller.deleteSubscription(listSubscriptions.getSelectedValue().getId());
 		});
 		
 		listSubscriptions.addListSelectionListener(new ListSelectionListener() {
@@ -316,8 +316,8 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 	}
 	
 	@Override
-	public void showNonExistingSubscritptionError(Subscription sub) {
-		errorLbl.setText("Error: No existing subscription with id "+sub.getId());
+	public void showNonExistingSubscritptionError(String id) {
+		errorLbl.setText("Error: No existing subscription with id "+id);
 	}
 	
 	private void updateAmountLabel() {
