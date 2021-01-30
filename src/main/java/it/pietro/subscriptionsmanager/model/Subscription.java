@@ -49,7 +49,7 @@ public class Subscription {
 	
 	@Override
 	public String toString() {
-		return "Subscription [id= "+id+", name= "+name+", price= "+price+", reptition= "+repetition+"]";
+		return "Subscription [id= "+id+", name= "+name+", price= "+price+", repetition= "+repetition+"]";
 	}
 	
 	@Override

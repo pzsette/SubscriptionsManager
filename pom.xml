@@ -205,12 +205,14 @@
 							<param>it.pietro.subscriptionsmanager.App</param>
 							<param>it.pietro.subscriptionsmanager.model.*</param>
 							<param>it.pietro.subscriptionsmanager.view.swing.*</param>
+							<param>it.pietro.subscriptionsmanager.view.cli.*</param>
 						</excludedClasses>
 						<targetTest>
 							<param>*Test</param>
 						</targetTest>
 						<excludedTestClasses>
 							<param>it.pietro.subscriptionsmanager.view.swing.*</param>
+							<param>it.pietro.subscriptionsmanager.view.cli.*</param>
 						</excludedTestClasses>
 						<mutators>
 							<mutator>STRONGER</mutator>

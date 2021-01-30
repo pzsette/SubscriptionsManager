@@ -259,7 +259,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 			public void keyReleased(KeyEvent e) {
 				addBtn.setEnabled(
 						!priceTextField.getText().trim().isEmpty() &&
-						isDouble(priceTextField.getText().trim()) &&
+						isPositiveDouble(priceTextField.getText().trim()) &&
 						!nameTextField.getText().trim().isEmpty() &&
 						!idTextField.getText().trim().isEmpty());
 			}
@@ -280,7 +280,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		});
 		
 		deleteBtn.addActionListener(e -> {
-			controller.deleteSubscription(listSubscriptions.getSelectedValue());
+			controller.deleteSubscription(listSubscriptions.getSelectedValue().getId());
 		});
 		
 		listSubscriptions.addListSelectionListener(new ListSelectionListener() {
@@ -316,8 +316,8 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 	}
 	
 	@Override
-	public void showNonExistingSubscritptionError(Subscription sub) {
-		errorLbl.setText("Error: No existing subscription with id "+sub.getId());
+	public void showNonExistingSubscritptionError(String id) {
+		errorLbl.setText("Error: No existing subscription with id "+id);
 	}
 	
 	private void updateAmountLabel() {
@@ -328,10 +328,13 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		this.controller = controller;
 	}
 	
-	private boolean isDouble(String value) {
+	private boolean isPositiveDouble(String value) {
 		try {
-			Double.parseDouble(value);
-			return true;
+			if (Double.parseDouble(value) > 0) {
+				return true;
+			} else {
+				return false;
+			}
 		} catch (NumberFormatException e) {
 			return false;
 		}

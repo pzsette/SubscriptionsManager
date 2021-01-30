@@ -9,7 +9,7 @@ public interface SubscriptionView {
 	
 	void showSubscriptionAlreadyExistsError(Subscription sub);
 	
-	void showNonExistingSubscritptionError(Subscription sub);
+	void showNonExistingSubscritptionError(String id);
 	
 	void subscriptionAdded(Subscription sub);
 	

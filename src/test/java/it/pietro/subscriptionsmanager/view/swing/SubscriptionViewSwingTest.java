@@ -142,10 +142,10 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	@GUITest
 	public void testErrorForNoExistingSubscription() {
 		GuiActionRunner.execute(
-				() -> swingView.showNonExistingSubscritptionError(SUBSCRIPTION_FIXTURE)
+				() -> swingView.showNonExistingSubscritptionError("1")
 		);
 		window.label("errorLbl")
-			.requireText("Error: No existing subscription with id "+SUBSCRIPTION_FIXTURE.getId());
+			.requireText("Error: No existing subscription with id 1");
 	}
 	
 	@Test
@@ -220,6 +220,6 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 				() -> swingView.getListSubscriptionModel().addElement(SUBSCRIPTION_FIXTURE));
 		window.list("subscriptionList").selectItem(0);
 		window.button(JButtonMatcher.withName("deleteBtn")).click();
-		verify(controller).deleteSubscription(SUBSCRIPTION_FIXTURE);
+		verify(controller).deleteSubscription(SUBSCRIPTION_FIXTURE.getId()); 
 	}
 }
