@@ -19,12 +19,9 @@ import javax.swing.JComboBox;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import it.pietro.subscriptionsmanager.model.Subscription;
 import it.pietro.subscriptionsmanager.view.SubscriptionView;
@@ -54,23 +51,6 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 	public CustomListModel<Subscription> getListSubscriptionModel() {
 		return listSubscriptionsModel;
 	}
-
-	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SubscriptionViewSwing frame = new SubscriptionViewSwing();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					Logger.getLogger(getClass().getName())
-						.log(Level.SEVERE, "Exception", e);
-				}
-			}
-		});
-	}*/
 
 	/**
 	 * Create the frame.

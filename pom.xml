@@ -29,6 +29,7 @@
 		<testcontainer.version>1.15.1</testcontainer.version>
 		<maven-failsafe.version>2.22.2</maven-failsafe.version>
 		<assertj-swing.version>3.17.1</assertj-swing.version>
+		<picocli.version>4.5.2</picocli.version>
 	
 		<sonar.projectKey>pzsette_SubscriptionsManager</sonar.projectKey>
 		<sonar.organization>pzsette777</sonar.organization>
@@ -108,6 +109,13 @@
 			<version>${assertj-swing.version}</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- PICOCLI -->
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>${picocli.version}</version>
+        </dependency>
 		
 	</dependencies>
 	
