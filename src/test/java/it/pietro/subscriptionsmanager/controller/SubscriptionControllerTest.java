@@ -33,7 +33,7 @@ public class SubscriptionControllerTest {
 	public void setUp() throws Exception {
 		MockitoAnnotations.openMocks(this);
 	}
-
+ 
 	@Test
 	public void testAllSubscriptionsRetrieval() {
 		List<Subscription> subscriptions = Collections.singletonList(SUBSCRIPTION_FIXTURE);

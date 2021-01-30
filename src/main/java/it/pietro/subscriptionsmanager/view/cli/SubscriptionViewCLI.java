@@ -26,9 +26,10 @@ public class SubscriptionViewCLI implements SubscriptionView {
 		this.output = output;
 		list = new ArrayList<>();
 	}
+
 	
 	public static void main(String[] args) {
-		SubscriptionViewCLI view = new SubscriptionViewCLI(System.out);
+		SubscriptionViewCLI view = new SubscriptionViewCLI( System.out);
 		view.runView();
 	};
 
@@ -74,7 +75,7 @@ public class SubscriptionViewCLI implements SubscriptionView {
 		this.controller = controller;
 	}
 	
-	public void showOptions() {
+	private void showOptions() {
 		output.println("1) Show all subscriptions");
 		output.println("2) Show total spending");
 		output.println("3) Add subscription");
@@ -82,20 +83,25 @@ public class SubscriptionViewCLI implements SubscriptionView {
 		output.println("5) Exit");
 	}
 	
-	public void addSubscription() {
+	private void addSubscription() {
 		output.println("Insert id:");
 		String id = scanner.nextLine();
 		output.println("Insert name:");
 		String name = scanner.nextLine();
 		output.println("Insert price:");
-		String price = scanner.nextLine();
+		Double price = forceDoubleChoice();
+		String repetition = chooseRepetition();
+		controller.addSubscription(new Subscription(id, name, price, repetition));
+	}
+	
+	private String chooseRepetition() {
 		output.println("Choose repetition:");
 		output.println("1) Weekly");
 		output.println("2) Monthly");
 		output.println("3) Annual");
-		int repetitionChoose = Integer.parseInt(scanner.nextLine());
-		String repetition;
-		switch (repetitionChoose) {
+		int choice = forceDigitChoice(1, 3);
+		String repetition = null;
+		switch (choice) {
 		case 1:
 			repetition = "Weekly";
 			break;
@@ -106,10 +112,42 @@ public class SubscriptionViewCLI implements SubscriptionView {
 			repetition = "Annual";
 			break;
 		default:
-			output.println("Invalid digit");
-			return;
+			break;	
 		}
-		controller.addSubscription(new Subscription(id, name, Double.valueOf(price), repetition));
+		return repetition;
+	}
+	
+	private int forceDigitChoice(int low, int high) {
+		int choice = 0;
+		boolean validInput = false;
+		while(!validInput) {
+			try {
+				choice = Integer.parseInt(scanner.nextLine());
+				if (choice >= low && choice <= high) {
+					validInput = true;
+				} else {
+					output.println("Input should be between "+low+" and "+high);
+				}
+			} catch (NumberFormatException e) {
+				output.println("Invalid digit");
+			}
+		}
+		return choice;
+	}
+	
+	private double forceDoubleChoice() {
+		Double choice = 0.0;
+		boolean validInput = false;
+		while(!validInput) {
+			String input = scanner.nextLine();
+			if (isPositiveDouble(input)) {
+				choice = Double.parseDouble(input);
+				validInput = true;
+			} else {
+				System.out.println("Input should be a positive double");
+			}
+		}
+		return choice;
 	}
 	
 	public void deleteSubscription() {
@@ -130,22 +168,8 @@ public class SubscriptionViewCLI implements SubscriptionView {
 		boolean exit = false;
 		while (!exit) {
 			showOptions();
-			int choose = 0;
-			boolean validInput = false;
-			while(!validInput) {
-				output.println("Choose operation...");
-				try {
-				 choose = Integer.parseInt(scanner.nextLine());
-				 if (choose > 0 && choose < 6) {
-					 validInput = true;
-				 } else {
-					 output.println("Input should be between 1 and 5"); 
-				 }
-				} catch (NumberFormatException e) {
-					output.println("Invalid digit");
-				}
-			}
-			switch(choose) {
+			int choice = forceDigitChoice(1, 5);
+			switch(choice) {
 			case 1:
 				showAllSubscriptions(list);
 				break;
@@ -167,4 +191,17 @@ public class SubscriptionViewCLI implements SubscriptionView {
 		}
 		output.print("Goodbye!");
 	}
+	
+	private boolean isPositiveDouble(String value) {
+		try {
+			if(Double.parseDouble(value) > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+	
 }

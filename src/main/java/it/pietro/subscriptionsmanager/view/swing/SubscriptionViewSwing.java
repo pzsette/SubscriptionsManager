@@ -259,7 +259,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 			public void keyReleased(KeyEvent e) {
 				addBtn.setEnabled(
 						!priceTextField.getText().trim().isEmpty() &&
-						isDouble(priceTextField.getText().trim()) &&
+						isPositiveDouble(priceTextField.getText().trim()) &&
 						!nameTextField.getText().trim().isEmpty() &&
 						!idTextField.getText().trim().isEmpty());
 			}
@@ -328,10 +328,13 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		this.controller = controller;
 	}
 	
-	private boolean isDouble(String value) {
+	private boolean isPositiveDouble(String value) {
 		try {
-			Double.parseDouble(value);
-			return true;
+			if (Double.parseDouble(value) > 0) {
+				return true;
+			} else {
+				return false;
+			}
 		} catch (NumberFormatException e) {
 			return false;
 		}

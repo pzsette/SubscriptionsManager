@@ -6,7 +6,6 @@ import static java.util.Arrays.asList;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Collections;
 
 import static org.mockito.Mockito.*;
 import org.junit.Before;
@@ -23,9 +22,6 @@ public class SubscriptionViewCLITest {
 	private SubscriptionController controller;
 	
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-	private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-	//private final PrintStream originalOut = System.out;
-	//private final PrintStream originalErr = System.err;
 	
 	SubscriptionViewCLI cliView; 
 
@@ -38,7 +34,6 @@ public class SubscriptionViewCLITest {
 		cliView = new SubscriptionViewCLI(new PrintStream(outContent));
 		cliView.setController(controller);
 	    System.setOut(new PrintStream(outContent));
-	    System.setErr(new PrintStream(errContent));
 	}
 
 	@Test
@@ -67,6 +62,25 @@ public class SubscriptionViewCLITest {
 		assertThat(outContent.toString())
 			.contains("Total monthly spending: 0.0\n");
 	}
+	
+	/*@Test
+	public void testForceDigitChoiceShouldPrintErrorWhenInvalidDigitIsTyped() {
+		String input = "eee";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.forceDigitChoice(1, 4);
+		assertThat(outContent.toString())
+			.contains("Invalid digit");
+	}
+	
+	@Test
+	public void testForceDigitChoiceShouldPrintErrorWhenInvalidIntegerIsTyped() {
+		String input = "eee";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.forceDigitChoice(1, 4);
+		assertThat(outContent.toString())
+			.contains("Input should be between 1 and 4");
+	}*/
+	
 	
 	@Test
 	public void testSpendindWhenThereAreSubsAdded() {
@@ -119,7 +133,7 @@ public class SubscriptionViewCLITest {
 	}
 	
 	@Test
-	public void testSubscriptionAdded() {
+	public void testMonthlySubscriptionAdded() {
 		cliView.subscriptionAdded(SUBSCRIPTION_FIXTURE);
 		assertThat(outContent.toString())
 			.isEqualTo("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] added\n");	
