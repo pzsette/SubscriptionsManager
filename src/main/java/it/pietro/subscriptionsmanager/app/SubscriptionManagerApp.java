@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.mongodb.ServerAddress;
-import com.mongodb.client.MongoClients;
 import com.mongodb.MongoClient;
 
 import it.pietro.subscriptionsmanager.controller.SubscriptionController;
@@ -16,7 +15,6 @@ import it.pietro.subscriptionsmanager.view.swing.SubscriptionViewSwing;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-
 
 public class SubscriptionManagerApp implements Callable<Void>  {
 	
