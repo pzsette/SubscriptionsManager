@@ -6,8 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.mongodb.ServerAddress;
-import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.MongoClient;
 
 import it.pietro.subscriptionsmanager.controller.SubscriptionController;
 import it.pietro.subscriptionsmanager.repository.mongo.SubscriptionMongoRepository;
@@ -36,8 +36,7 @@ public class SubscriptionManagerApp implements Callable<Void>  {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		
-
+		new CommandLine(new SubscriptionManagerApp()).execute(args);
 	}
 
 	@Override
@@ -45,11 +44,13 @@ public class SubscriptionManagerApp implements Callable<Void>  {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MongoClient client = MongoClients(new ServerAddress(mongoHost, mongoPort));
+					MongoClient client = new MongoClient(new ServerAddress(mongoHost, mongoPort));
 					SubscriptionMongoRepository repository = new SubscriptionMongoRepository(client, databaseName, collectionName);
-					SubscriptionViewSwing frame = new SubscriptionViewSwing();
-					SubscriptionController controller = new SubscriptionController(repository, frame);
-					frame.setVisible(true);
+					SubscriptionViewSwing swingView = new SubscriptionViewSwing();
+					SubscriptionController controller = new SubscriptionController(repository, swingView);
+					swingView.setController(controller);
+					swingView.setVisible(true);
+					controller.allSubscriptions();
 				} catch (Exception e) {
 					Logger.getLogger(getClass().getName())
 						.log(Level.SEVERE, "Exception", e);
