@@ -203,32 +203,6 @@
 		
 		<pluginManagement>
 			<plugins>
-				<!-- PIT PLUGIN -->	
-				<plugin>
-					<groupId>org.pitest</groupId>
-					<artifactId>pitest-maven</artifactId>
-					<version>${pit.version}</version>
-					<configuration>
-						<excludedClasses>
-							<param>it.pietro.subscriptionsmanager.App</param>
-							<param>it.pietro.subscriptionsmanager.model.*</param>
-							<param>it.pietro.subscriptionsmanager.view.swing.*</param>
-							<param>it.pietro.subscriptionsmanager.view.cli.*</param>
-						</excludedClasses>
-						<targetTest>
-							<param>*Test</param>
-						</targetTest>
-						<excludedTestClasses>
-							<param>it.pietro.subscriptionsmanager.view.swing.*</param>
-							<param>it.pietro.subscriptionsmanager.view.cli.*</param>
-						</excludedTestClasses>
-						<mutators>
-							<mutator>STRONGER</mutator>
-						</mutators>
-						<mutationThreshold>90</mutationThreshold>
-					</configuration>
-				</plugin>
-				
 				<!-- JACOCO PLUGIN -->
 				<plugin>
 					<groupId>org.jacoco</groupId>
@@ -237,7 +211,7 @@
 					<configuration>
 						<excludes>
 							<exclude>**/model/*.*</exclude>
-							<exclude>**/subscriptionsmanager/*.class</exclude>
+							<exclude>**/app/SubscriptionManagerApp.*</exclude>
 						</excludes>
 					</configuration>
  					<executions>
@@ -248,6 +222,32 @@
 							</goals>  
 						</execution>
 					</executions>
+				</plugin>
+				
+				<!-- PIT PLUGIN -->	
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<version>${pit.version}</version>
+					<configuration>
+						<excludedClasses>
+							<param>it.pietro.subscriptionsmanager.app.*</param>
+							<param>it.pietro.subscriptionsmanager.model.*</param>
+							<param>it.pietro.subscriptionsmanager.view.swing.*</param>
+							<param>it.pietro.subscriptionsmanager.view.cli.*</param>
+						</excludedClasses>
+						<targetTests>
+							<param>*Test</param>
+						</targetTests>
+						<excludedTestClasses>
+							<param>it.pietro.subscriptionsmanager.view.swing.SubscriptionViewSwingTest</param>
+							<param>it.pietro.subscriptionsmanager.view.cli.SubscriptionViewCLITest</param>
+						</excludedTestClasses>
+						<mutators>
+							<mutator>STRONGER</mutator>
+						</mutators>
+						<mutationThreshold>90</mutationThreshold>
+					</configuration>
 				</plugin>
 				
 				<!-- COVERALLS PLUGIN -->

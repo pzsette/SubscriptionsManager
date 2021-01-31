@@ -1,9 +1,8 @@
 package it.pietro.subscriptionsmanager.app;
 
-import static org.junit.Assert.*;
-
 import javax.swing.JFrame;
 
+import java.util.regex.Pattern;
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.core.matcher.JButtonMatcher;
@@ -23,6 +22,7 @@ import org.testcontainers.containers.MongoDBContainer;
 
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.model.Filters;
 
 import it.pietro.subscriptionsmanager.model.Subscription;
 
@@ -96,7 +96,7 @@ public class SubscriptionManagerAppSwingE2E extends AssertJSwingJUnitTestCase {
 		window.textBox("nameTextField").enterText("TestSub");
 		window.textBox("priceTextField").enterText("12");
 		window.comboBox("repetitionDropDown").selectItem("Annual");
-		window.button(JButtonMatcher.withName("addBtn")).click();
+		window.button(JButtonMatcher.withText("Add subscription")).click();
 		assertThat(window.list().contents())
 			.anySatisfy(e -> assertThat(e).contains("3", "TestSub", "12", "Annual"));
 		window.label(JLabelMatcher.withName("amountTextLabel")).requireText("18.0");
@@ -108,18 +108,29 @@ public class SubscriptionManagerAppSwingE2E extends AssertJSwingJUnitTestCase {
 		window.textBox("nameTextField").enterText("TestSub");
 		window.textBox("priceTextField").enterText("12");
 		window.comboBox("repetitionDropDown").selectItem("Annual");
-		window.button(JButtonMatcher.withName("addBtn")).click();
+		window.button(JButtonMatcher.withText("Add subscription")).click();
 		assertThat(window.label("errorLbl").text())
-			.contains("Error: Already existing subscription with id 1");	
+			.contains(SUBSCRIPTION_FIXTURE.getId());	
 	}
 	
 	@Test @GUITest
 	public void testRemoveButtonSucces() {
-		window.list().selectItem(1);
-		window.button("deleteBtn").click();
+		window.list()
+			.selectItem(1);
+		window.button(JButtonMatcher.withText("Delete selected")).click();
 		assertThat(window.list().contents())
 			.noneMatch(e -> e.contains(SUBSCRIPTION_FIXTURE2.getName()));
 		window.label(JLabelMatcher.withName("amountTextLabel")).requireText("1.0");
+	}
+	
+	@Test @GUITest
+	public void testRemoveButtonError() {
+		window.list("subscriptionList")
+			.selectItem(Pattern.compile(".*" + SUBSCRIPTION_FIXTURE2.getName() + ".*"));
+		removeSubFromDatabase(SUBSCRIPTION_FIXTURE2.getId());
+		window.button(JButtonMatcher.withText("Delete selected")).click();
+		assertThat(window.label("errorLbl").text())
+			.contains(SUBSCRIPTION_FIXTURE2.getId());
 	}
 	
 	private void addTestSubToDatabase(Subscription sub) {
@@ -131,6 +142,13 @@ public class SubscriptionManagerAppSwingE2E extends AssertJSwingJUnitTestCase {
 				.append("name", sub.getName())
 				.append("price", sub.getPrice())
 				.append("repetition", sub.getRepetition()));
+	}
+	
+	private void removeSubFromDatabase(String id) {
+		client
+			.getDatabase(DB_NAME)
+			.getCollection(DB_COLLECTION)
+			.deleteOne(Filters.eq("id", id));	
 	}
 
 }

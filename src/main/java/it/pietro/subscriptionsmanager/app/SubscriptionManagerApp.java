@@ -13,7 +13,6 @@ import it.pietro.subscriptionsmanager.repository.mongo.SubscriptionMongoReposito
 import it.pietro.subscriptionsmanager.view.swing.SubscriptionViewSwing;
 
 import picocli.CommandLine;
-import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 public class SubscriptionManagerApp implements Callable<Void>  {
