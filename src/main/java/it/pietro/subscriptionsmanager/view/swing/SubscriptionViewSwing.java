@@ -272,7 +272,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 	}
 
 	@Override
-	public void showAllSubscriptions(List<Subscription> subs) {
+	public void loadAllSubscriptions(List<Subscription> subs) {
 		subs.stream().forEach(listSubscriptionsModel::addElement);
 		updateAmountLabel();
 	}

@@ -130,9 +130,9 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	
 	@Test
 	@GUITest
-	public void testShowAllSubscriptionsShouldAddSubsDescriptionToTheList() {
+	public void testLoadAllSubscriptionsShouldAddSubsDescriptionToTheList() {
 		GuiActionRunner.execute(() -> 
-			swingView.showAllSubscriptions(asList(SUBSCRIPTION_FIXTURE,SUBSCRIPTION_FIXTURE2)));
+			swingView.loadAllSubscriptions(asList(SUBSCRIPTION_FIXTURE,SUBSCRIPTION_FIXTURE2)));
 		String[] listContents = window.list().contents();
 		assertThat(listContents)
 			.containsExactly(SUBSCRIPTION_FIXTURE.toString(),SUBSCRIPTION_FIXTURE2.toString());

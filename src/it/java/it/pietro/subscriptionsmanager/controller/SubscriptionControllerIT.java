@@ -52,7 +52,7 @@ public class SubscriptionControllerIT {
 	public void testAllSubscriptions() {
 		repository.save(SUBSCRIPTION_FIXTURE);
 		controller.allSubscriptions();
-		verify(view).showAllSubscriptions(asList(SUBSCRIPTION_FIXTURE));
+		verify(view).loadAllSubscriptions(asList(SUBSCRIPTION_FIXTURE));
 	}
 	
 	@Test

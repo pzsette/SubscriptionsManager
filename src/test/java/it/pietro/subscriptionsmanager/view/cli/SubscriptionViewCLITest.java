@@ -37,16 +37,27 @@ public class SubscriptionViewCLITest {
 	}
 
 	@Test
-	public void testShowAllSubscriptions() {
-		cliView.showAllSubscriptions(asList(SUBSCRIPTION_FIXTURE,SUBSCRIPTION_FIXTURE2));
+	public void testLoadAllSubscriptions() {
+		cliView.loadAllSubscriptions(asList(SUBSCRIPTION_FIXTURE,SUBSCRIPTION_FIXTURE2));
 		String input = "1\n5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		assertThat(cliView.getList())
+			.containsExactly(SUBSCRIPTION_FIXTURE,SUBSCRIPTION_FIXTURE2);
+	}
+	
+	@Test
+	public void testShowSubscriptions() {
+		cliView.getList().add(SUBSCRIPTION_FIXTURE);
+		cliView.getList().add(SUBSCRIPTION_FIXTURE2);
+		String input = "1\n5";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
 		assertThat(outContent.toString())
 			.contains("All subscriptions:\n"+SUBSCRIPTION_FIXTURE.toString()+"\n"+SUBSCRIPTION_FIXTURE2.toString()+"\n");
 	}
 	
 	@Test
-	public void testShowAllSubscriptionWhenThereAreNoSubsAdded() {
+	public void testShowSubscriptionWhenThereAreNoSubsAdded() {
 		String input = "1\n5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
