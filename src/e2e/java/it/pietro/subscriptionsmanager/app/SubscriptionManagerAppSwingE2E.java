@@ -54,7 +54,8 @@ public class SubscriptionManagerAppSwingE2E extends AssertJSwingJUnitTestCase {
 					"--mongo-host=" + containerIpAddress,
 					"--mongo-port=" + mappedPort.toString(),
 					"--db-name=" + DB_NAME,
-					"--db-collection=" + DB_COLLECTION
+					"--db-collection=" + DB_COLLECTION,
+					"--ui=gui"
 			)
 			.start();
 		

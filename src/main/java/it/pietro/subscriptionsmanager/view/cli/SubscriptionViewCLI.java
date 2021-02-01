@@ -27,14 +27,9 @@ public class SubscriptionViewCLI implements SubscriptionView {
 		list = new ArrayList<>();
 	}
 
-	
-	/*public static void main(String[] args) {
-		SubscriptionViewCLI view = new SubscriptionViewCLI( System.out);
-		view.runView();
-	};*/
-
 	@Override
 	public void showAllSubscriptions(List<Subscription> subs) {
+		list = subs;
 		if (subs.size() == 0) {
 			output.println("No subscriptions added");
 		} else {

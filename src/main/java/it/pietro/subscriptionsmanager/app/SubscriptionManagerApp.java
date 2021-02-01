@@ -10,12 +10,20 @@ import com.mongodb.MongoClient;
 
 import it.pietro.subscriptionsmanager.controller.SubscriptionController;
 import it.pietro.subscriptionsmanager.repository.mongo.SubscriptionMongoRepository;
+import it.pietro.subscriptionsmanager.view.cli.SubscriptionViewCLI;
 import it.pietro.subscriptionsmanager.view.swing.SubscriptionViewSwing;
 
 import picocli.CommandLine;
+import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
+@Command(mixinStandardHelpOptions = true)
 public class SubscriptionManagerApp implements Callable<Void>  {
+	
+	enum uiOptions {
+		gui,
+		cli
+	}
 	
 	@Option(names = { "--mongo-host" }, description = "MongoDB host address")
 	private String mongoHost = "localhost";
@@ -29,6 +37,9 @@ public class SubscriptionManagerApp implements Callable<Void>  {
 	@Option(names = { "--db-collection" }, description = "Collection name")
 	private String collectionName = "subscriptions";
 	
+	@Option(names = { "--ui" }, description = "User interfaces options: ${COMPLETION-CANDIDATES}")
+	uiOptions ui = uiOptions.gui;	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -38,20 +49,26 @@ public class SubscriptionManagerApp implements Callable<Void>  {
 
 	@Override
 	public Void call() throws Exception {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MongoClient client = new MongoClient(new ServerAddress(mongoHost, mongoPort));
-					SubscriptionMongoRepository repository = new SubscriptionMongoRepository(client, databaseName, collectionName);
+		EventQueue.invokeLater(() -> {
+			try {
+				MongoClient client = new MongoClient(new ServerAddress(mongoHost, mongoPort));
+				SubscriptionMongoRepository repository = new SubscriptionMongoRepository(client, databaseName, collectionName);
+				
+				if (ui.equals(uiOptions.gui)) {
 					SubscriptionViewSwing swingView = new SubscriptionViewSwing();
 					SubscriptionController controller = new SubscriptionController(repository, swingView);
 					swingView.setController(controller);
 					swingView.setVisible(true);
 					controller.allSubscriptions();
-				} catch (Exception e) {
-					Logger.getLogger(getClass().getName())
-						.log(Level.SEVERE, "Exception", e);
+				} else if (ui.equals(uiOptions.cli)) {
+					SubscriptionViewCLI cliView = new SubscriptionViewCLI(System.out);
+					SubscriptionController controller = new SubscriptionController(repository, cliView);
+					controller.allSubscriptions();
+					cliView.runView();
 				}
+			} catch (Exception e) {
+				Logger.getLogger(getClass().getName())
+					.log(Level.SEVERE, "Exception", e);
 			}
 		});
 		return null;

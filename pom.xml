@@ -246,7 +246,7 @@
 						<mutators>
 							<mutator>STRONGER</mutator>
 						</mutators>
-						<mutationThreshold>90</mutationThreshold>
+						<mutationThreshold>95</mutationThreshold>
 					</configuration>
 				</plugin>
 				
