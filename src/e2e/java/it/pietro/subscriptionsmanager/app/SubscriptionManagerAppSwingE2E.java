@@ -88,7 +88,6 @@ public class SubscriptionManagerAppSwingE2E extends AssertJSwingJUnitTestCase {
 					SUBSCRIPTION_FIXTURE2.getRepetition()
 			));
 		window.label(JLabelMatcher.withName("amountTextLabel")).requireText("17.0");
-		
 	}
 	
 	@Test @GUITest
