@@ -119,6 +119,14 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	
 	@Test
 	@GUITest
+	public void testWhenNegativeDoubleIsUsedAsPriceAddButtonShouldBeDisabled() {
+		window.textBox("idTextField").enterText("1");
+		window.textBox("nameTextField").enterText("test");
+		window.textBox("priceTextField").enterText("-7.0");
+	}
+	
+	@Test
+	@GUITest
 	public void testDeleteButtonShouldBeEnabledOnlyWhenASubscriptionIsSelected() {
 		GuiActionRunner.execute(() ->
 			swingView.getListSubscriptionModel().addElement(SUBSCRIPTION_FIXTURE));

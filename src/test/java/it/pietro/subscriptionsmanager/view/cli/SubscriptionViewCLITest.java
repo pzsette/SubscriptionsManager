@@ -6,6 +6,7 @@ import static java.util.Arrays.asList;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Scanner;
 
 import static org.mockito.Mockito.*;
 import org.junit.Before;
@@ -74,23 +75,48 @@ public class SubscriptionViewCLITest {
 			.contains("Total monthly spending: 0.0\n");
 	}
 	
-	/*@Test
+	@Test
 	public void testForceDigitChoiceShouldPrintErrorWhenInvalidDigitIsTyped() {
-		String input = "eee";
+		String input = "eee\n5\n";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.forceDigitChoice(1, 4);
+		cliView.runView();
 		assertThat(outContent.toString())
 			.contains("Invalid digit");
 	}
 	
 	@Test
 	public void testForceDigitChoiceShouldPrintErrorWhenInvalidIntegerIsTyped() {
-		String input = "eee";
+		String input = "8\n5\n";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.forceDigitChoice(1, 4);
+		cliView.runView();
 		assertThat(outContent.toString())
-			.contains("Input should be between 1 and 4");
-	}*/
+			.contains("Input should be between 1 and 5");
+	}
+	
+	@Test
+	public void testForceDoubleChoiceShouldPrintErrorWhenInputIsANegativeDouble() {
+		String input = "3\n1\ntest\n-7\n1\n1\n5";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
+		assertThat(outContent.toString())
+			.contains("Input should be a positive double");		
+	}
+	
+	@Test
+	public void testForceDoubleChoiceShouldPrintErrorWhenInputCanNotBeParsedAsDouble() {
+		String input = "3\n1\ntest\nNotADouble\n1\n1\n5";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
+		assertThat(outContent.toString())
+			.contains("Input should be a positive double");	
+	}
+	
+	@Test public void testChooseRepetitionMethodAssignsCorrectValue() {
+		String input = "3\n1\ntest\n1\n3\n5\n";
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
+		verify(controller).addSubscription(new Subscription("1", "test", 1.0, "Annual"));
+	}
 	
 	@Test
 	public void testSpendindWhenThereAreSubsAdded() {

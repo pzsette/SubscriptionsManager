@@ -63,6 +63,7 @@ public class SubscriptionManagerApp implements Callable<Void>  {
 				} else if (ui.equals(uiOptions.cli)) {
 					SubscriptionViewCLI cliView = new SubscriptionViewCLI(System.out);
 					SubscriptionController controller = new SubscriptionController(repository, cliView);
+					cliView.setController(controller);
 					controller.allSubscriptions();
 					cliView.runView();
 				}

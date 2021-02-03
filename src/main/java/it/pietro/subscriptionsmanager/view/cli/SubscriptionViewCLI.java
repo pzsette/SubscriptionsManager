@@ -30,14 +30,6 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	@Override
 	public void loadAllSubscriptions(List<Subscription> subs) {
 		listSubscriptions = subs;
-		if (subs.size() == 0) {
-			output.println("No subscriptions added");
-		} else {
-			output.println("All subscriptions:");
-			for (Subscription sub : subs) {
-				output.println(sub.toString());
-			}
-		}
 	}
 
 	@Override

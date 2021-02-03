@@ -5,19 +5,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
-import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import org.assertj.swing.annotation.GUITest;
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Test;
 import org.testcontainers.containers.MongoDBContainer;
 
 import com.mongodb.MongoClient;
@@ -51,21 +48,23 @@ public class SubscriptionManagerAppCLIE2E {
 		addTestSubToDatabase(SUBSCRIPTION_FIXTURE);
 		addTestSubToDatabase(SUBSCRIPTION_FIXTURE2);
 		ProcessBuilder pBuilder = new ProcessBuilder(
-							"java",
-							"-jar",
-							"./target/subscriptionsmanager-0.0.1-SNAPSHOT-jar-with-dependencies.jar",
+							"java", "-jar", "./target/subscriptionsmanager-0.0.1-SNAPSHOT-jar-with-dependencies.jar",
+							"--mongo-host="+containerIpAddress, 
+							"--mongo-port"+mappedPort.toString(),
+							"--db-name="+DB_NAME,
+							"--db-collection="+DB_COLLECTION,
 							"--ui=cli");
-		//pBuilder.redirectErrorStream(true);
+		
 		Process process = pBuilder.start();
+		System.out.println("Eccoolo");
 		
         reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         
-        //System.out.println(reader.readLine());
+        System.out.println(reader.readLine());
 		String line = null;
 		boolean initFinished = false;
 		while (((line = reader.readLine()) != null) & !initFinished) {
-			System.out.println("ProcessOut: " + line);
 			if (line.contains("Exit")) {
 				initFinished = true;
 				return;
@@ -78,11 +77,12 @@ public class SubscriptionManagerAppCLIE2E {
 		client.close();
 	}
 	
-	@Test @GUITest
+	/*@Test @GUITest
 	public void testOnStartAllDatabaseElementsAreLoaded() throws Exception {
+		System.out.println("FIRST");
 
-		writer.write("1\n5");
-		writer.flush();
+		writer.write("1\n5\n");
+		//writer.flush();
 		writer.close();
 		
 		StringBuilder builder = new StringBuilder();
@@ -90,9 +90,11 @@ public class SubscriptionManagerAppCLIE2E {
 		while ( (line = reader.readLine()) != null) {
 			builder.append(line);
 		}
+		System.out.println("E2E");
 		System.out.println(builder.toString());
-		assertThat(builder.toString()).contains("Exit");
-	}
+		System.out.println("E3E");
+		assertThat(builder.toString()).contains("Netflix");
+	}*/
 	
 	private void addTestSubToDatabase(Subscription sub) {
 		client
