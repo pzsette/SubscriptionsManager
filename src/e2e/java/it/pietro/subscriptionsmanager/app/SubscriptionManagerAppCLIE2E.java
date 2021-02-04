@@ -58,7 +58,6 @@ public class SubscriptionManagerAppCLIE2E {
 		
 		Process process = pBuilder.start();
 		
-		
         reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         
@@ -94,6 +93,76 @@ public class SubscriptionManagerAppCLIE2E {
 		assertThat(result[2]).contains("Test", "4.0", "Weekly");
 	}
 	
+	@Test
+	public void testAddSubscriptionSucces() throws Exception {
+		
+		writer.write("3\n3\nTestSub\n12\n3\n1\n2\n5");
+		writer.flush();
+		writer.close();
+		
+		StringBuilder builder = new StringBuilder();
+		String line = "";
+		while ( (line = reader.readLine()) != null ) {
+			builder.append(line+System.lineSeparator());
+		}
+		String result = builder.toString();
+		assertThat(result)
+			.contains("TestSub", "12", "Annual")
+			.contains("Total monthly spending: 18.0");
+	}
+	
+	@Test
+	public void testAddSubscriptionError() throws Exception {
+		
+		writer.write("3\n1\nTestSub\n12\n3\n5");
+		writer.flush();
+		writer.close();
+		
+		StringBuilder builder = new StringBuilder();
+		String line = "";
+		while ( (line = reader.readLine()) != null ) {
+			builder.append(line+System.lineSeparator());
+		}
+		String result = builder.toString();
+		System.out.println(result);
+		assertThat(result)
+			.contains("Error: Already existing subscription with 1");
+	}
+	
+	@Test
+	public void testRemoveSubscriptionSucces() throws Exception {
+		
+		writer.write("4\n1\n1\n5");
+		writer.flush();
+		writer.close();
+		
+		StringBuilder builder = new StringBuilder();
+		String line = "";
+		while ( (line = reader.readLine()) != null ) {
+			builder.append(line+System.lineSeparator());
+		}
+		String result = builder.toString();
+		assertThat(result)
+			.doesNotContain("Netflix", "Monthly");
+	}
+	
+	@Test
+	public void testRemoveSubscriptionError() throws Exception {
+		
+		writer.write("4\n8\n5");
+		writer.flush();
+		writer.close();
+		
+		StringBuilder builder = new StringBuilder();
+		String line = "";
+		while ( (line = reader.readLine()) != null ) {
+			builder.append(line+System.lineSeparator());
+		}
+		String result = builder.toString();
+		assertThat(result)
+			.contains("Error: No existing subscription with id 1");
+	}
+	
 	private void addTestSubToDatabase(Subscription sub) {
 		client
 			.getDatabase(DB_NAME)
@@ -103,13 +172,6 @@ public class SubscriptionManagerAppCLIE2E {
 				.append("name", sub.getName())
 				.append("price", sub.getPrice())
 				.append("repetition", sub.getRepetition()));
-	}
-	
-	private void removeSubFromDatabase(String id) {
-		client
-			.getDatabase(DB_NAME)
-			.getCollection(DB_COLLECTION)
-			.deleteOne(Filters.eq("id", id));	
 	}
 
 }
