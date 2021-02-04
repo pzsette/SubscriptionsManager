@@ -39,11 +39,12 @@ public class SubscriptionManagerAppSwingE2E extends AssertJSwingJUnitTestCase {
 	private static final Subscription SUBSCRIPTION_FIXTURE2 = new Subscription("2", "Test", 4.0, "Weekly");
 	
 	private FrameFixture window;
+	
 	private MongoClient client;
 
 	@Override
 	protected void onSetUp() throws Exception {
-		String containerIpAddress = mongo.getContainerIpAddress();
+		String containerIpAddress = mongo.getHost();
 		Integer mappedPort = mongo.getMappedPort(27017);
 		client = new MongoClient(new ServerAddress(containerIpAddress, mappedPort));	
 		client.getDatabase(DB_NAME).drop();

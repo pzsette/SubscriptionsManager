@@ -15,6 +15,7 @@ import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.Test;
 import org.testcontainers.containers.MongoDBContainer;
 
 import com.mongodb.MongoClient;
@@ -49,19 +50,18 @@ public class SubscriptionManagerAppCLIE2E {
 		addTestSubToDatabase(SUBSCRIPTION_FIXTURE2);
 		ProcessBuilder pBuilder = new ProcessBuilder(
 							"java", "-jar", "./target/subscriptionsmanager-0.0.1-SNAPSHOT-jar-with-dependencies.jar",
-							"--mongo-host="+containerIpAddress, 
-							"--mongo-port"+mappedPort.toString(),
-							"--db-name="+DB_NAME,
-							"--db-collection="+DB_COLLECTION,
+							"--mongo-host=" + containerIpAddress, 
+							"--mongo-port=" + mappedPort.toString(),
+							"--db-name=" + DB_NAME,
+							"--db-collection=" + DB_COLLECTION,
 							"--ui=cli");
 		
 		Process process = pBuilder.start();
-		System.out.println("Eccoolo");
+		
 		
         reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         
-        System.out.println(reader.readLine());
 		String line = null;
 		boolean initFinished = false;
 		while (((line = reader.readLine()) != null) & !initFinished) {
@@ -77,24 +77,22 @@ public class SubscriptionManagerAppCLIE2E {
 		client.close();
 	}
 	
-	/*@Test @GUITest
+	@Test
 	public void testOnStartAllDatabaseElementsAreLoaded() throws Exception {
-		System.out.println("FIRST");
 
 		writer.write("1\n5\n");
-		//writer.flush();
+		writer.flush();
 		writer.close();
 		
 		StringBuilder builder = new StringBuilder();
-		String line = null;
-		while ( (line = reader.readLine()) != null) {
-			builder.append(line);
+		String line = "";
+		while ( (line = reader.readLine()) != null ) {
+			builder.append(line+System.lineSeparator());
 		}
-		System.out.println("E2E");
-		System.out.println(builder.toString());
-		System.out.println("E3E");
-		assertThat(builder.toString()).contains("Netflix");
-	}*/
+		String[] result = builder.toString().split(System.lineSeparator());
+		assertThat(result[1]).contains("Netflix", "1.0", "Monthly");
+		assertThat(result[2]).contains("Test", "4.0", "Weekly");
+	}
 	
 	private void addTestSubToDatabase(Subscription sub) {
 		client
