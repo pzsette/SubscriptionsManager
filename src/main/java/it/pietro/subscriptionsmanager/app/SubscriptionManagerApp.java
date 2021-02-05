@@ -44,6 +44,8 @@ public class SubscriptionManagerApp implements Callable<Void>  {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		//Logger logger = Logger.getLogger("org.mongodb.driver");
+		//logger.setLevel(Level.SEVERE);
 		new CommandLine(new SubscriptionManagerApp()).execute(args);
 	}
 
@@ -61,6 +63,7 @@ public class SubscriptionManagerApp implements Callable<Void>  {
 					swingView.setVisible(true);
 					controller.allSubscriptions();
 				} else if (ui.equals(uiOptions.cli)) {
+					//java.util.logging.Logger.getLogger("org.mongodb.driver").setLevel(java.util.logging.Level.OFF);
 					SubscriptionViewCLI cliView = new SubscriptionViewCLI(System.out);
 					SubscriptionController controller = new SubscriptionController(repository, cliView);
 					cliView.setController(controller);

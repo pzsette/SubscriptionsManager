@@ -6,7 +6,6 @@ import static java.util.Arrays.asList;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Scanner;
 
 import static org.mockito.Mockito.*;
 import org.junit.Before;
