@@ -30,6 +30,8 @@ public class SubscriptionManagerAppCLIE2E {
 	public static BufferedReader reader;
 	public static BufferedWriter writer;
 	
+	private static final String EOL = System.getProperty("line.separator");
+	
 	private MongoClient client;
 	
 	@Before
@@ -68,7 +70,7 @@ public class SubscriptionManagerAppCLIE2E {
 	
 	@Test
 	public void testOnStartAllDatabaseElementsAreLoaded() throws Exception {
-		String output = getOutput("1\n5\n");
+		String output = getOutput("1"+EOL+"5"+EOL+"");
 		
 		String[] splitOutput = output.split(System.lineSeparator());
 		assertThat(splitOutput[1]).contains("Netflix", "1.0", "Monthly");
@@ -77,7 +79,7 @@ public class SubscriptionManagerAppCLIE2E {
 	
 	@Test
 	public void testAddSubscriptionSucces() throws Exception {
-		String output = getOutput("3\n3\nTestSub\n12\n3\n1\n2\n5");
+		String output = getOutput("3"+EOL+"3"+EOL+"TestSub"+EOL+"12"+EOL+"3"+EOL+"1"+EOL+"2"+EOL+"5");
 		
 		assertThat(output)
 			.contains("TestSub", "12", "Annual")
@@ -86,7 +88,7 @@ public class SubscriptionManagerAppCLIE2E {
 	
 	@Test
 	public void testAddSubscriptionError() throws Exception {
-		String output = getOutput("3\n1\nTestSub\n12\n3\n5");
+		String output = getOutput("3"+EOL+"1"+EOL+"TestSub"+EOL+"12"+EOL+"3"+EOL+"5");
 		
 		assertThat(output)
 			.contains("Error: Already existing subscription with id 1");
@@ -94,7 +96,7 @@ public class SubscriptionManagerAppCLIE2E {
 	
 	@Test
 	public void testRemoveSubscriptionSucces() throws Exception {
-		String output = getOutput("4\n1\n5");
+		String output = getOutput("4"+EOL+"1"+EOL+"5");
 		
 		assertThat(output)
 			.contains("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] removed");
@@ -102,7 +104,7 @@ public class SubscriptionManagerAppCLIE2E {
 	
 	@Test
 	public void testRemoveSubscriptionError() throws Exception {
-		String output = getOutput("4\n8\n5");
+		String output = getOutput("4"+EOL+"8"+EOL+"5");
 
 		assertThat(output)
 			.contains("Error: No existing subscription with id 8");
