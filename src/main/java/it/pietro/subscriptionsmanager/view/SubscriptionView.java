@@ -5,7 +5,7 @@ import it.pietro.subscriptionsmanager.model.Subscription;
 
 public interface SubscriptionView {
 	
-	void showAllSubscriptions(List<Subscription> subs);
+	void loadAllSubscriptions(List<Subscription> subs);
 	
 	void showSubscriptionAlreadyExistsError(Subscription sub);
 	

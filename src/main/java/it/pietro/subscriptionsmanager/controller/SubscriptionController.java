@@ -15,7 +15,7 @@ public class SubscriptionController {
 	}
 	
 	public void allSubscriptions() {
-		view.showAllSubscriptions(repository.findAll());
+		view.loadAllSubscriptions(repository.findAll());
 	}
 	
 	public void addSubscription(Subscription sub) {

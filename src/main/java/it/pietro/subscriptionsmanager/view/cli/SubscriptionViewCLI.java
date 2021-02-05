@@ -12,37 +12,24 @@ import it.pietro.subscriptionsmanager.view.SubscriptionView;
 
 public class SubscriptionViewCLI implements SubscriptionView {
 	
-	private List<Subscription> list; 
+	private List<Subscription> listSubscriptions; 
 	private SubscriptionController controller;
 	private Scanner scanner;
 	
 	private PrintStream output;
 	
 	public List<Subscription> getList() {
-		return list;
+		return listSubscriptions;
 	}
 	
 	public SubscriptionViewCLI(PrintStream output) {
 		this.output = output;
-		list = new ArrayList<>();
+		listSubscriptions = new ArrayList<>();
 	}
 
-	
-	/*public static void main(String[] args) {
-		SubscriptionViewCLI view = new SubscriptionViewCLI( System.out);
-		view.runView();
-	};*/
-
 	@Override
-	public void showAllSubscriptions(List<Subscription> subs) {
-		if (subs.size() == 0) {
-			output.println("No subscriptions added");
-		} else {
-			output.println("All subscriptions:");
-			for (Subscription sub : subs) {
-				output.println(sub.toString());
-			}
-		}
+	public void loadAllSubscriptions(List<Subscription> subs) {
+		listSubscriptions = subs;
 	}
 
 	@Override
@@ -57,22 +44,29 @@ public class SubscriptionViewCLI implements SubscriptionView {
 
 	@Override
 	public void subscriptionAdded(Subscription sub) {
-		list.add(sub);
+		listSubscriptions.add(sub);
 		output.println(sub.toString()+" added");
 	}
 
 	@Override
 	public void subscriptionRemoved(Subscription sub) {
-		list.remove(sub);
+		listSubscriptions.remove(sub);
 		output.println(sub.toString()+" removed");
 	}
 	
-	public void showSpending() {
-		output.println("Total monthly spending: "+(SubscriptionSpending.computeSpending(list)));
+	private void showSubscriptions() {
+		if (listSubscriptions.isEmpty()) {
+			System.out.println("No subscriptions added");
+		} else {
+			System.out.println("All subscriptions:");
+			for (Subscription sub : listSubscriptions) {
+				System.out.println(sub.toString());
+			}
+		}
 	}
 	
-	public void setController(SubscriptionController controller) {
-		this.controller = controller;
+	private void showSpending() {
+		output.println("Total monthly spending: "+(SubscriptionSpending.computeSpending(listSubscriptions)));
 	}
 	
 	private void showOptions() {
@@ -165,7 +159,7 @@ public class SubscriptionViewCLI implements SubscriptionView {
 			int choice = forceDigitChoice(1, 5);
 			switch(choice) {
 			case 1:
-				showAllSubscriptions(list);
+				showSubscriptions();
 				break;
 			case 2:
 				showSpending();
@@ -184,6 +178,10 @@ public class SubscriptionViewCLI implements SubscriptionView {
 			}
 		}
 		output.print("Goodbye!");
+	}
+	
+	public void setController(SubscriptionController controller) {
+		this.controller = controller;
 	}
 	
 	private boolean isPositiveDouble(String value) {

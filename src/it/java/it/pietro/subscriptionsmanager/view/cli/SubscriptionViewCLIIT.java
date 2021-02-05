@@ -58,8 +58,8 @@ public class SubscriptionViewCLIIT {
 		repository.save(SUBSCRIPTION_FIXTURE);
 		repository.save(SUBSCRIPTION_FIXTURE2);
 		controller.allSubscriptions();
-		assertThat(outContent.toString())
-			.hasToString("All subscriptions:\n"+SUBSCRIPTION_FIXTURE.toString()+"\n"+SUBSCRIPTION_FIXTURE2.toString()+"\n");
+		assertThat(cliView.getList())
+			.containsExactly(SUBSCRIPTION_FIXTURE,SUBSCRIPTION_FIXTURE2);
 	}
 	
 	@Test

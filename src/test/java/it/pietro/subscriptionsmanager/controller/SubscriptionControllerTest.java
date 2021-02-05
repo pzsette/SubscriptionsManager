@@ -39,7 +39,7 @@ public class SubscriptionControllerTest {
 		List<Subscription> subscriptions = Collections.singletonList(SUBSCRIPTION_FIXTURE);
 		when(repository.findAll()).thenReturn(subscriptions);
 		controller.allSubscriptions();
-		verify(view).showAllSubscriptions(subscriptions);	
+		verify(view).loadAllSubscriptions(subscriptions);	
 	}
 	
 	@Test
