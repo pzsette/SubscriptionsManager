@@ -8,6 +8,8 @@ public class Subscription {
 	private Double price;
 	private String repetition;
 	
+	protected Subscription() {}
+	
 	public Subscription(String id, String name, Double price, String repetition) {
 		this.id = id;
 		this.name = name;
