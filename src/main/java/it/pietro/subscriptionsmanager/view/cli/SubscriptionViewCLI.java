@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import it.pietro.subscriptionsmanager.controller.SubscriptionController;
 import it.pietro.subscriptionsmanager.model.Subscription;
 import it.pietro.subscriptionsmanager.spending.SubscriptionSpending;
@@ -14,6 +17,8 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	
 	private List<Subscription> listSubscriptions; 
 	private SubscriptionController controller;
+	
+	private static final Logger LOGGER = LogManager.getLogger(SubscriptionViewCLI.class);
 	
 	private Scanner scanner;
 	private PrintStream output;
@@ -152,6 +157,7 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	
 	public void runView() {
 		scanner = new Scanner(System.in);
+		LOGGER.info("APP BY PZ7");
 		output.println("SUBSCRIPTIONS MANAGER");
 		boolean exit = false;
 		while (!exit) {
