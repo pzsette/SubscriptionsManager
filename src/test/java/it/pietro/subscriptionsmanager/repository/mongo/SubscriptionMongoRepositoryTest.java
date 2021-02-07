@@ -1,8 +1,12 @@
 package it.pietro.subscriptionsmanager.repository.mongo;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -11,6 +15,7 @@ import org.junit.Test;
 
 import com.mongodb.ServerAddress;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
@@ -30,7 +35,7 @@ public class SubscriptionMongoRepositoryTest {
 	
 	private MongoClient client;
 	private SubscriptionMongoRepository repository;
-	private MongoCollection<Document> collection;
+	private MongoCollection<Subscription> collection;
 	
 	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Month");
 	private static final Subscription SUBSCRIPTION_FIXTURE2 = new Subscription("2", "Test", 1.0, "Month");
@@ -48,11 +53,17 @@ public class SubscriptionMongoRepositoryTest {
 	
 	@Before
 	public void setup() {
+		
+		CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+				fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+		
 		client = new MongoClient(new ServerAddress(serverAddress));
 		repository = new SubscriptionMongoRepository(client, "app", "subscriptions");
 		MongoDatabase database = client.getDatabase("app");
 		database.drop();
-		collection = database.getCollection("subscriptions");
+		collection = database
+				.getCollection("subscriptions", Subscription.class)
+				.withCodecRegistry(pojoCodecRegistry);
 	}
 	
 	@After
@@ -99,22 +110,17 @@ public class SubscriptionMongoRepositoryTest {
 	public void testDelete() {
 		addTestSubscriptiontToDatabase(SUBSCRIPTION_FIXTURE);
 		repository.delete(SUBSCRIPTION_FIXTURE.getId());
-		assertThat(readAllSubscriptionFormDB()).isEmpty();
+		assertThat(collection);
 	}
 	
 	private void addTestSubscriptiontToDatabase(Subscription sub) {
-		collection.insertOne(
-				new Document()
-					.append("id", sub.getId())
-					.append("name", sub.getName())
-					.append("price", sub.getPrice())
-					.append("repetition", sub.getRepetition()));
+		collection.insertOne(sub);
 	}
 	
 	private List<Subscription> readAllSubscriptionFormDB() {
 		return StreamSupport
 				.stream(collection.find().spliterator(), false)
-				.map(d -> new Subscription(""+d.get("id"), ""+d.get("name"), (double)d.get("price"), ""+d.get("repetition")))
+				//.map(d -> new Subscription(""+d.get("id"), ""+d.get("name"), (double)d.get("price"), ""+d.get("repetition")))
 				.collect(Collectors.toList());
 	}
 

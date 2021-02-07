@@ -1,6 +1,8 @@
 package it.pietro.subscriptionsmanager.app;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,6 +10,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -15,6 +19,7 @@ import org.junit.Test;
 import org.testcontainers.containers.MongoDBContainer;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.ServerAddress;
 
 import it.pietro.subscriptionsmanager.model.Subscription;
@@ -31,6 +36,9 @@ public class SubscriptionManagerAppCLIE2E {
 	public static BufferedWriter writer;
 	
 	private MongoClient client;
+	
+	private final CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+			fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 	
 	@Before
 	public void onSetUp() throws Exception {
@@ -125,12 +133,8 @@ public class SubscriptionManagerAppCLIE2E {
 	private void addTestSubToDatabase(Subscription sub) {
 		client
 			.getDatabase(DB_NAME)
-			.getCollection(DB_COLLECTION)
-			.insertOne(new Document()
-				.append("id", sub.getId())
-				.append("name", sub.getName())
-				.append("price", sub.getPrice())
-				.append("repetition", sub.getRepetition()));
+			.getCollection(DB_COLLECTION, Subscription.class)
+			.withCodecRegistry(pojoCodecRegistry)
+			.insertOne(sub);
 	}
-
 }

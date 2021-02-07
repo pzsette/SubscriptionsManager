@@ -12,8 +12,13 @@ import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.swing.launcher.ApplicationLauncher.*;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -21,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.testcontainers.containers.MongoDBContainer;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.model.Filters;
 
@@ -37,6 +43,9 @@ public class SubscriptionManagerAppSwingE2E extends AssertJSwingJUnitTestCase {
 	
 	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Monthly");
 	private static final Subscription SUBSCRIPTION_FIXTURE2 = new Subscription("2", "Test", 4.0, "Weekly");
+	
+	private final CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+			fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 	
 	private FrameFixture window;
 	
@@ -137,19 +146,17 @@ public class SubscriptionManagerAppSwingE2E extends AssertJSwingJUnitTestCase {
 	private void addTestSubToDatabase(Subscription sub) {
 		client
 			.getDatabase(DB_NAME)
-			.getCollection(DB_COLLECTION)
-			.insertOne(new Document()
-				.append("id", sub.getId())
-				.append("name", sub.getName())
-				.append("price", sub.getPrice())
-				.append("repetition", sub.getRepetition()));
+			.getCollection(DB_COLLECTION, Subscription.class)
+			.withCodecRegistry(pojoCodecRegistry)
+			.insertOne(sub);
 	}
 	
 	private void removeSubFromDatabase(String id) {
 		client
 			.getDatabase(DB_NAME)
 			.getCollection(DB_COLLECTION)
-			.deleteOne(Filters.eq("id", id));	
+			.withCodecRegistry(pojoCodecRegistry)
+			.deleteOne(Filters.eq("_id", id));	
 	}
 
 }
