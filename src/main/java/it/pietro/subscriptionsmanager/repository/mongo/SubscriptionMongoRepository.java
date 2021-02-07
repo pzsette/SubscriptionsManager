@@ -47,7 +47,7 @@ public class SubscriptionMongoRepository implements SubscriptionRepository {
 
 	@Override
 	public Subscription findById(String id) {
-		Subscription d = collection.find(eq("id", id)).first();
+		Subscription d = collection.find(eq("_id", id)).first();
 		if (d!= null) {
 			return d;
 		}
@@ -65,7 +65,7 @@ public class SubscriptionMongoRepository implements SubscriptionRepository {
 
 	@Override
 	public void delete(String id) {
-		collection.deleteOne(Filters.eq("id", id));
+		collection.deleteOne(Filters.eq("_id", id));
 
 	}
 

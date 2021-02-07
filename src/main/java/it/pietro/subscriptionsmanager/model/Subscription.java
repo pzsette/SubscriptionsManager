@@ -2,7 +2,10 @@ package it.pietro.subscriptionsmanager.model;
 
 import java.util.Objects;
 
+import org.bson.codecs.pojo.annotations.BsonId;
+
 public class Subscription {
+	@BsonId
 	private String id;
 	private String name;
 	private Double price;
