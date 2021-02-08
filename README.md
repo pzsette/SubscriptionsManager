@@ -3,8 +3,14 @@
 ![Java CI with Maven](https://github.com/pzsette/SubscriptionsManager/workflows/Java%20CI%20with%20Maven/badge.svg) 
 
 [![Coverage Status](https://coveralls.io/repos/github/pzsette/SubscriptionsManager/badge.svg?branch=master)](https://coveralls.io/github/pzsette/SubscriptionsManager?branch=master)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=pzsette_SubscriptionsManager&metric=bugs)](https://sonarcloud.io/dashboard?id=pzsette_SubscriptionsManager)
 
 A simple Java appplication to keep track and have an overview of subcriptions and their costs. Built using test driven development (TDD) with Java and Maven. It can be used through a GUI or a CLI interface.
+
+## Screenshots
+
+<img src="screenshots/sub_gui.png" height=300/>
+<img src="screenshots/sub_cli.png" height=145/>
 
 ## Requirements
 
