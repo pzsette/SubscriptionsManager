@@ -16,6 +16,7 @@ public class SubscriptionMongoRepository implements SubscriptionRepository {
 	
 	private final MongoCollection<Document> collection;
 	
+	
 	public SubscriptionMongoRepository(MongoClient client, String dbName, String collectionName) {
 		collection = client
 				.getDatabase(dbName)

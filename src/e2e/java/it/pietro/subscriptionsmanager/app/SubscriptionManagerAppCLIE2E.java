@@ -53,14 +53,14 @@ public class SubscriptionManagerAppCLIE2E {
         reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         
-		String line = null;
+		/*String line = null;
 		boolean initFinished = false;
 		while (((line = reader.readLine()) != null) & !initFinished) {
 			if (line.contains("Exit")) {
 				initFinished = true;
 				return;
 			}
-		}
+		}*/
 	}
 
 	@After
