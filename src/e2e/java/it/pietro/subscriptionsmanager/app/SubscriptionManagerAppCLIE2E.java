@@ -12,11 +12,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.MongoDBContainer;
 
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
 import it.pietro.subscriptionsmanager.model.Subscription;
 
 public class SubscriptionManagerAppCLIE2E {
@@ -36,10 +39,12 @@ public class SubscriptionManagerAppCLIE2E {
 	
 	@Before
 	public void onSetUp() throws Exception {
+		//((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.testcontainers").setLevel(Level.OFF);
 		String containerIpAddress = mongo.getContainerIpAddress();
 		Integer mappedPort = mongo.getMappedPort(27017);
 		client = new MongoClient(new ServerAddress(containerIpAddress, mappedPort));
 		client.getDatabase(DB_NAME).drop();
+		
 		addTestSubToDatabase(new Subscription("1", "Netflix", 1.0, "Monthly"));
 		addTestSubToDatabase(new Subscription("2", "Test", 4.0, "Weekly"));
 		Process process = new ProcessBuilder(
@@ -49,7 +54,6 @@ public class SubscriptionManagerAppCLIE2E {
 							"--db-name=" + DB_NAME,
 							"--db-collection=" + DB_COLLECTION,
 							"--ui=cli").start();
-		
         reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         
@@ -71,10 +75,14 @@ public class SubscriptionManagerAppCLIE2E {
 	@Test
 	public void testOnStartAllDatabaseElementsAreLoaded() throws Exception {
 		String output = getOutput("1"+EOL+"5"+EOL+"");
+
+		System.out.println("LOL");
+		System.out.println(output);
+		System.out.println("LOL2");
 		
-		String[] splitOutput = output.split(System.lineSeparator());
-		assertThat(splitOutput[1]).contains("Netflix", "1.0", "Monthly");
-		assertThat(splitOutput[2]).contains("Test", "4.0", "Weekly");
+		assertThat(output)
+			.contains("Netflix", "1.0", "Monthly")
+			.contains("Test", "4.0", "Weekly");
 	}
 	
 	@Test

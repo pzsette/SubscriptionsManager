@@ -87,8 +87,8 @@ public class SubscriptionManagerApp implements Callable<Void>  {
 	}
 	
 	private static void disableMongoJavaLogs() {
-		Logger logger = loggerCtx.getLogger("org.mongodb.driver");
-		logger.setLevel(Level.ERROR);
+		Logger loggerMongoJava = loggerCtx.getLogger("org.mongodb.driver");
+		loggerMongoJava.setLevel(Level.ERROR);
 	}
 
 }
