@@ -39,7 +39,6 @@ public class SubscriptionManagerAppCLIE2E {
 	
 	@Before
 	public void onSetUp() throws Exception {
-		//((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.testcontainers").setLevel(Level.OFF);
 		String containerIpAddress = mongo.getContainerIpAddress();
 		Integer mappedPort = mongo.getMappedPort(27017);
 		client = new MongoClient(new ServerAddress(containerIpAddress, mappedPort));
