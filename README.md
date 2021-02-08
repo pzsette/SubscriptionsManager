@@ -22,3 +22,22 @@ Argument | Description
 --db-collection | Collection name. Default value: `subscriptions`
 --ui  | User interfaces options (`gui`, `cli`). Default value: `gui`
 
+## Test
+
+You can run all the tests for this app cloning the repo and executig the command: 
+
+`mvn clean verify`
+
+## Run the app
+
+Before using the app run MongoDB in a container, specifing port, with the command:
+
+`docker run -p 27017:27017 --rm mongo:4.2.3`
+
+The build the JAR package through the command 
+
+`comand per JAR` or alteratively you can download the JAR directly from here
+
+Start the app with
+
+`Java -jar -target/subscriptionsmanager-0.0.1-SNAPSHOT-jar-with-dependencies.jar [arguments]` 
