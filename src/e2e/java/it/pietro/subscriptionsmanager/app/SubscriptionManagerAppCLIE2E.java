@@ -16,6 +16,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
+
 import org.testcontainers.containers.MongoDBContainer;
 
 import com.mongodb.MongoClient;
@@ -48,6 +49,7 @@ public class SubscriptionManagerAppCLIE2E {
 		Integer mappedPort = mongo.getMappedPort(27017);
 		client = new MongoClient(new ServerAddress(containerIpAddress, mappedPort));
 		client.getDatabase(DB_NAME).drop();
+		
 		addTestSubToDatabase(new Subscription("1", "Netflix", 1.0, "Monthly"));
 		addTestSubToDatabase(new Subscription("2", "Test", 4.0, "Weekly"));
 		Process process = new ProcessBuilder(
@@ -57,18 +59,8 @@ public class SubscriptionManagerAppCLIE2E {
 							"--db-name=" + DB_NAME,
 							"--db-collection=" + DB_COLLECTION,
 							"--ui=cli").start();
-		
         reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-        
-		String line = null;
-		boolean initFinished = false;
-		while (((line = reader.readLine()) != null) & !initFinished) {
-			if (line.contains("Exit")) {
-				initFinished = true;
-				return;
-			}
-		}
 	}
 
 	@After
@@ -79,10 +71,9 @@ public class SubscriptionManagerAppCLIE2E {
 	@Test
 	public void testOnStartAllDatabaseElementsAreLoaded() throws Exception {
 		String output = getOutput("1"+EOL+"5"+EOL+"");
-		
-		String[] splitOutput = output.split(System.lineSeparator());
-		assertThat(splitOutput[1]).contains("Netflix", "1.0", "Monthly");
-		assertThat(splitOutput[2]).contains("Test", "4.0", "Weekly");
+		assertThat(output)
+			.contains("Netflix", "1.0", "Monthly")
+			.contains("Test", "4.0", "Weekly");
 	}
 	
 	@Test

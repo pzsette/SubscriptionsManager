@@ -25,6 +25,7 @@ public class SubscriptionMongoRepository implements SubscriptionRepository {
 	
 	private final MongoCollection<Subscription> collection;
 	
+	
 	public SubscriptionMongoRepository(MongoClient client, String dbName, String collectionName) {
 		
 		CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),

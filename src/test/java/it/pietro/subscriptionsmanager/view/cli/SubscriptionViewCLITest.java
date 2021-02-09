@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import static org.mockito.Mockito.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -35,7 +36,6 @@ public class SubscriptionViewCLITest {
 		MockitoAnnotations.openMocks(this);
 		cliView = new SubscriptionViewCLI(new PrintStream(outContent));
 		cliView.setController(controller);
-	    System.setOut(new PrintStream(outContent));
 	}
 
 	@Test

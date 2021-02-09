@@ -2,8 +2,15 @@ package it.pietro.subscriptionsmanager.app;
 
 import java.awt.EventQueue;
 import java.util.concurrent.Callable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+//import org.apache.logging.log4j.LogManager;
+//import org.apache.logging.log4j.Logger;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+
+import org.slf4j.LoggerFactory;
 
 import com.mongodb.ServerAddress;
 import com.mongodb.MongoClient;
@@ -19,6 +26,9 @@ import picocli.CommandLine.Option;
 
 @Command(mixinStandardHelpOptions = true)
 public class SubscriptionManagerApp implements Callable<Void>  {
+	
+	private static LoggerContext loggerCtx = (LoggerContext) LoggerFactory.getILoggerFactory();
+	private static final Logger logger = loggerCtx.getLogger(SubscriptionManagerApp.class);
 	
 	enum uiOptions {
 		gui,
@@ -44,8 +54,7 @@ public class SubscriptionManagerApp implements Callable<Void>  {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		//Logger logger = Logger.getLogger("org.mongodb.driver");
-		//logger.setLevel(Level.SEVERE);
+		disableMongoJavaLogs();
 		new CommandLine(new SubscriptionManagerApp()).execute(args);
 	}
 
@@ -63,7 +72,7 @@ public class SubscriptionManagerApp implements Callable<Void>  {
 					swingView.setVisible(true);
 					controller.allSubscriptions();
 				} else if (ui.equals(uiOptions.cli)) {
-					//java.util.logging.Logger.getLogger("org.mongodb.driver").setLevel(java.util.logging.Level.OFF);
+					
 					SubscriptionViewCLI cliView = new SubscriptionViewCLI(System.out);
 					SubscriptionController controller = new SubscriptionController(repository, cliView);
 					cliView.setController(controller);
@@ -71,11 +80,15 @@ public class SubscriptionManagerApp implements Callable<Void>  {
 					cliView.runView();
 				}
 			} catch (Exception e) {
-				Logger.getLogger(getClass().getName())
-					.log(Level.SEVERE, "Exception", e);
+				logger.debug("Caught Exception: %s", e.getMessage());
 			}
 		});
 		return null;
+	}
+	
+	private static void disableMongoJavaLogs() {
+		Logger loggerMongoJava = loggerCtx.getLogger("org.mongodb.driver");
+		loggerMongoJava.setLevel(Level.ERROR);
 	}
 
 }

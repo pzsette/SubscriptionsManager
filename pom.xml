@@ -30,6 +30,7 @@
 		<maven-failsafe.version>2.22.2</maven-failsafe.version>
 		<assertj-swing.version>3.17.1</assertj-swing.version>
 		<picocli.version>4.5.2</picocli.version>
+		<log4j.version>2.13.3</log4j.version>
 	
 		<sonar.projectKey>pzsette_SubscriptionsManager</sonar.projectKey>
 		<sonar.organization>pzsette777</sonar.organization>
@@ -115,6 +116,18 @@
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
             <version>${picocli.version}</version>
+        </dependency>
+        
+        <!-- LOG4J -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
         </dependency>
 		
 	</dependencies>
@@ -326,7 +339,7 @@
 		
 		<!-- PIT PROFILE -->
 		<profile>
-			<id>mutation-testing</id>
+			<id>pit-mutation</id>
 			<build>
 				<plugins>
 					<plugin>
