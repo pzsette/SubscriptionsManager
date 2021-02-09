@@ -31,6 +31,7 @@
 		<assertj-swing.version>3.17.1</assertj-swing.version>
 		<picocli.version>4.5.2</picocli.version>
 		<log4j.version>2.13.3</log4j.version>
+		<sonarqube.version>3.7.0.1746</sonarqube.version>
 	
 		<sonar.projectKey>pzsette_SubscriptionsManager</sonar.projectKey>
 		<sonar.organization>pzsette777</sonar.organization>
@@ -273,6 +274,13 @@
 					<groupId>org.sonarsource.scanner.maven</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
 					<version>${sonar.version}</version>
+				</plugin>
+				
+				<!-- SONAR PLUGIN -->
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>${sonarqube.version}</version>
 				</plugin>
 				
 			</plugins>
