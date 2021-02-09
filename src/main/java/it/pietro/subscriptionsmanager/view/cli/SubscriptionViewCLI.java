@@ -14,8 +14,8 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	
 	private List<Subscription> listSubscriptions; 
 	private SubscriptionController controller;
-	private Scanner scanner;
 	
+	private Scanner scanner;
 	private PrintStream output;
 	
 	public List<Subscription> getList() {

@@ -36,6 +36,8 @@ public class SubscriptionViewCLIIT {
 	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Monthly");
 	private static final Subscription SUBSCRIPTION_FIXTURE2 = new Subscription("2", "Test", 1.0, "Monthly");
 	
+	private static final String EOL = System.getProperty("line.separator");
+	
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	
 	@Before
@@ -64,7 +66,7 @@ public class SubscriptionViewCLIIT {
 	
 	@Test
 	public void testAddSubscriptionSucces() {
-		String input = "3\n1\nNetflix\n1.0\n2\n5\n";
+		String input = "3"+EOL+"1"+EOL+"Netflix"+EOL+"1.0"+EOL+"2"+EOL+"5"+EOL+"";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
@@ -74,7 +76,7 @@ public class SubscriptionViewCLIIT {
 	@Test
 	public void testAddSubscriptionError() {
 		repository.save(SUBSCRIPTION_FIXTURE);
-		String input = "3\n1\nTestFail\n1.0\n2\n5\n";
+		String input = "3"+EOL+"1"+EOL+"TestFail"+EOL+"1.0"+EOL+"2"+EOL+"5"+EOL;
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
@@ -84,7 +86,7 @@ public class SubscriptionViewCLIIT {
 	@Test
 	public void testRemoveSubscriptionSucces() {
 		controller.addSubscription(SUBSCRIPTION_FIXTURE);
-		String input = "4\n1\n5";
+		String input = "4"+EOL+"1"+EOL+"5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
@@ -94,7 +96,7 @@ public class SubscriptionViewCLIIT {
 	@Test
 	public void testRemoveSubscriptionError() {
 		cliView.getList().add(SUBSCRIPTION_FIXTURE);
-		String input = "4\n1\n5";
+		String input = "4"+EOL+"1"+EOL+"5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())

@@ -23,6 +23,8 @@ public class SubscriptionViewCLITest {
 	
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	
+	private static final String EOL = System.getProperty("line.separator");
+	
 	SubscriptionViewCLI cliView; 
 
 	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Monthly");
@@ -39,7 +41,7 @@ public class SubscriptionViewCLITest {
 	@Test
 	public void testLoadAllSubscriptions() {
 		cliView.loadAllSubscriptions(asList(SUBSCRIPTION_FIXTURE,SUBSCRIPTION_FIXTURE2));
-		String input = "1\n5";
+		String input = "1"+EOL+"5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		assertThat(cliView.getList())
 			.containsExactly(SUBSCRIPTION_FIXTURE,SUBSCRIPTION_FIXTURE2);
@@ -49,34 +51,34 @@ public class SubscriptionViewCLITest {
 	public void testShowSubscriptions() {
 		cliView.getList().add(SUBSCRIPTION_FIXTURE);
 		cliView.getList().add(SUBSCRIPTION_FIXTURE2);
-		String input = "1\n5";
+		String input = "1"+EOL+"5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
-			.contains("All subscriptions:\n"+SUBSCRIPTION_FIXTURE.toString()+"\n"+SUBSCRIPTION_FIXTURE2.toString()+"\n");
+			.contains("All subscriptions:"+EOL+""+SUBSCRIPTION_FIXTURE.toString()+""+EOL+""+SUBSCRIPTION_FIXTURE2.toString()+""+EOL);
 	}
 	
 	@Test
 	public void testShowSubscriptionWhenThereAreNoSubsAdded() {
-		String input = "1\n5";
+		String input = "1"+EOL+"5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
-			.contains("No subscriptions added\n");
+			.contains("No subscriptions added"+EOL);
 	}
 	
 	@Test
 	public void testShowSpendingWhenThereAreNoSubAdded() {
-		String input = "2\n5";
+		String input = "2"+EOL+"5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
-			.contains("Total monthly spending: 0.0\n");
+			.contains("Total monthly spending: 0.0"+EOL);
 	}
 	
 	@Test
 	public void testForceDigitChoiceShouldPrintErrorWhenInvalidDigitIsTyped() {
-		String input = "eee\n5\n";
+		String input = "eee"+EOL+"5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
@@ -85,7 +87,7 @@ public class SubscriptionViewCLITest {
 	
 	@Test
 	public void testForceDigitChoiceShouldPrintErrorWhenInvalidIntegerIsTyped() {
-		String input = "8\n5\n";
+		String input = "8"+EOL+"5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
@@ -94,7 +96,7 @@ public class SubscriptionViewCLITest {
 	
 	@Test
 	public void testForceDoubleChoiceShouldPrintErrorWhenInputIsANegativeDouble() {
-		String input = "3\n1\ntest\n-7\n1\n1\n5";
+		String input = "3"+EOL+"1"+EOL+"test"+EOL+"-7"+EOL+"1"+EOL+"1"+EOL+"5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
@@ -103,7 +105,7 @@ public class SubscriptionViewCLITest {
 	
 	@Test
 	public void testForceDoubleChoiceShouldPrintErrorWhenInputCanNotBeParsedAsDouble() {
-		String input = "3\n1\ntest\nNotADouble\n1\n1\n5";
+		String input = "3"+EOL+"1"+EOL+"test"+EOL+"NotADouble"+EOL+"1"+EOL+"1"+EOL+"5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
@@ -111,7 +113,7 @@ public class SubscriptionViewCLITest {
 	}
 	
 	@Test public void testChooseRepetitionMethodAssignsCorrectValue() {
-		String input = "3\n1\ntest\n1\n3\n5\n";
+		String input = "3"+EOL+"1"+EOL+"test"+EOL+"1"+EOL+"3"+EOL+"5"+EOL;
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		verify(controller).addSubscription(new Subscription("1", "test", 1.0, "Annual"));
@@ -121,11 +123,11 @@ public class SubscriptionViewCLITest {
 	public void testSpendindWhenThereAreSubsAdded() {
 		cliView.getList().add(SUBSCRIPTION_FIXTURE);
 		cliView.getList().add(SUBSCRIPTION_FIXTURE2);
-		String input = "2\n5";
+		String input = "2"+EOL+"5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
-			.contains("Total monthly spending: 5.0\n");
+			.contains("Total monthly spending: 5.0"+EOL);
 	}
 	
 	@Test
@@ -138,7 +140,7 @@ public class SubscriptionViewCLITest {
 	
 	@Test
 	public void testAddSubscriptionShouldDelegateToController() {
-		String input = "3\n1\nNetflix\n1.0\n2\n5";
+		String input = "3"+EOL+"1"+EOL+"Netflix"+EOL+"1.0"+EOL+"2"+EOL+"5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		verify(controller).addSubscription(SUBSCRIPTION_FIXTURE);
@@ -147,7 +149,7 @@ public class SubscriptionViewCLITest {
 	@Test
 	public void testDeleteSubscriptionShouldDelegateToController() {
 		cliView.getList().add(SUBSCRIPTION_FIXTURE);
-		String input = "4\n1\n5";
+		String input = "4"+EOL+"1"+EOL+"5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		verify(controller).deleteSubscription(SUBSCRIPTION_FIXTURE.getId());
@@ -157,27 +159,27 @@ public class SubscriptionViewCLITest {
 	public void testshowSubscriptionAlreadyExistsError() {
 		cliView.showSubscriptionAlreadyExistsError(SUBSCRIPTION_FIXTURE);
 		assertThat(outContent.toString())
-			.isEqualTo("Error: Already existing subscription with id 1\n");
+			.isEqualTo("Error: Already existing subscription with id 1"+EOL);
 	}
 	
 	@Test
 	public void testshowNonExistingSubscritptionError() {
 		cliView.showNonExistingSubscritptionError("1");
 		assertThat(outContent.toString())
-			.isEqualTo("Error: No existing subscription with id 1\n");	
+			.isEqualTo("Error: No existing subscription with id 1"+EOL);	
 	}
 	
 	@Test
 	public void testMonthlySubscriptionAdded() {
 		cliView.subscriptionAdded(SUBSCRIPTION_FIXTURE);
 		assertThat(outContent.toString())
-			.isEqualTo("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] added\n");	
+			.isEqualTo("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] added"+EOL);	
 	}
 	
 	@Test
 	public void testSubscriptionRemoved() {
 		cliView.subscriptionRemoved(SUBSCRIPTION_FIXTURE);
 		assertThat(outContent.toString())
-			.isEqualTo("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] removed\n");		
+			.isEqualTo("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] removed"+EOL);		
 	}
 }
