@@ -3,7 +3,10 @@
 ![Java CI with Maven](https://github.com/pzsette/SubscriptionsManager/workflows/Java%20CI%20with%20Maven/badge.svg) 
 
 [![Coverage Status](https://coveralls.io/repos/github/pzsette/SubscriptionsManager/badge.svg?branch=master)](https://coveralls.io/github/pzsette/SubscriptionsManager?branch=master)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=pzsette_SubscriptionsManager&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=pzsette_SubscriptionsManager)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=pzsette_SubscriptionsManager&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=pzsette_SubscriptionsManager)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=pzsette_SubscriptionsManager&metric=bugs)](https://sonarcloud.io/dashboard?id=pzsette_SubscriptionsManager)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=pzsette_SubscriptionsManager&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=pzsette_SubscriptionsManager)
 
 A simple Java appplication to keep track and have an overview of subcriptions and their costs. Built using test driven development (TDD) with Java and Maven. It can be used through a GUI or a CLI interface.
 
@@ -30,9 +33,17 @@ Argument | Description
 
 ## Test
 
-You can run all the tests for this app cloning the repo and executig the command: 
+You can run all the **tests** (Unit, Integration and E2E) for this app cloning the repo and executig the command: 
 
 `mvn clean verify`
+
+alternatively you can execute the **jacoco 100% coverage check** with: 
+
+`mvn clean verify -P coverage-check`
+
+or you can executio **mutation testing** with pit with:
+
+`mvn clean verify -P mutation testing`
 
 ## Run the app
 
