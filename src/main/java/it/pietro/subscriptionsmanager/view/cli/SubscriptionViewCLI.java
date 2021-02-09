@@ -18,8 +18,6 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	private List<Subscription> listSubscriptions; 
 	private SubscriptionController controller;
 	
-	private static final Logger LOGGER = LogManager.getLogger(SubscriptionViewCLI.class);
-	
 	private Scanner scanner;
 	private PrintStream output;
 	
@@ -61,11 +59,11 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	
 	private void showSubscriptions() {
 		if (listSubscriptions.isEmpty()) {
-			System.out.println("No subscriptions added");
+			output.println("No subscriptions added");
 		} else {
-			System.out.println("All subscriptions:");
+			output.println("All subscriptions:");
 			for (Subscription sub : listSubscriptions) {
-				System.out.println(sub.toString());
+				output.println(sub.toString());
 			}
 		}
 	}
@@ -143,7 +141,7 @@ public class SubscriptionViewCLI implements SubscriptionView {
 				choice = Double.parseDouble(input);
 				validInput = true;
 			} else {
-				System.out.println("Input should be a positive double");
+				output.println("Input should be a positive double");
 			}
 		}
 		return choice;
@@ -157,7 +155,6 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	
 	public void runView() {
 		scanner = new Scanner(System.in);
-		LOGGER.info("APP BY PZ7");
 		output.println("SUBSCRIPTIONS MANAGER");
 		boolean exit = false;
 		while (!exit) {
@@ -183,7 +180,7 @@ public class SubscriptionViewCLI implements SubscriptionView {
 				break;
 			}
 		}
-		output.print("Goodbye!");
+		output.println("Goodbye!");
 	}
 	
 	public void setController(SubscriptionController controller) {

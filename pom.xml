@@ -303,7 +303,7 @@
 		
 		<!-- PIT PROFILE -->
 		<profile>
-			<id>mutation-testing</id>
+			<id>pit-mutation</id>
 			<build>
 				<plugins>
 					<plugin>

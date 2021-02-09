@@ -55,15 +55,6 @@ public class SubscriptionManagerAppCLIE2E {
 							"--ui=cli").start();
         reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-        
-		/*String line = null;
-		boolean initFinished = false;
-		while (((line = reader.readLine()) != null) & !initFinished) {
-			if (line.contains("Exit")) {
-				initFinished = true;
-				return;
-			}
-		}*/
 	}
 
 	@After
@@ -74,11 +65,6 @@ public class SubscriptionManagerAppCLIE2E {
 	@Test
 	public void testOnStartAllDatabaseElementsAreLoaded() throws Exception {
 		String output = getOutput("1"+EOL+"5"+EOL+"");
-
-		System.out.println("LOL");
-		System.out.println(output);
-		System.out.println("LOL2");
-		
 		assertThat(output)
 			.contains("Netflix", "1.0", "Monthly")
 			.contains("Test", "4.0", "Weekly");
