@@ -55,6 +55,7 @@
 			**/SubscriptionViewSwingTest.java
 		</sonar.issue.ignore.multicriteria.e2.resourceKey>	
 		
+		<!-- Local variable and function parameter names should comply with a naming convention" -->
 		<sonar.issue.ignore.multicriteria.e3.ruleKey>
 			java:S117
 		</sonar.issue.ignore.multicriteria.e3.ruleKey>
@@ -150,18 +151,6 @@
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
             <version>${picocli.version}</version>
-        </dependency>
-        
-        <!-- LOG4J -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
         </dependency>
 		
 	</dependencies>

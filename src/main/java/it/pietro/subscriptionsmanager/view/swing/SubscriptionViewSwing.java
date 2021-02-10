@@ -3,8 +3,6 @@ package it.pietro.subscriptionsmanager.view.swing;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
@@ -264,12 +262,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 				listSubscriptions.getSelectedValue().getId())
 		);
 		
-		listSubscriptions.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				deleteBtn.setEnabled(listSubscriptions.getSelectedIndex() != -1);
-			}
-		});
+		listSubscriptions.addListSelectionListener(e -> deleteBtn.setEnabled(listSubscriptions.getSelectedIndex() != -1));
 	}
 
 	@Override
