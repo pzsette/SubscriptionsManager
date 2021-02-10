@@ -3,9 +3,6 @@ package it.pietro.subscriptionsmanager.app;
 import java.awt.EventQueue;
 import java.util.concurrent.Callable;
 
-//import org.apache.logging.log4j.LogManager;
-//import org.apache.logging.log4j.Logger;
-
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
@@ -30,7 +27,7 @@ public class SubscriptionManagerApp implements Callable<Void>  {
 	private static LoggerContext loggerCtx = (LoggerContext) LoggerFactory.getILoggerFactory();
 	private static final Logger logger = loggerCtx.getLogger(SubscriptionManagerApp.class);
 	
-	enum uiOptions {
+	private enum uiOptions {
 		gui,
 		cli
 	}
