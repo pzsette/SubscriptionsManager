@@ -37,7 +37,7 @@
 		<sonar.organization>pzsette777</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>-->
 		
-		<sonar.issue.ignore.multicriteria>e1,e2</sonar.issue.ignore.multicriteria>
+		<sonar.issue.ignore.multicriteria>e1,e2,e3</sonar.issue.ignore.multicriteria>
 		
 		<!-- Disable "Inheritance tree of classes should not be too deep" -->
 		<sonar.issue.ignore.multicriteria.e1.ruleKey>
@@ -54,6 +54,13 @@
 		<sonar.issue.ignore.multicriteria.e2.resourceKey>
 			**/SubscriptionViewSwingTest.java
 		</sonar.issue.ignore.multicriteria.e2.resourceKey>	
+		
+		<sonar.issue.ignore.multicriteria.e3.ruleKey>
+			java:S117
+		</sonar.issue.ignore.multicriteria.e3.ruleKey>
+		<sonar.issue.ignore.multicriteria.e3.resourceKey>
+			**/SubscriptionViewSwing.java
+		</sonar.issue.ignore.multicriteria.e3.resourceKey>
 
 		<sonar.junit.reportPaths>
 			${project.build.directory}/surefire-reports,
