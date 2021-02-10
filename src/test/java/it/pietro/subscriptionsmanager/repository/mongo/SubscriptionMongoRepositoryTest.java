@@ -110,7 +110,8 @@ public class SubscriptionMongoRepositoryTest {
 	public void testDelete() {
 		addTestSubscriptiontToDatabase(SUBSCRIPTION_FIXTURE);
 		repository.delete(SUBSCRIPTION_FIXTURE.getId());
-		assertThat(collection);
+		assertThat(readAllSubscriptionFormDB())
+			.isEmpty();
 	}
 	
 	private void addTestSubscriptiontToDatabase(Subscription sub) {
