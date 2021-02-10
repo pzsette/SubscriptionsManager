@@ -46,8 +46,7 @@ public class SubscriptionMongoRepository implements SubscriptionRepository {
 
 	@Override
 	public Subscription findById(String id) {
-		Subscription d = collection.find(eq("_id", id)).first();
-		return d;
+		return collection.find(eq("_id", id)).first();
 	}
 
 	@Override

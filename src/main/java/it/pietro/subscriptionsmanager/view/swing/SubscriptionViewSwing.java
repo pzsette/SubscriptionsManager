@@ -107,7 +107,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		contentPane.add(scrollPane, gbc_scrollPane);
 		
 		//JLIST SUBSCRIPTIONS
-		listSubscriptions = new JList<Subscription>(listSubscriptionsModel);
+		listSubscriptions = new JList<>(listSubscriptionsModel);
 		scrollPane.setViewportView(listSubscriptions);
 		listSubscriptions.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listSubscriptions.setName("subscriptionList");
@@ -197,7 +197,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		contentPane.add(repetitionTextLabel, gbc_repetitionTextLabel);
 		
 		//REPETITION COMBO BOX
-		repetitionDropDown = new JComboBox<String>(repetition);
+		repetitionDropDown = new JComboBox<>(repetition);
 		repetitionDropDown.setName("repetitionDropDown");
 		GridBagConstraints gbc_repetitionDropDown = new GridBagConstraints();
 		gbc_repetitionDropDown.fill = GridBagConstraints.HORIZONTAL;
@@ -249,19 +249,18 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		nameTextField.addKeyListener(btnAddEnabler);
 		priceTextField.addKeyListener(btnAddEnabler);
 		
-		addBtn.addActionListener(e -> {
+		addBtn.addActionListener(e -> 
 			controller.addSubscription(
 					new Subscription(
 							idTextField.getText(),
 							nameTextField.getText(),
 							Double.parseDouble(priceTextField.getText()),
-							repetitionDropDown.getSelectedItem().toString())
-					);
-		});
+							repetitionDropDown.getSelectedItem().toString()))
+		);
 		
-		deleteBtn.addActionListener(e -> {
-			controller.deleteSubscription(listSubscriptions.getSelectedValue().getId());
-		});
+		deleteBtn.addActionListener(e -> controller.deleteSubscription(
+				listSubscriptions.getSelectedValue().getId())
+		);
 		
 		listSubscriptions.addListSelectionListener(new ListSelectionListener() {
 			@Override
@@ -311,11 +310,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 	
 	private boolean isPositiveDouble(String value) {
 		try {
-			if (Double.parseDouble(value) > 0) {
-				return true;
-			} else {
-				return false;
-			}
+			return Double.parseDouble(value) > 0;
 		} catch (NumberFormatException e) {
 			return false;
 		}
