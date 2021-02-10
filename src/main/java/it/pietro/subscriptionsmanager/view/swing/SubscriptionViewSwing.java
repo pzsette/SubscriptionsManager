@@ -18,6 +18,8 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -61,7 +63,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		
 		setMinimumSize(new Dimension(500, 330));
 		setTitle("Subscriptions manager");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setMinimumSize(new Dimension(0, 0));
