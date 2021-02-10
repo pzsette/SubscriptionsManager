@@ -11,7 +11,6 @@ import java.util.stream.StreamSupport;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientSettings;
 
-import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
