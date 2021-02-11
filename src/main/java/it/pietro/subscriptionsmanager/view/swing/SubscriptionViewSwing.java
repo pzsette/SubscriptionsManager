@@ -293,6 +293,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 	@Override
 	public void showNonExistingSubscritptionError(String id) {
 		errorLbl.setText("Error: No existing subscription with id "+id);
+		listSubscriptionsModel.removeElement(getSubByIdFromCustomListModel(id));
 	}
 	
 	private void updateAmountLabel() {
@@ -301,6 +302,15 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 	
 	public void setController(SubscriptionController controller) {
 		this.controller = controller;
+	}
+	
+	public Subscription getSubByIdFromCustomListModel(String id) {
+		return listSubscriptionsModel
+			.getList()
+			.stream()
+			.filter(sub -> id.equals(sub.getId()))
+			.findAny()
+			.orElse(null);
 	}
 	
 	private boolean isPositiveDouble(String value) {

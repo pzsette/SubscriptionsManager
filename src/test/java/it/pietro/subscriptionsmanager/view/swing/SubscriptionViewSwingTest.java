@@ -151,10 +151,15 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	@GUITest
 	public void testErrorForNoExistingSubscription() {
 		GuiActionRunner.execute(
-				() -> swingView.showNonExistingSubscritptionError("1")
+				() ->  {
+					swingView.getListSubscriptionModel().addElement(SUBSCRIPTION_FIXTURE);
+					swingView.showNonExistingSubscritptionError(SUBSCRIPTION_FIXTURE.getId());
+				}
 		);
 		window.label("errorLbl")
 			.requireText("Error: No existing subscription with id 1");
+		assertThat(swingView.getListSubscriptionModel().getList())
+			.isEmpty();
 	}
 	
 	@Test
