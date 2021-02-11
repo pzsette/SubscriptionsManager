@@ -11,7 +11,6 @@ import java.util.stream.StreamSupport;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientSettings;
 
-import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
@@ -42,27 +41,18 @@ public class SubscriptionMongoRepository implements SubscriptionRepository {
 	public List<Subscription> findAll() {
 		return StreamSupport
 			.stream(collection.find().spliterator(), false)
-			//.map(this::fromDocumentToStudent)
 			.collect(Collectors.toList());		
 	}
 
 	@Override
 	public Subscription findById(String id) {
-		Subscription d = collection.find(eq("_id", id)).first();
-		if (d!= null) {
-			return d;
-		}
-		return null;
+		return collection.find(eq("_id", id)).first();
 	}
 
 	@Override
 	public void save(Subscription sub) {
 		collection.insertOne(sub);
 	}
-	
-	/*private Subscription fromDocumentToStudent(Document d) {
-		return new Subscription(""+d.get("id"), ""+d.get("name"), (Double) d.get("price"), ""+d.get("repetition"));
-	}*/
 
 	@Override
 	public void delete(String id) {

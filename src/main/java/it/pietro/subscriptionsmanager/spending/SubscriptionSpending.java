@@ -5,7 +5,7 @@ import it.pietro.subscriptionsmanager.model.Subscription;
 
 public class SubscriptionSpending {
 	
-	private SubscriptionSpending() {};
+	private SubscriptionSpending() {}
 	
 	public static double computeSpending(List<Subscription> subs) {
 		Double price = 0.0;

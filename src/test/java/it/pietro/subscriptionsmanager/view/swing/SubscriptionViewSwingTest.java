@@ -122,7 +122,8 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	public void testWhenNegativeDoubleIsUsedAsPriceAddButtonShouldBeDisabled() {
 		window.textBox("idTextField").enterText("1");
 		window.textBox("nameTextField").enterText("test");
-		window.textBox("priceTextField").enterText("-7.0");
+		window.textBox("priceTextField").enterText("/7.0");
+		window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
 	}
 	
 	@Test
@@ -150,10 +151,15 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	@GUITest
 	public void testErrorForNoExistingSubscription() {
 		GuiActionRunner.execute(
-				() -> swingView.showNonExistingSubscritptionError("1")
+				() ->  {
+					swingView.getListSubscriptionModel().addElement(SUBSCRIPTION_FIXTURE);
+					swingView.showNonExistingSubscritptionError(SUBSCRIPTION_FIXTURE.getId());
+				}
 		);
 		window.label("errorLbl")
 			.requireText("Error: No existing subscription with id 1");
+		assertThat(swingView.getListSubscriptionModel().getList())
+			.isEmpty();
 	}
 	
 	@Test

@@ -31,10 +31,53 @@
 		<assertj-swing.version>3.17.1</assertj-swing.version>
 		<picocli.version>4.5.2</picocli.version>
 		<log4j.version>2.13.3</log4j.version>
-	
+		<sonarqube.version>3.7.0.1746</sonarqube.version>
+
 		<sonar.projectKey>pzsette_SubscriptionsManager</sonar.projectKey>
 		<sonar.organization>pzsette777</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		
+		<sonar.issue.ignore.multicriteria>e1,e2,e3,e4,e5</sonar.issue.ignore.multicriteria>
+		
+		<!-- Disable "Inheritance tree of classes should not be too deep" -->
+		<sonar.issue.ignore.multicriteria.e1.ruleKey>
+			java:S110
+		</sonar.issue.ignore.multicriteria.e1.ruleKey>
+		<sonar.issue.ignore.multicriteria.e1.resourceKey>
+			**/*.java
+		</sonar.issue.ignore.multicriteria.e1.resourceKey>
+		
+		<!-- Disable "Add at least one assertion to test case" -->
+		<sonar.issue.ignore.multicriteria.e2.ruleKey>
+			java:S2699
+		</sonar.issue.ignore.multicriteria.e2.ruleKey>
+		<sonar.issue.ignore.multicriteria.e2.resourceKey>
+			**/SubscriptionViewSwingTest.java
+		</sonar.issue.ignore.multicriteria.e2.resourceKey>	
+		
+		<!-- Local variable and function parameter names should comply with a naming convention" -->
+		<sonar.issue.ignore.multicriteria.e3.ruleKey>
+			java:S117
+		</sonar.issue.ignore.multicriteria.e3.ruleKey>
+		<sonar.issue.ignore.multicriteria.e3.resourceKey>
+			**/SubscriptionViewSwing.java
+		</sonar.issue.ignore.multicriteria.e3.resourceKey>
+		
+		<!-- Disable "Constant names should comply with a naming convention" -->
+		<sonar.issue.ignore.multicriteria.e4.ruleKey>
+			java:S115
+		</sonar.issue.ignore.multicriteria.e4.ruleKey>
+		<sonar.issue.ignore.multicriteria.e4.resourceKey>
+			**/SubscriptionManagerApp.java
+		</sonar.issue.ignore.multicriteria.e4.resourceKey>
+		
+		<!-- Disable "Constant names should comply with a naming convention" -->
+		<sonar.issue.ignore.multicriteria.e5.ruleKey>
+			java:S106
+		</sonar.issue.ignore.multicriteria.e5.ruleKey>
+		<sonar.issue.ignore.multicriteria.e5.resourceKey>
+			**/SubscriptionManagerApp.java
+		</sonar.issue.ignore.multicriteria.e5.resourceKey>
 
 		<sonar.junit.reportPaths>
 			${project.build.directory}/surefire-reports,
@@ -116,18 +159,6 @@
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
             <version>${picocli.version}</version>
-        </dependency>
-        
-        <!-- LOG4J -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
         </dependency>
 		
 	</dependencies>
@@ -250,7 +281,7 @@
 						<mutators>
 							<mutator>STRONGER</mutator>
 						</mutators>
-						<mutationThreshold>95</mutationThreshold>
+						<mutationThreshold>100</mutationThreshold>
 					</configuration>
 				</plugin>
 				

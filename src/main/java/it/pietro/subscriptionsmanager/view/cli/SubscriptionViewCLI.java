@@ -186,11 +186,7 @@ public class SubscriptionViewCLI implements SubscriptionView {
 	
 	private boolean isPositiveDouble(String value) {
 		try {
-			if(Double.parseDouble(value) > 0) {
-				return true;
-			} else {
-				return false;
-			}
+			return (Double.parseDouble(value) > 0);
 		} catch (NumberFormatException e) {
 			return false;
 		}

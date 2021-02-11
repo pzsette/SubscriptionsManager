@@ -107,6 +107,7 @@ public class SubscriptionViewSwingIT extends AssertJSwingJUnitTestCase {
 		window.list().selectItem(0);
 		window.button("deleteBtn").click();
 		window.label("errorLbl").requireText("Error: No existing subscription with id 1");
+		assertThat(window.list().contents()).isEmpty();	
 	}
 
 }

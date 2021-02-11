@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.junit.After;
@@ -110,7 +109,8 @@ public class SubscriptionMongoRepositoryTest {
 	public void testDelete() {
 		addTestSubscriptiontToDatabase(SUBSCRIPTION_FIXTURE);
 		repository.delete(SUBSCRIPTION_FIXTURE.getId());
-		assertThat(collection);
+		assertThat(readAllSubscriptionFormDB())
+			.isEmpty();
 	}
 	
 	private void addTestSubscriptiontToDatabase(Subscription sub) {

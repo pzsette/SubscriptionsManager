@@ -7,11 +7,11 @@ on: [push]
 
 jobs:
   build:
-  
+
     runs-on: ubuntu-18.04
-    
+
     name: Test on Java13
-    
+
     steps:
     - uses: actions/checkout@v2
       with:
@@ -36,7 +36,7 @@ jobs:
           -D sonar.organization=$SONAR_ORGANIZATION \
           -D sonar.projectKey=$SONAR_PROJECT
       env:
-          ENABLED_PROFILES: -P jacoco,mutation-testing
+          ENABLED_PROFILES: -P jacoco,pit-mutation
           ADDITIONAL_MAVEN_ARGS: coveralls:report sonar:sonar
           COVERALLS_TOKEN: ${{secrets.COVERALLS_TOKEN}}
           SONAR_URL: https://sonarcloud.io
@@ -44,7 +44,7 @@ jobs:
           SONAR_PROJECT: pzsette_SubscriptionsManager
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
+
   build-on-pr-merge:
     if: startsWith(github.event.head_commit.message, 'Merge pull request')
 
@@ -53,7 +53,7 @@ jobs:
       matrix:
         java: [8, 9, 11]
     name: Test on older Java versions
-    
+
     steps:
     - uses: actions/checkout@v2
       with:
@@ -68,7 +68,7 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
-        
+
     - name: Build with Maven
       run: |
           xvfb-run --server-args="-screen 0, 1280x720x24" -a \

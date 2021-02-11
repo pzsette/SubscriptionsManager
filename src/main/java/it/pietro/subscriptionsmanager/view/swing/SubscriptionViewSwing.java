@@ -3,8 +3,6 @@ package it.pietro.subscriptionsmanager.view.swing;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
@@ -18,6 +16,8 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -61,7 +61,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		
 		setMinimumSize(new Dimension(500, 330));
 		setTitle("Subscriptions manager");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setMinimumSize(new Dimension(0, 0));
@@ -107,7 +107,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		contentPane.add(scrollPane, gbc_scrollPane);
 		
 		//JLIST SUBSCRIPTIONS
-		listSubscriptions = new JList<Subscription>(listSubscriptionsModel);
+		listSubscriptions = new JList<>(listSubscriptionsModel);
 		scrollPane.setViewportView(listSubscriptions);
 		listSubscriptions.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listSubscriptions.setName("subscriptionList");
@@ -197,7 +197,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		contentPane.add(repetitionTextLabel, gbc_repetitionTextLabel);
 		
 		//REPETITION COMBO BOX
-		repetitionDropDown = new JComboBox<String>(repetition);
+		repetitionDropDown = new JComboBox<>(repetition);
 		repetitionDropDown.setName("repetitionDropDown");
 		GridBagConstraints gbc_repetitionDropDown = new GridBagConstraints();
 		gbc_repetitionDropDown.fill = GridBagConstraints.HORIZONTAL;
@@ -249,26 +249,20 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		nameTextField.addKeyListener(btnAddEnabler);
 		priceTextField.addKeyListener(btnAddEnabler);
 		
-		addBtn.addActionListener(e -> {
+		addBtn.addActionListener(e -> 
 			controller.addSubscription(
 					new Subscription(
 							idTextField.getText(),
 							nameTextField.getText(),
 							Double.parseDouble(priceTextField.getText()),
-							repetitionDropDown.getSelectedItem().toString())
-					);
-		});
+							repetitionDropDown.getSelectedItem().toString()))
+		);
 		
-		deleteBtn.addActionListener(e -> {
-			controller.deleteSubscription(listSubscriptions.getSelectedValue().getId());
-		});
+		deleteBtn.addActionListener(e -> controller.deleteSubscription(
+				listSubscriptions.getSelectedValue().getId())
+		);
 		
-		listSubscriptions.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				deleteBtn.setEnabled(listSubscriptions.getSelectedIndex() != -1);
-			}
-		});
+		listSubscriptions.addListSelectionListener(e -> deleteBtn.setEnabled(listSubscriptions.getSelectedIndex() != -1));
 	}
 
 	@Override
@@ -299,6 +293,7 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 	@Override
 	public void showNonExistingSubscritptionError(String id) {
 		errorLbl.setText("Error: No existing subscription with id "+id);
+		listSubscriptionsModel.removeElement(getSubByIdFromCustomListModel(id));
 	}
 	
 	private void updateAmountLabel() {
@@ -309,13 +304,18 @@ public class SubscriptionViewSwing extends JFrame implements SubscriptionView {
 		this.controller = controller;
 	}
 	
+	public Subscription getSubByIdFromCustomListModel(String id) {
+		return listSubscriptionsModel
+			.getList()
+			.stream()
+			.filter(sub -> id.equals(sub.getId()))
+			.findAny()
+			.orElse(null);
+	}
+	
 	private boolean isPositiveDouble(String value) {
 		try {
-			if (Double.parseDouble(value) > 0) {
-				return true;
-			} else {
-				return false;
-			}
+			return Double.parseDouble(value) > 0;
 		} catch (NumberFormatException e) {
 			return false;
 		}
