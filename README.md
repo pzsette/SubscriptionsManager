@@ -6,6 +6,7 @@
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=pzsette_SubscriptionsManager&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=pzsette_SubscriptionsManager)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=pzsette_SubscriptionsManager&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=pzsette_SubscriptionsManager)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=pzsette_SubscriptionsManager&metric=bugs)](https://sonarcloud.io/dashboard?id=pzsette_SubscriptionsManager)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=pzsette_SubscriptionsManager&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=pzsette_SubscriptionsManager)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=pzsette_SubscriptionsManager&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=pzsette_SubscriptionsManager)
 
 A simple Java appplication to keep track and have an overview of subcriptions and their costs. Built using test driven development (TDD) with Java and Maven. It can be used through a GUI or a CLI interface.
@@ -41,19 +42,19 @@ alternatively you can execute the **jacoco 100% coverage check** with:
 
 `mvn clean verify -P coverage-check`
 
-or you can executio **mutation testing** with pit with:
+or you can execute **mutation testing** pit with:
 
-`mvn clean verify -P mutation testing`
+`mvn clean verify -P mutation-testing`
 
 ## Run the app
 
-Before using the app run MongoDB in a container, specifing port, with the command:
+Before using the app run **MongoDB** in a container, specifing port, with the command:
 
 `docker run -p 27017:27017 --rm mongo:4.2.3`
 
-The build the JAR package through the command 
+To build the **fat JAR** package through the command 
 
-`comand per JAR` or alteratively you can download the JAR directly from here
+`mvn clean package` or alteratively you can download the JAR directly from [here](https://github.com/pzsette/SubscriptionsManager/releases)
 
 Start the app with
 
