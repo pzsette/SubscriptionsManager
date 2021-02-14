@@ -51,7 +51,6 @@ public class SubscriptionManagerApp implements Callable<Void>  {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		disableMongoJavaLogs();
 		new CommandLine(new SubscriptionManagerApp()).execute(args);
 	}
 
@@ -69,7 +68,7 @@ public class SubscriptionManagerApp implements Callable<Void>  {
 					swingView.setVisible(true);
 					controller.allSubscriptions();
 				} else if (ui.equals(uiOptions.cli)) {
-					
+					disableMongoJavaLogs();
 					SubscriptionViewCLI cliView = new SubscriptionViewCLI(System.out);
 					SubscriptionController controller = new SubscriptionController(repository, cliView);
 					cliView.setController(controller);

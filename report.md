@@ -108,7 +108,7 @@ method is responsable for updating the spending label whenever necessary using t
 
 <img src="screenshots/sub_cli.png" height=145/>
 
-Since there are no tools for testing CLI-based application it was necessry to find a workaround to do that. All the functios uses  ```Syste.out``` to print in the console, so we can capture that output changing it with a different ```PrintStream```. In particular if change ```System.out``` with ```ByteArrayOutputStream```, the we can capture the output as a ```String```. Using **Dependancy Injection** we can create a different ```SubscriptionViewCLI``` instance depending if we're testing or executing the app.
+Since there are no tools for testing CLI-based application it was necessry to find a workaround to do that. All the functios print to ```System.out``` , so we can capture that output changing it with a different ```PrintStream```. In particular if change ```System.out``` with ```ByteArrayOutputStream```, the we can capture the output as a ```String```. Using **Dependancy Injection** we can create a different ```SubscriptionViewCLI``` instance depending if we're testing or executing the app.
 
 ```
 public class SubscriptionViewCLI implements SubscriptionView {
@@ -170,11 +170,49 @@ The functions ```forceDoubleChoice()``` and ```forceDigitChoice(int low, int hig
 
 ## Testing
 
+The application is fully tested and the **pyramid** shape is respected:
+
+* Unit tests
+* Integrations tests
+* 10 End to End tests
+
 ### Unit tests
+
+In this phase every class is tested in isolation. The **Mockito** library was used to mock the other components that get involved.
+
+The classes without logic were excluded from the Jacoco coverage measure, throught configuration in the ```pom.xml``` file.
+
+To simulate input by the user during the test of the CLI version of application was used the ```System.setIn() ``` method that reassigns the "standard" input stream. This can be a ```ByteArrayStream```, so we use a string, encoded into a sequence of bytes, as custom input.
+
+```
+@Test
+public void testLoadAllSubscriptions() {
+	cliView.loadAllSubscriptions(asList(SUBSCRIPTION_FIXTURE,SUBSCRIPTION_FIXTURE2));
+	String input = "1"+EOL+"5";
+	System.setIn(new ByteArrayInputStream(input.getBytes()));
+	assertThat(cliView.getList())
+		.containsExactly(SUBSCRIPTION_FIXTURE,SUBSCRIPTION_FIXTURE2);
+}
+```
+
+JUnit is the main framework used for testing, together with AssertJ and AssertJ Swing (for UI tests)
 
 ### Integrations tests
 
+Integrations tests verify the correct behaviour of some components together and when interacting with external servicie. In this case the MongoDB database are started by **Testcontainer**, a Java library that provides throwaway instances of different database types. 
+
+In particular were tested interactions between, only in the positive or most interesting cases:
+
+* Controller with a real SubscriptionRepository implementation. View is still mocked.
+
+* SubscriptionMongoRepository interacting with a real mongoDB instance.
+
+* Interaction between both types of view and the controller and a real repository.
+
 ### End To End tests
+
+In end to end tests the whole application is tested and is verified that alla components interacts correctly.
+
 
 ### Code coverage
 
