@@ -60,7 +60,7 @@ The whole application is based on the **MVC** Model-View-Controller) patter. To 
 
 ### Model
 
-This class represents a subcription instance. It has four attributes: id, name, price and repetition. The repetition field is a ```String``` and can assume three values: ```"Weekly"```, ```"Monthly"```, ```"Annual"```. This class contains all the getter/setter and the mothods ```equals```, ```toString```, ```equals```.
+This class represents a subcription instance. It has four attributes: id, name, price and repetition. The repetition field is a `String` and can assume three values: `"Weekly"`, `"Monthly"`, `"Annual"`. This class contains all the getter/setter and the mothods ```equals```, `toString`, `equals`.
 
 ### Controller
 
@@ -74,12 +74,12 @@ The Controller acts as a bridge between the view and the model. It retrieves dat
 
 The repository interface provides methods for simple operations on the database.
 
-The ```SubscriptionMongoRepository``` class implents this interface to use a MongoDB database. The constructor takes a ```MongoCLient``` object, the database and the repository name.
+The `SubscriptionMongoRepository` class implents this interface to use a MongoDB database. The constructor takes a `MongoCLient` object, the database and the repository name.
 
 To avoid having to manually convert Subscription objects into Mongo documents it was added the POJOs (Plain Old Java Object) support via the PojoCodec, wich allows for direct serialization of POJOs to and from BSON.
 
-Automatic POJO support can be provided by building ```PojoCodecProvider``` by calling ```builder.build()``` then it can be combined with an existing ```CodecRegistry``` to create a new registry that will also support the registered POJOs.
-After creating the codec registry, the model type must be passed to the ```getCollection``` method in ```MongoDatabase```, and the registry can then be added using the ```withCodecRegistry``` modifier of ```MongoCollection```.
+Automatic POJO support can be provided by building `PojoCodecProvider` by calling `builder.build()` then it can be combined with an existing `CodecRegistry` to create a new registry that will also support the registered POJOs.
+After creating the codec registry, the model type must be passed to the `getCollection` method in `MongoDatabase`, and the registry can then be added using the `withCodecRegistry` modifier of `MongoCollection`.
 
 ```
 public SubscriptionMongoRepository(MongoClient client, String dbName, String collectionName) {
@@ -101,8 +101,8 @@ The GUI view is build using the Swing framework. Most of the work was done throu
 
 <img src="screenshots/sub_gui.png" height=300/>
 
-The ```updateAmountLabel()```
-method is responsable for updating the spending label whenever necessary using the static ```computeSpending(List<Subscription>)``` method of the ```SubscriptionSpending``` class.
+The `updateAmountLabel()`
+method is responsable for updating the spending label whenever necessary using the static `computeSpending(List<Subscription>)` method of the `SubscriptionSpending` class.
  
 #### CLI
 
@@ -127,7 +127,7 @@ public class SubscriptionViewCLI implements SubscriptionView {
 }
 ```
 
-The function ``` runApp()``` set scanner attribute, show the initial menu and then depending on the user's choice call the appropriate function.
+The function `runApp()` set scanner attribute, show the initial menu and then depending on the user's choice call the appropriate function.
 
 ``` 
 public void runView() {
@@ -161,12 +161,7 @@ public void runView() {
 }
 ``` 
 
-The functions ```forceDoubleChoice()``` and ```forceDigitChoice(int low, int high)``` ensure that the user chooses only allowed values.
-	
-
-
-
-
+The functions `forceDoubleChoice()` and `forceDigitChoice(int low, int high)` ensure that the user chooses only allowed values.
 
 ## Testing
 
@@ -180,9 +175,9 @@ The application is fully tested and the **pyramid** shape is respected:
 
 In this phase every class is tested in isolation. The **Mockito** library was used to mock the other components that get involved.
 
-The classes without logic were excluded from the Jacoco coverage measure, throught configuration in the ```pom.xml``` file.
+Unit tests are stored in the *src/test/java* folder.
 
-To simulate input by the user during the test of the CLI version of application was used the ```System.setIn() ``` method that reassigns the "standard" input stream. This can be a ```ByteArrayStream```, so we use a string, encoded into a sequence of bytes, as custom input.
+To simulate input by the user during the test of the CLI version of application was used the `System.setIn()` method that reassigns the "standard" input stream. This can be a `ByteArrayStream`, so we use a string, encoded into a sequence of bytes, as custom input.
 
 ```
 @Test
@@ -199,7 +194,9 @@ JUnit is the main framework used for testing, together with AssertJ and AssertJ 
 
 ### Integrations tests
 
-Integrations tests verify the correct behaviour of some components together and when interacting with external servicie. In this case the MongoDB database are started by **Testcontainer**, a Java library that provides throwaway instances of different database types. 
+Integrations tests verify the correct behaviour of some components together and when interacting with external servicie. In this case the MongoDB database are started by **Testcontainer**, a Java library that provides throwaway instances of different database types.
+
+Integrations tests are stored in the *src/it/java* folder.
 
 In particular were tested interactions between, only in the positive or most interesting cases:
 
@@ -211,14 +208,61 @@ In particular were tested interactions between, only in the positive or most int
 
 ### End To End tests
 
-In end to end tests the whole application is tested and is verified that alla components interacts correctly.
+In end to end tests the whole application is tested and is verified that all components interacts correctly.
+
+Integrations tests are stored in the *src/e2e/java* folder.
+
+All the tests interact only with the user interface of the application and they're launched from the `main` method in `SubscriptionManagerApp` class.
+
+When testing the GUI view, the application is started using the AssertJ Swing API of the class ApplicationLauncher. Then the API of WindowFinder is used to lookup the frame of ourview by title.
+
+When testing the CLI view a different approach is used. The `ProcessBuilder` class is used to create a new process directly for the JAR file. The output stream is redireted into a `BufferReader` and `BufferWriter` is used to simulate an input from the user.
+
+With end to end tests is verified if:
+
+* All elements are correctly loaded at the startup and the spending amout is correctly computed.
+
+* Addition and Removal of a subscription is done correctly and the spending amount is correctly updated.
+
+* Error messages are correctly shown.
 
 
 ### Code coverage
 
+Using **JaCoCo** we can verify that 100% coverage is achived.
+The classes without logic were excluded from coverage measure, throught configuration in the `pom.xml` file.
+More precisely were exclued the `Subscription` model class and the `SubscriptionManagerApp`, that contains the main method.
+
+To enable the 100% coverage the following profile is available:
+`mvn clean verify -P coverage-check`
+
 ### Mutation testing
 
+Also mutation testing is used in this project usnig the **PIT** library. In the pom file mutators are configured to STRONGER level and the mutation threshold is set to 100. Also in this case some classes are excluded.
+
+To enable the mutation check the following profile is availble:
+`mvn clean verify -P mutation-testing`
+
+
 ### Continous integration
+
+In this project the GitHub action service is used for continous integrations.
+The execution is configured in the maven.yaml file inside the *.github/workflows* folder. The syntax follow the official GitHub documentation.
+
+Basically workflow is made by two branches:
+
+* The first one is executed for every push request on the repository and the eviroment is Java13 on a Ubuntu machine. The *.m2* Maven folder and the *.sonar/cache* folder are cached to improve execution time. Then the maven command is executed to perform:
+	1. Build and test the project
+	2. JaCoCo coverage
+	3. PIT mutation
+	4. Coveralls report 
+	5. SonarCloud analysis
+
+* The second one is executed after merging a Pull request and runs the same job on three differents Java enviroments: 8, 9, 11.
+In this case the maven command performs:
+	1. Build and test
+	2. JaCoCo coverage
+	3. PIT mutaiton
 
 ```
 name: Java CI with Maven
@@ -256,14 +300,8 @@ jobs:
           -D sonar.organization=$SONAR_ORGANIZATION \
           -D sonar.projectKey=$SONAR_PROJECT
       env:
-          ENABLED_PROFILES: -P jacoco,pit-mutation
-          ADDITIONAL_MAVEN_ARGS: coveralls:report sonar:sonar
-          COVERALLS_TOKEN: ${{secrets.COVERALLS_TOKEN}}
-          SONAR_URL: https://sonarcloud.io
-          SONAR_ORGANIZATION: pzsette777
-          SONAR_PROJECT: pzsette_SubscriptionsManager
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      /* ... */
 
   build-on-pr-merge:
     if: startsWith(github.event.head_commit.message, 'Merge pull request')
@@ -289,12 +327,7 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
-    - name: Build with Maven
-      run: |
-          xvfb-run --server-args="-screen 0, 1280x720x24" -a \
-          mvn -f pom.xml -Dmaven.compiler.source=${{matrix.java}} -Dmaven.compiler.target=${{matrix.java}} clean verify $ACTIVE_PROFILES
-      env:
-        ACTIVE_PROFILES: -Pjacoco,mutation-testing
+    /* ... */
 
 ```
 
@@ -302,6 +335,19 @@ jobs:
 
 #### SonarCube
 
+It's possibile too perform a code quality analysis locally running a Docker Container using the **sonarqube Docker image**, then: `mvn clean verify sonar:sonar`
+
+
+
+
 #### SonarCloud
 
 ## Execution
+
+Argument | Description
+---------|-------------
+--mongo-host | MongoDB host address. Default value: `localhost`
+--mongo-port | MongoDB host port. Default value: `27017`
+--db-name | Database name. Default value: `subscriptionsmanager`
+--db-collection | Collection name. Default value: `subscriptions`
+--ui  | User interfaces options (`gui`, `cli`). Default value: `gui`
