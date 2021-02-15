@@ -267,6 +267,7 @@ The classes without logic were excluded from coverage measure, throught configur
 More precisely were exclued the `Subscription` model class and the `SubscriptionManagerApp`, that contains the main method.
 
 To enable the 100% coverage the following profile is available:
+
 `mvn clean verify -P coverage-check`
 
 ### Mutation testing
@@ -274,6 +275,7 @@ To enable the 100% coverage the following profile is available:
 Also mutation testing is used in this project usnig the **PIT** library. In the pom file mutators are configured to STRONGER level and the mutation threshold is set to 100. Also in this case some classes are excluded.
 
 To enable the mutation check the following profile is availble:
+
 `mvn clean verify -P mutation-testing`
 
 
@@ -368,7 +370,9 @@ jobs:
 
 #### SonarCube
 
-It's possibile too perform a code quality analysis locally running a Docker Container using the **sonarqube Docker image**, then: `mvn clean verify sonar:sonar`
+It's possibile too perform a code quality analysis locally running a Docker Container using the **sonarqube Docker image**, then: 
+
+`mvn clean verify sonar:sonar`
 
 #### SonarCloud
 
@@ -384,7 +388,7 @@ mvn clean verify sonar:sonar \
 
 ## Execution
 
-To start the application with the right paraments we used **picocli**, a command line framework for creating Java command line applications with almost zero codeis. Using its annotation the following arguments were specified:
+To start the application from the **JAR** with the right paraments we used **picocli**, a framework for creating Java command line applications with almost zero code. Using its annotation the following arguments were specified:
 
 Argument | Description
 ---------|-------------
@@ -393,3 +397,13 @@ Argument | Description
 --db-name | Database name. Default value: `subscriptionsmanager`
 --db-collection | Collection name. Default value: `subscriptions`
 --ui  | User interfaces options (`gui`, `cli`). Default value: `gui`
+
+Is possible to build the **fat JAR** package through the command 
+
+`mvn clean package` 
+
+or alteratively you can download the **JAR** directly from [here](https://github.com/pzsette/SubscriptionsManager/releases)
+
+Start the app with:
+
+`Java -jar -target/subscriptionsmanager-0.0.1-SNAPSHOT-jar-with-dependencies.jar [arguments]` 
