@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project is a simple application built using the Test-Driven Development (**TDD**) methodology together with Build Automation and Continuous Integration service. This application allows a user to store informations about differents subscriptions and track the monthly spending for all of them.
+This project is a simple application built using the Test-Driven Development (**TDD**) methodology together with **Build Automation** and **Continuous Integration** services. This application allows a user to store informations about differents subscriptions and track the monthly spending for all of them.
 
 ## Application features
 
@@ -93,6 +93,39 @@ public SubscriptionMongoRepository(MongoClient client, String dbName, String col
 			.withCodecRegistry(pojoCodecRegistry);		
 }
 ```	
+### Compute Spending
+
+The `SubscriptionSpending` class is used to computer the mothly spending amount. It has only one static method `computeSpending` that takes as input `Lis<Subscrption>` and returns the spending as double.
+
+```	
+public static double computeSpending(List<Subscription> subs) {
+	Double price = 0.0;
+	for(Subscription sub : subs) {
+		if (sub.getRepetition().equals("Weekly")) {
+			price += sub.getPrice()*4;
+		} else if( sub.getRepetition().equals("Monthly")) {
+			price += sub.getPrice();
+		} else {
+			price += sub.getPrice()/12;
+		}
+	}
+	return price;
+ } 
+```	
+The beahaviour of this function is tested in the 
+`SubscriptionMongoRepositoryTest` class.
+ 
+
+### Docker Virtualization
+
+Usually installi a server directly on the development machin is a bad idea, infact this can cause issues durign configuration among all tem's members. **Docker** containers are used with aim of virtualize the mongoDB server for this application.
+The main advantage of containers is the high reproducibily, so every one can use the same version of the server.
+The following command allows to start a MongoDB container, from the image, on the port *27017*:
+
+`docker run -p 27017:27017 --rm mongo:4.2.3`
+
+During integration and e2e tests MongoDB is configured and launched trough the **Testcontainer** Java library. 
+
 ### View
 The generic view interface provides methods for loading and deleting methods and showing error messages. This application offers to the user to choose between two different UIs.
 
@@ -167,8 +200,8 @@ The functions `forceDoubleChoice()` and `forceDigitChoice(int low, int high)` en
 
 The application is fully tested and the **pyramid** shape is respected:
 
-* Unit tests
-* Integrations tests
+* 50 Unit tests
+* 18 Integrations tests
 * 10 End to End tests
 
 ### Unit tests
@@ -337,12 +370,21 @@ jobs:
 
 It's possibile too perform a code quality analysis locally running a Docker Container using the **sonarqube Docker image**, then: `mvn clean verify sonar:sonar`
 
-
-
-
 #### SonarCloud
 
+It's also possibile enable code quality analysis on **SonarCloud** specifying the right arguments in the Maven command:
+
+```
+mvn clean verify sonar:sonar \
+-D sonar.host.url=$SONAR_URL \
+-D sonar.organization=$SONAR_ORGANIZATION \
+-D sonar.projectKey=$SONAR_PROJECT
+```
+
+
 ## Execution
+
+To start the application with the right paraments we used **picocli**, a command line framework for creating Java command line applications with almost zero codeis. Using its annotation the following arguments were specified:
 
 Argument | Description
 ---------|-------------
