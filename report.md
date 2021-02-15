@@ -2,15 +2,15 @@
 
 ## Introduction
 
-This project is a simple application built using the Test-Driven Development (**TDD**) methodology together with **Build Automation** and **Continuous Integration** services. This application allows a user to store informations about differents subscriptions and track the monthly spending for all of them.
+This project is a simple application built using the Test-Driven Development (**TDD**) methodology together with **Build Automation** and **Continuous Integration** services. This application allows a user to store informations about different subscriptions and track the monthly spending for all of them.
 
 ## Application features
 
 The applications itself is quite simple, the features are:
 
-* Add a new subscription to the database. Every subscription has an id, a name a price and the relative repetition.
-* Remove a subscription to the database
-* Compute and show the monthly spending overall for all the subscription.
+* Add a new subscription to the database. Every subscription has an id, a name a price and a repetition.
+* Remove a subscription from the database
+* Compute and show the monthly spending overall for all the subscriptions.
 
 The user can interact with the application in two different ways: 
 
@@ -19,13 +19,13 @@ The user can interact with the application in two different ways:
 
 ## Used technologies
 
-Here below are listed all the technlogies and tools used to make this application.
+Here below are listed all the technologies and tools used to make this application.
 
 ### Development tools
 
 * **Operating Sistem**: macOS Catalina 10.15.7
 * **IDE**: Eclipse 4.7.0
-* **Programming language**: Java 13
+* **Programming language**: Java 11
 
 ### Version control
 
@@ -44,7 +44,7 @@ Here below are listed all the technlogies and tools used to make this applicatio
 ### Testing
 
 * **JUnit**: open source Unit Testing Framework for JAVA.
-* **AssertJ**: provides a rich set of assertions to improves test code. readability
+* **AssertJ**: provides a rich set of assertions to improves test code readability
 * **AssertJSwign**: Java library that provides a fluent interface for functional Swing UI testing.
 * **Mockito**: framework which can be used in conjunction with JUnit. Mockito allows to create and configure mock objects.
 * **Testcontainer**:  Java library that supports JUnit tests, providing lightweight, throwaway instances of common databases.
@@ -286,14 +286,14 @@ The execution is configured in the maven.yaml file inside the *.github/workflows
 
 Basically workflow is made by two branches:
 
-* The first one is executed for every push request on the repository and the eviroment is Java13 on a Ubuntu machine. The *.m2* Maven folder and the *.sonar/cache* folder are cached to improve execution time. Then the maven command is executed to perform:
+* The first one is executed for every push request on the repository and the eviroment is Java11 on a Ubuntu machine. The *.m2* Maven folder and the *.sonar/cache* folder are cached to improve execution time. Then the maven command is executed to perform:
 	1. Build and test the project
 	2. JaCoCo coverage
 	3. PIT mutation
 	4. Coveralls report 
 	5. SonarCloud analysis
 
-* The second one is executed after merging a Pull request and runs the same job on three differents Java enviroments: 8, 9, 11.
+* The second one is executed after merging a Pull request and runs the same job on two differents Java enviroments: 8, 9.
 In this case the maven command performs:
 	1. Build and test
 	2. JaCoCo coverage
@@ -315,10 +315,10 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - name: Set up JDK 13
+    - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
-        java-version: 13
+        java-version: 11
     - name: Cache Maven packages
       uses: actions/cache@v2
       with:
@@ -344,7 +344,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        java: [8, 9, 11]
+        java: [8, 9]
     name: Test on older Java versions
 
     steps:
