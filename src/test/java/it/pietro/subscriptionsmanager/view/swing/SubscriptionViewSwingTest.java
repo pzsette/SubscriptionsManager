@@ -44,8 +44,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		window.show();
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testControlsInitialState() {
 		window.label(JLabelMatcher.withName("spendingTextLabel"));
 		window.label(JLabelMatcher.withName("amountTextLabel")).requireText("0");
@@ -63,8 +62,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		window.label(JLabelMatcher.withName("errorLbl")).requireText(" ");
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testWhenSubFieldsAreNotEmptyTheAddButtonShouldBeEnabled() {
 		window.textBox("idTextField").enterText("1");
 		window.textBox("nameTextField").enterText("Netflix");
@@ -72,8 +70,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withName("addBtn")).requireEnabled();
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testWhenPriceFieldIsNotFilledWithDoubleTheAddButtonShouldBeDisabled() {
 		window.textBox("idTextField").enterText("1");
 		window.textBox("nameTextField").enterText("Netflix");
@@ -81,8 +78,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testWhenNameIsNotFilledTheAddButtonShouldBeDisabled() {
 	  window.textBox("idTextField").enterText(" ");
 	  window.textBox("priceTextField").enterText("7.0");
@@ -90,8 +86,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	  window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
 	}
 
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testWheIdIsNotFilledTheAddButtonShouldBeDisabled() {
 	  window.textBox("idTextField").enterText("1");
 	  window.textBox("priceTextField").enterText(" ");
@@ -99,8 +94,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	  window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
 	}
 
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testWhenPriceIsNotFilledTheAddButtonShouldBeDisabled() {
 	  window.textBox("idTextField").enterText("2");
 	  window.textBox("priceTextField").enterText("7.0");
@@ -108,8 +102,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	  window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testWhenThereAreBlankFieldsAddButtonShouldBeDisabled() {
 		window.textBox("idTextField").enterText("1");
 		window.textBox("nameTextField").enterText(" ");
@@ -117,8 +110,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testWhenNegativeDoubleIsUsedAsPriceAddButtonShouldBeDisabled() {
 		window.textBox("idTextField").enterText("1");
 		window.textBox("nameTextField").enterText("test");
@@ -126,8 +118,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testDeleteButtonShouldBeEnabledOnlyWhenASubscriptionIsSelected() {
 		GuiActionRunner.execute(() ->
 			swingView.getListSubscriptionModel().addElement(SUBSCRIPTION_FIXTURE));
@@ -137,8 +128,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withName("deleteBtn")).requireDisabled();
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testLoadAllSubscriptionsShouldAddSubsDescriptionToTheList() {
 		GuiActionRunner.execute(() -> 
 			swingView.loadAllSubscriptions(asList(SUBSCRIPTION_FIXTURE,SUBSCRIPTION_FIXTURE2)));
@@ -147,8 +137,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 			.containsExactly(SUBSCRIPTION_FIXTURE.toString(),SUBSCRIPTION_FIXTURE2.toString());
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testErrorForNoExistingSubscription() {
 		GuiActionRunner.execute(
 				() ->  {
@@ -162,8 +151,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 			.isEmpty();
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testErrorForAlreadyExistingSubscription() {
 		GuiActionRunner.execute(
 				() -> swingView.showSubscriptionAlreadyExistsError(SUBSCRIPTION_FIXTURE)
@@ -172,8 +160,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 			.requireText("Error: Already existing subscription with id "+SUBSCRIPTION_FIXTURE.getId());
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testSubscriptionAddedShouldAddTheSubToTheListAndResetErrorLabel() {
 		GuiActionRunner.execute(
 				() -> swingView.subscriptionAdded(SUBSCRIPTION_FIXTURE));
@@ -182,8 +169,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		window.label("errorLbl").requireText(" ");
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testSubscriptionRemovedShouldAddTheSubToTheListAndResetErrorLabel() {
 		GuiActionRunner.execute(
 				() -> {
@@ -196,16 +182,14 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		window.label("errorLbl").requireText(" ");
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testAddSubscriptionShouldUpdateAmountTextLabel() {
 		GuiActionRunner.execute(
 				() -> swingView.subscriptionAdded(SUBSCRIPTION_FIXTURE));
 		window.label(JLabelMatcher.withName("amountTextLabel")).requireText("1.0");
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testRemoveSubscriptionShouldUpdateAmountTextLabel() {
 		GuiActionRunner.execute(
 				() -> {
@@ -216,8 +200,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		window.label(JLabelMatcher.withName("amountTextLabel")).requireText("4.0");
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testAddButtonShouldDelegateToController() {
 		window.textBox("idTextField").enterText("1");
 		window.textBox("nameTextField").enterText("Netflix");
@@ -227,8 +210,7 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		verify(controller).addSubscription(SUBSCRIPTION_FIXTURE);
 	}
 	
-	@Test
-	@GUITest
+	@Test @GUITest
 	public void testDeleteButtonShouldDelegateController() {
 		GuiActionRunner.execute(
 				() -> swingView.getListSubscriptionModel().addElement(SUBSCRIPTION_FIXTURE));

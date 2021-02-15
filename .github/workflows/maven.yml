@@ -10,13 +10,13 @@ jobs:
 
     runs-on: ubuntu-18.04
 
-    name: Test on Java13
+    name: Test on Java11
 
     steps:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - name: Set up JDK 13
+    - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
         java-version: 13
@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        java: [8, 9, 11]
+        java: [8, 9]
     name: Test on older Java versions
 
     steps:

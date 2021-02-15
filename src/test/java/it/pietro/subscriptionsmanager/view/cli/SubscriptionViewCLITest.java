@@ -159,27 +159,27 @@ public class SubscriptionViewCLITest {
 	public void testshowSubscriptionAlreadyExistsError() {
 		cliView.showSubscriptionAlreadyExistsError(SUBSCRIPTION_FIXTURE);
 		assertThat(outContent.toString())
-			.isEqualTo("Error: Already existing subscription with id 1"+EOL);
+			.hasToString("Error: Already existing subscription with id 1"+EOL);
 	}
 	
 	@Test
 	public void testshowNonExistingSubscritptionError() {
 		cliView.showNonExistingSubscritptionError("1");
 		assertThat(outContent.toString())
-			.isEqualTo("Error: No existing subscription with id 1"+EOL);	
+			.hasToString("Error: No existing subscription with id 1"+EOL);	
 	}
 	
 	@Test
 	public void testMonthlySubscriptionAdded() {
 		cliView.subscriptionAdded(SUBSCRIPTION_FIXTURE);
 		assertThat(outContent.toString())
-			.isEqualTo("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] added"+EOL);	
+			.hasToString("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] added"+EOL);	
 	}
 	
 	@Test
 	public void testSubscriptionRemoved() {
 		cliView.subscriptionRemoved(SUBSCRIPTION_FIXTURE);
 		assertThat(outContent.toString())
-			.isEqualTo("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] removed"+EOL);		
+			.hasToString("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] removed"+EOL);		
 	}
 }
