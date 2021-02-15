@@ -86,8 +86,8 @@
 		
 		<sonar.coverage.exclusions>
 			**/model/*.*,
-			**/App.*
-			**/view/swing/**.java
+			**/app/SubscriptionManagerApp.java
+			<!-- **/view/swing/**.java -->
 		</sonar.coverage.exclusions>
 		
 	</properties>
@@ -144,6 +144,7 @@
 			<groupId>org.testcontainers</groupId>
 			<artifactId>mongodb</artifactId>
 			<version>${testcontainer.version}</version>
+			<scope>test</scope>
 		</dependency>
 		
 		<!-- ASSERTJ SWING -->

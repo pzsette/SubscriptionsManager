@@ -34,10 +34,8 @@ public class CustomListModel<T> extends AbstractListModel<T> {
 	}
 	
 	public void addElement(T sub) {
-		if (!list.contains(sub)) {
-			list.add(sub);
-			fireContentsChanged(this, 0, getSize());
-		}
+		list.add(sub);
+		fireContentsChanged(this, 0, getSize());
 	}
 	
 	public void removeElement(T sub) {
