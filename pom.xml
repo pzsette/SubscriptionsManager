@@ -33,9 +33,9 @@
 		<log4j.version>2.13.3</log4j.version>
 		<sonarqube.version>3.7.0.1746</sonarqube.version>
 
-		<sonar.projectKey>pzsette_SubscriptionsManager</sonar.projectKey>
+		<!-- <sonar.projectKey>pzsette_SubscriptionsManager</sonar.projectKey>
 		<sonar.organization>pzsette777</sonar.organization>
-		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url> -->
 		
 		<sonar.issue.ignore.multicriteria>e1,e2,e3,e4,e5</sonar.issue.ignore.multicriteria>
 		
@@ -60,9 +60,7 @@
 			java:S117
 		</sonar.issue.ignore.multicriteria.e3.ruleKey>
 		<sonar.issue.ignore.multicriteria.e3.resourceKey>
-			**/SubscriptionViewSwing.java,
-			**/SubscriptionViewSwingE2E.java,
-			**/SubscriptionViewCLIE2E.java
+			**/SubscriptionViewSwing.java
 		</sonar.issue.ignore.multicriteria.e3.resourceKey>
 		
 		<!-- Disable "Constant names should comply with a naming convention" -->
