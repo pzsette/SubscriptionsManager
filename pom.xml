@@ -55,7 +55,7 @@
 			**/SubscriptionViewSwingTest.java
 		</sonar.issue.ignore.multicriteria.e2.resourceKey>	
 		
-		<!-- Local variable and function parameter names should comply with a naming convention" -->
+		<!-- Disable "Local variable and function parameter names should comply with a naming convention" -->
 		<sonar.issue.ignore.multicriteria.e3.ruleKey>
 			java:S117
 		</sonar.issue.ignore.multicriteria.e3.ruleKey>
