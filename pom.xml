@@ -55,12 +55,14 @@
 			**/SubscriptionViewSwingTest.java
 		</sonar.issue.ignore.multicriteria.e2.resourceKey>	
 		
-		<!-- Local variable and function parameter names should comply with a naming convention" -->
+		<!-- Disable "Local variable and function parameter names should comply with a naming convention" -->
 		<sonar.issue.ignore.multicriteria.e3.ruleKey>
 			java:S117
 		</sonar.issue.ignore.multicriteria.e3.ruleKey>
 		<sonar.issue.ignore.multicriteria.e3.resourceKey>
-			**/SubscriptionViewSwing.java
+			**/SubscriptionViewSwing.java,
+			**/SubscriptionViewSwingE2E.java,
+			**/SubscriptionViewCLIE2E.java
 		</sonar.issue.ignore.multicriteria.e3.resourceKey>
 		
 		<!-- Disable "Constant names should comply with a naming convention" -->
@@ -71,7 +73,7 @@
 			**/SubscriptionManagerApp.java
 		</sonar.issue.ignore.multicriteria.e4.resourceKey>
 		
-		<!-- Disable "Constant names should comply with a naming convention" -->
+		<!-- Disable "Standard outputs should not be used directly to log anything" -->
 		<sonar.issue.ignore.multicriteria.e5.ruleKey>
 			java:S106
 		</sonar.issue.ignore.multicriteria.e5.ruleKey>
@@ -87,7 +89,6 @@
 		<sonar.coverage.exclusions>
 			**/model/*.*,
 			**/app/SubscriptionManagerApp.java
-			<!-- **/view/swing/**.java -->
 		</sonar.coverage.exclusions>
 		
 	</properties>

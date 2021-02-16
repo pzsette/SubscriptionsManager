@@ -95,18 +95,13 @@ public class SubscriptionViewCLI implements SubscriptionView {
 		output.println("3) Annual");
 		int choice = forceDigitChoice(1, 3);
 		String repetition = null;
-		switch (choice) {
-		case 1:
+		if (choice == 1) {
+
 			repetition = "Weekly";
-			break;
-		case 2:
+		} else if (choice == 2) {
 			repetition = "Monthly";
-			break;
-		case 3:	
+		} else {	
 			repetition = "Annual";
-			break;
-		default:
-			break;	
 		}
 		return repetition;
 	}
@@ -157,24 +152,16 @@ public class SubscriptionViewCLI implements SubscriptionView {
 		while (!exit) {
 			showOptions();
 			int choice = forceDigitChoice(1, 5);
-			switch(choice) {
-			case 1:
+			if (choice == 1) {
 				showSubscriptions();
-				break;
-			case 2:
+			} else if (choice == 2) {
 				showSpending();
-				break;
-			case 3:	
+			} else if (choice == 3) {
 				addSubscription();
-				break;
-			case 4:
+			} else if (choice == 4) {
 				deleteSubscription();
-				break;
-			case 5:
+			} else {
 				exit = true;
-				break;
-			default:
-				break;
 			}
 		}
 		output.println("Goodbye!");
