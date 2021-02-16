@@ -2,15 +2,15 @@
 
 ## Introduction
 
-This project is a simple application built using the Test-Driven Development (**TDD**) methodology together with **Build Automation** and **Continuous Integration** services. This application allows a user to store informations about differents subscriptions and track the monthly spending for all of them.
+This project is a simple application built using the Test-Driven Development (**TDD**) methodology together with **Build Automation** and **Continuous Integration** services. This application allows a user to store informations about different subscriptions and track the monthly spending for all of them.
 
 ## Application features
 
 The applications itself is quite simple, the features are:
 
-* Add a new subscription to the database. Every subscription has an id, a name a price and the relative repetition.
-* Remove a subscription to the database
-* Compute and show the monthly spending overall for all the subscription.
+* Add a new subscription to the database.
+* Remove a subscription from the database
+* Compute and show the monthly spending overall for all the subscriptions.
 
 The user can interact with the application in two different ways: 
 
@@ -19,13 +19,13 @@ The user can interact with the application in two different ways:
 
 ## Used technologies
 
-Here below are listed all the technlogies and tools used to make this application.
+Here below are listed all the technologies and tools used to make this application.
 
 ### Development tools
 
 * **Operating Sistem**: macOS Catalina 10.15.7
 * **IDE**: Eclipse 4.7.0
-* **Programming language**: Java 13
+* **Programming language**: Java 11
 
 ### Version control
 
@@ -44,9 +44,10 @@ Here below are listed all the technlogies and tools used to make this applicatio
 ### Testing
 
 * **JUnit**: open source Unit Testing Framework for JAVA.
-* **AssertJ**: provides a rich set of assertions to improves test code. readability
+* **AssertJ**: provides a rich set of assertions to improve test code readability.
 * **AssertJSwign**: Java library that provides a fluent interface for functional Swing UI testing.
 * **Mockito**: framework which can be used in conjunction with JUnit. Mockito allows to create and configure mock objects.
+* **MongoDB Java Server** in-memory implementation od a MongoDB server.
 * **Testcontainer**:  Java library that supports JUnit tests, providing lightweight, throwaway instances of common databases.
 
 ### Code Quality
@@ -56,27 +57,27 @@ Here below are listed all the technlogies and tools used to make this applicatio
 
 ## Implementation
 
-The whole application is based on the **MVC** Model-View-Controller) patter. To be precise we used the MVP a slightly variant of the MVC. 
+The whole application is based on the **MVC** (Model-View-Controller) patter. To be precise we used the MVP a slightly variant of the MVC. 
 
 ### Model
 
-This class represents a subcription instance. It has four attributes: id, name, price and repetition. The repetition field is a `String` and can assume three values: `"Weekly"`, `"Monthly"`, `"Annual"`. This class contains all the getter/setter and the mothods ```equals```, `toString`, `equals`.
+This class represents a subcription instance. It has four attributes: id, name, price and repetition. The repetition field is a `String` and can assume three values: `"Weekly"`, `"Monthly"`, `"Annual"`. This class contains all the getter/setter and the mothods `hashCode`, `toString`, `equals`.
 
 ### Controller
 
-The Controller acts as a bridge between the view and the model. It retrieves data from the repository (the model) and formats it into for dispaly in the view. The ```SubscriptionController``` class obviously has a reference to a View object and to a Repository object. It has three methods to:
+The Controller acts as a bridge between the view and the model. It retrieves data from the repository (the model) and formats them for dispaly in the view. The `SubscriptionController` class obviously has a reference to a View object and to a Repository object. It has three methods to:
 
 * Load alla elements into the view from the repository.
-* Update the view when a new Subscrition in added.
-* Update the view when a Subscription in delete.
+* Update the view when a new Subscrition is added.
+* Update the view when a Subscription is deleted.
 
 ### Repository
 
 The repository interface provides methods for simple operations on the database.
 
-The `SubscriptionMongoRepository` class implents this interface to use a MongoDB database. The constructor takes a `MongoCLient` object, the database and the repository name.
+The `SubscriptionMongoRepository` class implents this interface to use a MongoDB database. The constructor takes a `MongoCLient` object, the database name and the repository name.
 
-To avoid having to manually convert Subscription objects into Mongo documents it was added the POJOs (Plain Old Java Object) support via the PojoCodec, wich allows for direct serialization of POJOs to and from BSON.
+In order to avoid having to manually convert Subscription objects into Mongo documents it was added the POJOs (Plain Old Java Object) support via the PojoCodec, wich allows for direct serialization of POJOs to and from BSON.
 
 Automatic POJO support can be provided by building `PojoCodecProvider` by calling `builder.build()` then it can be combined with an existing `CodecRegistry` to create a new registry that will also support the registered POJOs.
 After creating the codec registry, the model type must be passed to the `getCollection` method in `MongoDatabase`, and the registry can then be added using the `withCodecRegistry` modifier of `MongoCollection`.
@@ -95,30 +96,12 @@ public SubscriptionMongoRepository(MongoClient client, String dbName, String col
 ```	
 ### Compute Spending
 
-The `SubscriptionSpending` class is used to computer the mothly spending amount. It has only one static method `computeSpending` that takes as input `Lis<Subscrption>` and returns the spending as double.
-
-```	
-public static double computeSpending(List<Subscription> subs) {
-	Double price = 0.0;
-	for(Subscription sub : subs) {
-		if (sub.getRepetition().equals("Weekly")) {
-			price += sub.getPrice()*4;
-		} else if( sub.getRepetition().equals("Monthly")) {
-			price += sub.getPrice();
-		} else {
-			price += sub.getPrice()/12;
-		}
-	}
-	return price;
- } 
-```	
-The beahaviour of this function is tested in the 
-`SubscriptionMongoRepositoryTest` class.
- 
+The `SubscriptionSpending` class is used to compute the monthly spending amount. It has only one static method `computeSpending` that takes as input a `List<Subscription>` and returns the spending as double.	
+The beahaviour of this function is tested in the `SubscriptionMongoRepositoryTest` class.
 
 ### Docker Virtualization
 
-Usually installi a server directly on the development machin is a bad idea, infact this can cause issues durign configuration among all tem's members. **Docker** containers are used with aim of virtualize the mongoDB server for this application.
+Usually install a server directly on the development machin is a bad idea, infact this can cause issues during configuration among all team's members. **Docker** containers are used with aim of virtualize the mongoDB server for this application.
 The main advantage of containers is the high reproducibily, so every one can use the same version of the server.
 The following command allows to start a MongoDB container, from the image, on the port *27017*:
 
@@ -130,18 +113,17 @@ During integration and e2e tests MongoDB is configured and launched trough the *
 The generic view interface provides methods for loading and deleting methods and showing error messages. This application offers to the user to choose between two different UIs.
 
 #### GUI
-The GUI view is build using the Swing framework. Most of the work was done through the Window Builder tool. 
+The GUI view is build using the Swing framework. Most of the work was done through the Window-Builder tool. 
 
 <img src="screenshots/sub_gui.png" height=300/>
 
-The `updateAmountLabel()`
-method is responsable for updating the spending label whenever necessary using the static `computeSpending(List<Subscription>)` method of the `SubscriptionSpending` class.
+The `updateAmountLabel()` method is responsable for updating the spending label whenever necessary using the static `computeSpending(List<Subscription>)` method of the `SubscriptionSpending` class.
  
 #### CLI
 
 <img src="screenshots/sub_cli.png" height=145/>
 
-Since there are no tools for testing CLI-based application it was necessry to find a workaround to do that. All the functios print to ```System.out``` , so we can capture that output changing it with a different ```PrintStream```. In particular if change ```System.out``` with ```ByteArrayOutputStream```, the we can capture the output as a ```String```. Using **Dependancy Injection** we can create a different ```SubscriptionViewCLI``` instance depending if we're testing or executing the app.
+Since there are no tools for testing CLI-based application it was necessry to find a workaround to do that. All the functions print to `System.out`, so we can get that output changing it with a different `PrintStream`. In particular if `System.out` is changed with `ByteArrayOutputStream`, then we can capture the output as a `String`. Using **Dependancy Injection** we can create a different `SubscriptionViewCLI` instance depending if we're testing or executing the app.
 
 ```
 public class SubscriptionViewCLI implements SubscriptionView {
@@ -160,7 +142,7 @@ public class SubscriptionViewCLI implements SubscriptionView {
 }
 ```
 
-The function `runApp()` set scanner attribute, show the initial menu and then depending on the user's choice call the appropriate function.
+The function `runApp()` set scanner attribute, shows the initial menu and then depending on the user's choice call the appropriate function.
 
 ``` 
 public void runView() {
@@ -170,24 +152,16 @@ public void runView() {
 	while (!exit) {
 		showOptions();
 		int choice = forceDigitChoice(1, 5);
-		switch(choice) {
-		case 1:
+		if (choice == 1) {
 			showSubscriptions();
-			break;
-		case 2:
+		} else if (choice == 2) {
 			showSpending();
-			break;
-		case 3:	
+		} else if (choice == 3) {
 			addSubscription();
-			break;
-		case 4:
+		} else if (choice == 4) {
 			deleteSubscription();
-			break;
-		case 5:
+		} else {
 			exit = true;
-			break;
-		default:
-			break;
 		}
 	}
 	output.println("Goodbye!");
@@ -201,7 +175,7 @@ The functions `forceDoubleChoice()` and `forceDigitChoice(int low, int high)` en
 The application is fully tested and the **pyramid** shape is respected:
 
 * 50 Unit tests
-* 18 Integrations tests
+* 17 Integrations tests
 * 10 End to End tests
 
 ### Unit tests
@@ -231,13 +205,13 @@ Integrations tests verify the correct behaviour of some components together and 
 
 Integrations tests are stored in the *src/it/java* folder.
 
-In particular were tested interactions between, only in the positive or most interesting cases:
+In particular were tested interactions only in the positive or most interesting cases:
 
 * Controller with a real SubscriptionRepository implementation. View is still mocked.
 
 * SubscriptionMongoRepository interacting with a real mongoDB instance.
 
-* Interaction between both types of view and the controller and a real repository.
+* Interaction between both types of view the controller and a real repository.
 
 ### End To End tests
 
@@ -247,7 +221,7 @@ Integrations tests are stored in the *src/e2e/java* folder.
 
 All the tests interact only with the user interface of the application and they're launched from the `main` method in `SubscriptionManagerApp` class.
 
-When testing the GUI view, the application is started using the AssertJ Swing API of the class ApplicationLauncher. Then the API of WindowFinder is used to lookup the frame of ourview by title.
+When testing the GUI view, the application is started using the AssertJ Swing API of the class ApplicationLauncher. Then the API of WindowFinder is used to lookup the frame of the view by title.
 
 When testing the CLI view a different approach is used. The `ProcessBuilder` class is used to create a new process directly for the JAR file. The output stream is redireted into a `BufferReader` and `BufferWriter` is used to simulate an input from the user.
 
@@ -259,44 +233,44 @@ With end to end tests is verified if:
 
 * Error messages are correctly shown.
 
-
 ### Code coverage
 
-Using **JaCoCo** we can verify that 100% coverage is achived.
-The classes without logic were excluded from coverage measure, throught configuration in the `pom.xml` file.
+Using **JaCoCo** we can verify that 100% coverage is achieved.
+The classes without logic were excluded from coverage measure, through configuration in the `pom.xml` file.
 More precisely were exclued the `Subscription` model class and the `SubscriptionManagerApp`, that contains the main method.
 
 To enable the 100% coverage the following profile is available:
+
 `mvn clean verify -P coverage-check`
 
 ### Mutation testing
 
-Also mutation testing is used in this project usnig the **PIT** library. In the pom file mutators are configured to STRONGER level and the mutation threshold is set to 100. Also in this case some classes are excluded.
+Also mutation testing is used in this project thanks to the **PIT** library. In the pom file mutators are configured to STRONGER level and the mutation threshold is set to 100. Also in this case some classes are excluded.
 
-To enable the mutation check the following profile is availble:
+To enable the mutation check the following profile is available:
+
 `mvn clean verify -P mutation-testing`
-
 
 ### Continous integration
 
 In this project the GitHub action service is used for continous integrations.
-The execution is configured in the maven.yaml file inside the *.github/workflows* folder. The syntax follow the official GitHub documentation.
+The execution is configured in the maven.yaml file inside the *.github/workflows* folder. The syntax follows the official GitHub documentation.
 
 Basically workflow is made by two branches:
 
-* The first one is executed for every push request on the repository and the eviroment is Java13 on a Ubuntu machine. The *.m2* Maven folder and the *.sonar/cache* folder are cached to improve execution time. Then the maven command is executed to perform:
+* The first one is executed for every push request on the repository and the eviroment is Java11 on a Ubuntu machine. The *.m2* Maven folder and the *.sonar/cache* folder are cached to improve execution time. Then the maven command is executed to perform:
 	1. Build and test the project
 	2. JaCoCo coverage
 	3. PIT mutation
 	4. Coveralls report 
 	5. SonarCloud analysis
 
-* The second one is executed after merging a Pull request and runs the same job on three differents Java enviroments: 8, 9, 11.
+* The second one is executed after merging a Pull request and runs the same job on two differents Java enviroments: 8, 9.
 In this case the maven command performs:
 	1. Build and test
 	2. JaCoCo coverage
 	3. PIT mutaiton
-
+	
 ```
 name: Java CI with Maven
 
@@ -313,10 +287,10 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - name: Set up JDK 13
+    - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
-        java-version: 13
+        java-version: 11
     - name: Cache Maven packages
       uses: actions/cache@v2
       with:
@@ -342,7 +316,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        java: [8, 9, 11]
+        java: [8, 9]
     name: Test on older Java versions
 
     steps:
@@ -368,7 +342,9 @@ jobs:
 
 #### SonarCube
 
-It's possibile too perform a code quality analysis locally running a Docker Container using the **sonarqube Docker image**, then: `mvn clean verify sonar:sonar`
+It's possibile too perform a code quality analysis locally running a Docker Container using the **sonarqube Docker image**, then: 
+
+`mvn clean verify sonar:sonar`
 
 #### SonarCloud
 
@@ -384,7 +360,7 @@ mvn clean verify sonar:sonar \
 
 ## Execution
 
-To start the application with the right paraments we used **picocli**, a command line framework for creating Java command line applications with almost zero codeis. Using its annotation the following arguments were specified:
+To start the application from the **JAR** with the right paraments we used **picocli**, a framework for creating Java command line applications with almost zero code. Using its annotation the following arguments were specified:
 
 Argument | Description
 ---------|-------------
@@ -393,3 +369,13 @@ Argument | Description
 --db-name | Database name. Default value: `subscriptionsmanager`
 --db-collection | Collection name. Default value: `subscriptions`
 --ui  | User interfaces options (`gui`, `cli`). Default value: `gui`
+
+Is possible to build the **fat JAR** package through the command 
+
+`mvn clean package` 
+
+or alteratively you can download the **JAR** directly from [here](https://github.com/pzsette/SubscriptionsManager/releases)
+
+Start the app with:
+
+`Java -jar -target/subscriptionsmanager-0.0.1-SNAPSHOT-jar-with-dependencies.jar [arguments]` 
