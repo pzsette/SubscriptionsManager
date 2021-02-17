@@ -116,6 +116,9 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 		window.textBox("nameTextField").enterText("test");
 		window.textBox("priceTextField").enterText("/7.0");
 		window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
+		window.textBox("priceTextField").setText("");
+		window.textBox("priceTextField").enterText("-7.0");
+		window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
 	}
 	
 	@Test @GUITest

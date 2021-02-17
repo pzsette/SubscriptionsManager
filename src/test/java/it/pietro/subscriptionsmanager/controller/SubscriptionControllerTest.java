@@ -62,7 +62,7 @@ public class SubscriptionControllerTest {
 	}
 	
 	@Test
-	public void testDeleteSubscriptionWhenSubscritpionExists() {
+	public void testDeleteSubscriptionWhenSubscriptionExists() {
 		when(repository.findById(SUBSCRIPTION_FIXTURE.getId()))
 			.thenReturn(SUBSCRIPTION_FIXTURE);
 		controller.deleteSubscription(SUBSCRIPTION_FIXTURE.getId());

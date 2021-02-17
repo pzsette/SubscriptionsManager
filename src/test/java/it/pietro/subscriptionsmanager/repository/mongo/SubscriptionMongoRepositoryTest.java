@@ -120,7 +120,6 @@ public class SubscriptionMongoRepositoryTest {
 	private List<Subscription> readAllSubscriptionFormDB() {
 		return StreamSupport
 				.stream(collection.find().spliterator(), false)
-				//.map(d -> new Subscription(""+d.get("id"), ""+d.get("name"), (double)d.get("price"), ""+d.get("repetition")))
 				.collect(Collectors.toList());
 	}
 

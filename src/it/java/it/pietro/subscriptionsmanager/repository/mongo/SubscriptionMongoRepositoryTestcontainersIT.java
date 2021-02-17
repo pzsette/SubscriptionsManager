@@ -80,7 +80,7 @@ public class SubscriptionMongoRepositoryTestcontainersIT {
 	@Test
 	public void testSave() {
 		repository.save(SUBSCRIPTION_FIXTURE);
-		assertThat(readAllSubscriptionFormDB())
+		assertThat(readAllSubscriptionFromDB())
 			.containsExactly(SUBSCRIPTION_FIXTURE);
 	}
 	
@@ -88,11 +88,11 @@ public class SubscriptionMongoRepositoryTestcontainersIT {
 	public void testDelete() {
 		collection.insertOne(SUBSCRIPTION_FIXTURE);
 		repository.delete(SUBSCRIPTION_FIXTURE.getId());
-		assertThat(readAllSubscriptionFormDB())
+		assertThat(readAllSubscriptionFromDB())
 			.isEmpty();
 	}
 	
-	private List<Subscription> readAllSubscriptionFormDB() {
+	private List<Subscription> readAllSubscriptionFromDB() {
 		return StreamSupport
 				.stream(collection.find().spliterator(), false)
 				.collect(Collectors.toList());

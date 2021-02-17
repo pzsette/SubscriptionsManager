@@ -80,8 +80,7 @@
 			java:S3577
 		</sonar.issue.ignore.multicriteria.e6.ruleKey>
 		<sonar.issue.ignore.multicriteria.e6.resourceKey>
-			**/SubscriptionManagerAppCLIE2E.java,
-			**/SubscriptionManagerAppSwingE2E.java
+			**/SubscriptionManagerApp*E2E.java
 		</sonar.issue.ignore.multicriteria.e6.resourceKey>
 
 		<sonar.junit.reportPaths>

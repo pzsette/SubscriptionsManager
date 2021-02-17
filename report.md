@@ -1,4 +1,4 @@
-# Subscriptions Manager
+Virtualisationserializationsmethods# Subscriptions Manager
 
 ## Introduction
 
@@ -12,7 +12,7 @@ The applications itself is quite simple, the features are:
 * Remove a subscription from the database
 * Compute and show the monthly spending overall for all the subscriptions.
 
-The user can interact with the application in two different ways: 
+The user can interact with the application in two different ways:
 
 * **GUI** (Graphic User Interface)
 * **CLI** (Command Line Interface)
@@ -57,11 +57,11 @@ Here below are listed all the technologies and tools used to make this applicati
 
 ## Implementation
 
-The whole application is based on the **MVC** (Model-View-Controller) patter. To be precise we used the MVP a slightly variant of the MVC. 
+The whole application is based on the **MVC** (Model-View-Controller) patter. To be precise we used the MVP a slightly variant of the MVC.
 
 ### Model
 
-This class represents a subcription instance. It has four attributes: id, name, price and repetition. The repetition field is a `String` and can assume three values: `"Weekly"`, `"Monthly"`, `"Annual"`. This class contains all the getter/setter and the mothods `hashCode`, `toString`, `equals`.
+This class represents a subscription instance. It has four attributes: id, name, price and repetition. The repetition field is a `String` and can assume three values: `"Weekly"`, `"Monthly"`, `"Annual"`. This class contains all the getter/setter and the mothods `hashCode`, `toString`, `equals`.
 
 ### Controller
 
@@ -75,76 +75,76 @@ The Controller acts as a bridge between the view and the model. It retrieves dat
 
 The repository interface provides methods for simple operations on the database.
 
-The `SubscriptionMongoRepository` class implents this interface to use a MongoDB database. The constructor takes a `MongoCLient` object, the database name and the repository name.
+The `SubscriptionMongoRepository` class implements this interface to use a MongoDB database. The constructor takes a `MongoCLient` object, the database name and the repository name.
 
-In order to avoid having to manually convert Subscription objects into Mongo documents it was added the POJOs (Plain Old Java Object) support via the PojoCodec, wich allows for direct serialization of POJOs to and from BSON.
+In order to avoid having to manually convert Subscription objects into Mongo documents it was added the POJOs (Plain Old Java Object) support via the PojoCodec, which allows for direct serialization of POJOs to and from BSON.
 
 Automatic POJO support can be provided by building `PojoCodecProvider` by calling `builder.build()` then it can be combined with an existing `CodecRegistry` to create a new registry that will also support the registered POJOs.
 After creating the codec registry, the model type must be passed to the `getCollection` method in `MongoDatabase`, and the registry can then be added using the `withCodecRegistry` modifier of `MongoCollection`.
 
 ```
 public SubscriptionMongoRepository(MongoClient client, String dbName, String collectionName) {
-	
+
 	CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
 			fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-	
+
 	collection = client
 			.getDatabase(dbName)
 			.getCollection(collectionName, Subscription.class)
 			.withCodecRegistry(pojoCodecRegistry);		
 }
-```	
+```
 ### Compute Spending
 
-The `SubscriptionSpending` class is used to compute the monthly spending amount. It has only one static method `computeSpending` that takes as input a `List<Subscription>` and returns the spending as double.	
-The beahaviour of this function is tested in the `SubscriptionMongoRepositoryTest` class.
+The `SubscriptionSpending` class is used to compute the monthly spending amount. It has only one static method `computeSpending` that takes as input a `List<Subscription>` and returns the spending as double.
+The behaviour of this function is tested in the `SubscriptionMongoRepositoryTest` class.
 
 ### Docker Virtualization
 
-Usually install a server directly on the development machin is a bad idea, infact this can cause issues during configuration among all team's members. **Docker** containers are used with aim of virtualize the mongoDB server for this application.
-The main advantage of containers is the high reproducibily, so every one can use the same version of the server.
+Usually install a server directly on the development machine is a bad idea, in fact this can cause issues during configuration among all team's members. **Docker** containers are used with aim of virtualising the mongoDB server for this application.
+The main advantage of containers is the high reproducibility, so every one can use the same version of the server.
 The following command allows to start a MongoDB container, from the image, on the port *27017*:
 
 `docker run -p 27017:27017 --rm mongo:4.2.3`
 
-During integration and e2e tests MongoDB is configured and launched trough the **Testcontainer** Java library. 
+During integration and e2e tests MongoDB is configured and launched trough the **Testcontainer** Java library.
 
 ### View
 The generic view interface provides methods for loading and deleting methods and showing error messages. This application offers to the user to choose between two different UIs.
 
 #### GUI
-The GUI view is build using the Swing framework. Most of the work was done through the Window-Builder tool. 
+The GUI view is build using the Swing framework. Most of the work was done through the Window-Builder tool.
 
 <img src="screenshots/sub_gui.png" height=300/>
 
-The `updateAmountLabel()` method is responsable for updating the spending label whenever necessary using the static `computeSpending(List<Subscription>)` method of the `SubscriptionSpending` class.
- 
+The `updateAmountLabel()` method is responsible for updating the spending label whenever necessary using the static `computeSpending(List<Subscription>)` method of the `SubscriptionSpending` class.
+
 #### CLI
 
 <img src="screenshots/sub_cli.png" height=145/>
 
-Since there are no tools for testing CLI-based application it was necessry to find a workaround to do that. All the functions print to `System.out`, so we can get that output changing it with a different `PrintStream`. In particular if `System.out` is changed with `ByteArrayOutputStream`, then we can capture the output as a `String`. Using **Dependancy Injection** we can create a different `SubscriptionViewCLI` instance depending if we're testing or executing the app.
+Since there are no tools for testing CLI-based application it was necessary to find a workaround to do that. All the functions print to `System.out`, so we can get that output changing it with a different `PrintStream`. In particular if `System.out` is changed with `ByteArrayOutputStream`, then we can capture the output as a `String`. Using **Dependancy Injection** we can create a different `SubscriptionViewCLI` instance depending if we're testing or executing the app.
 
 ```
 public class SubscriptionViewCLI implements SubscriptionView {
-	
-	private List<Subscription> listSubscriptions; 
-	
+
+	private List<Subscription> listSubscriptions;
+
 	private Scanner scanner;
 	private PrintStream output;
-	
+
 	public SubscriptionViewCLI(PrintStream output) {
 		this.output = output;
 		listSubscriptions = new ArrayList<>();
 	}
-	
+
 	/* ... */
 }
 ```
 
 The function `runApp()` set scanner attribute, shows the initial menu and then depending on the user's choice call the appropriate function.
 
-``` 
+```
 public void runView() {
 	scanner = new Scanner(System.in);
 	output.println("SUBSCRIPTIONS MANAGER");
@@ -166,7 +166,7 @@ public void runView() {
 	}
 	output.println("Goodbye!");
 }
-``` 
+```
 
 The functions `forceDoubleChoice()` and `forceDigitChoice(int low, int high)` ensure that the user chooses only allowed values.
 
@@ -201,7 +201,7 @@ JUnit is the main framework used for testing, together with AssertJ and AssertJ 
 
 ### Integrations tests
 
-Integrations tests verify the correct behaviour of some components together and when interacting with external servicie. In this case the MongoDB database are started by **Testcontainer**, a Java library that provides throwaway instances of different database types.
+Integrations tests verify the correct behaviour of some components together and when interacting with external service. In this case the MongoDB database are started by **Testcontainer**, a Java library that provides throwaway instances of different database types.
 
 Integrations tests are stored in the *src/it/java* folder.
 
@@ -223,11 +223,11 @@ All the tests interact only with the user interface of the application and they'
 
 When testing the GUI view, the application is started using the AssertJ Swing API of the class ApplicationLauncher. Then the API of WindowFinder is used to lookup the frame of the view by title.
 
-When testing the CLI view a different approach is used. The `ProcessBuilder` class is used to create a new process directly for the JAR file. The output stream is redireted into a `BufferReader` and `BufferWriter` is used to simulate an input from the user.
+When testing the CLI view a different approach is used. The `ProcessBuilder` class is used to create a new process directly for the JAR file. The output stream is redirected into a `BufferReader` and `BufferWriter` is used to simulate an input from the user.
 
 With end to end tests is verified if:
 
-* All elements are correctly loaded at the startup and the spending amout is correctly computed.
+* All elements are correctly loaded at the startup and the spending amount is correctly computed.
 
 * Addition and Removal of a subscription is done correctly and the spending amount is correctly updated.
 
@@ -237,7 +237,7 @@ With end to end tests is verified if:
 
 Using **JaCoCo** we can verify that 100% coverage is achieved.
 The classes without logic were excluded from coverage measure, through configuration in the `pom.xml` file.
-More precisely were exclued the `Subscription` model class and the `SubscriptionManagerApp`, that contains the main method.
+More precisely were excluded the `Subscription` model class and the `SubscriptionManagerApp`, that contains the main method.
 
 To enable the 100% coverage the following profile is available:
 
@@ -253,24 +253,24 @@ To enable the mutation check the following profile is available:
 
 ### Continous integration
 
-In this project the GitHub action service is used for continous integrations.
+In this project the GitHub action service is used for continuous integrations.
 The execution is configured in the maven.yaml file inside the *.github/workflows* folder. The syntax follows the official GitHub documentation.
 
 Basically workflow is made by two branches:
 
-* The first one is executed for every push request on the repository and the eviroment is Java11 on a Ubuntu machine. The *.m2* Maven folder and the *.sonar/cache* folder are cached to improve execution time. Then the maven command is executed to perform:
+* The first one is executed for every push request on the repository and the environment is Java11 on a Ubuntu machine. The *.m2* Maven folder and the *.sonar/cache* folder are cached to improve execution time. Then the maven command is executed to perform:
 	1. Build and test the project
 	2. JaCoCo coverage
 	3. PIT mutation
-	4. Coveralls report 
+	4. Coveralls report
 	5. SonarCloud analysis
 
-* The second one is executed after merging a Pull request and runs the same job on two differents Java enviroments: 8, 9.
+* The second one is executed after merging a Pull request and runs the same job on two different Java environments: 8, 9.
 In this case the maven command performs:
 	1. Build and test
 	2. JaCoCo coverage
 	3. PIT mutaiton
-	
+
 ```
 name: Java CI with Maven
 
@@ -307,7 +307,7 @@ jobs:
           -D sonar.organization=$SONAR_ORGANIZATION \
           -D sonar.projectKey=$SONAR_PROJECT
       env:
-      
+
       /* ... */
 
   build-on-pr-merge:
@@ -342,7 +342,7 @@ jobs:
 
 #### SonarCube
 
-It's possibile too perform a code quality analysis locally running a Docker Container using the **sonarqube Docker image**, then: 
+It's possibile too perform a code quality analysis locally running a Docker Container using the **sonarQube Docker image**, then:
 
 `mvn clean verify sonar:sonar`
 
@@ -360,7 +360,7 @@ mvn clean verify sonar:sonar \
 
 ## Execution
 
-To start the application from the **JAR** with the right paraments we used **picocli**, a framework for creating Java command line applications with almost zero code. Using its annotation the following arguments were specified:
+To start the application from the **JAR** with the right parameters we used **picocli**, a framework for creating Java command line applications with almost zero code. Using its annotation the following arguments were specified:
 
 Argument | Description
 ---------|-------------
@@ -370,12 +370,12 @@ Argument | Description
 --db-collection | Collection name. Default value: `subscriptions`
 --ui  | User interfaces options (`gui`, `cli`). Default value: `gui`
 
-Is possible to build the **fat JAR** package through the command 
+Is possible to build the **fat JAR** package through the command
 
-`mvn clean package` 
+`mvn clean package`
 
-or alteratively you can download the **JAR** directly from [here](https://github.com/pzsette/SubscriptionsManager/releases)
+or alternatively you can download the **JAR** directly from [here](https://github.com/pzsette/SubscriptionsManager/releases)
 
 Start the app with:
 
-`Java -jar -target/subscriptionsmanager-0.0.1-SNAPSHOT-jar-with-dependencies.jar [arguments]` 
+`Java -jar -target/subscriptionsmanager-0.0.1-SNAPSHOT-jar-with-dependencies.jar [arguments]`
