@@ -33,12 +33,19 @@ public class SubscriptionViewCLIIT {
 	private static final String DB_NAME = "subscriptionsmanager";
 	private static final String DB_COLLECTION = "subscriptions";
 	
-	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Monthly");
-	private static final Subscription SUBSCRIPTION_FIXTURE2 = new Subscription("2", "Test", 1.0, "Monthly");
+	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 2.0, "Monthly");
+	private static final Subscription SUBSCRIPTION_FIXTURE2 = new Subscription("2", "Spotify", 1.0, "Monthly");
 	
 	private static final String EOL = System.getProperty("line.separator");
 	
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	
+	private void checkOutputWithGivenInput(String input, String output) {
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
+		assertThat(outContent.toString())
+			.contains(output);
+	}
 	
 	@Before
 	public void setUp() {
@@ -66,41 +73,29 @@ public class SubscriptionViewCLIIT {
 	
 	@Test
 	public void testAddSubscriptionSucces() {
-		String input = "3"+EOL+"1"+EOL+"Netflix"+EOL+"1.0"+EOL+"2"+EOL+"5"+EOL+"";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] added");
+		checkOutputWithGivenInput(
+				"3"+EOL+"1"+EOL+"Netflix"+EOL+"2.0"+EOL+"2"+EOL+"5"+EOL+"", 
+				SUBSCRIPTION_FIXTURE.toString()+" added");
 	}
 	
 	@Test
 	public void testAddSubscriptionError() {
 		repository.save(SUBSCRIPTION_FIXTURE);
-		String input = "3"+EOL+"1"+EOL+"TestFail"+EOL+"1.0"+EOL+"2"+EOL+"5"+EOL;
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains("Error: Already existing subscription with id 1");
+		checkOutputWithGivenInput(
+				"3"+EOL+"1"+EOL+"TestFail"+EOL+"1.0"+EOL+"2"+EOL+"5"+EOL, 
+				"Error: Already existing subscription with id 1");
 	}
 	
 	@Test
 	public void testRemoveSubscriptionSucces() {
 		controller.addSubscription(SUBSCRIPTION_FIXTURE);
-		String input = "4"+EOL+"1"+EOL+"5";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] removed");	
+		checkOutputWithGivenInput("4"+EOL+"1"+EOL+"5", SUBSCRIPTION_FIXTURE.toString()+" removed");	
 	}
 	
 	@Test
 	public void testRemoveSubscriptionError() {
 		cliView.getList().add(SUBSCRIPTION_FIXTURE);
-		String input = "4"+EOL+"1"+EOL+"5";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains("Error: No existing subscription with id 1");	
+		checkOutputWithGivenInput("4"+EOL+"1"+EOL+"5", "Error: No existing subscription with id 1");
 	}
 	
 	

@@ -30,12 +30,20 @@ public class SubscriptionViewCLITest {
 
 	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Monthly");
 	private static final Subscription SUBSCRIPTION_FIXTURE2 = new Subscription("2", "Test", 1.0, "Weekly");
+	
+	private void checkIfOutputContainsWithGivenInput(String input, String output) {
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
+		assertThat(outContent.toString())
+			.contains(output);
+	}
 	 
 	@Before
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
 		cliView = new SubscriptionViewCLI(new PrintStream(outContent));
 		cliView.setController(controller);
+		
 	}
 
 	@Test
@@ -51,65 +59,43 @@ public class SubscriptionViewCLITest {
 	public void testShowSubscriptions() {
 		cliView.getList().add(SUBSCRIPTION_FIXTURE);
 		cliView.getList().add(SUBSCRIPTION_FIXTURE2);
-		String input = "1"+EOL+"5";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains("All subscriptions:"+EOL+""+SUBSCRIPTION_FIXTURE.toString()+""+EOL+""+SUBSCRIPTION_FIXTURE2.toString()+""+EOL);
+		checkIfOutputContainsWithGivenInput(
+				"1"+EOL+"5", 
+				"All subscriptions:"+EOL+SUBSCRIPTION_FIXTURE.toString()+EOL+SUBSCRIPTION_FIXTURE2.toString());
 	}
 	
 	@Test
 	public void testShowSubscriptionWhenThereAreNoSubsAdded() {
-		String input = "1"+EOL+"5";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains("No subscriptions added"+EOL);
+		checkIfOutputContainsWithGivenInput("1"+EOL+"5", "No subscriptions added");
 	}
 	
 	@Test
 	public void testShowSpendingWhenThereAreNoSubAdded() {
-		String input = "2"+EOL+"5";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains("Total monthly spending: 0.0"+EOL);
+		checkIfOutputContainsWithGivenInput("2"+EOL+"5", "Total monthly spending: 0.0");
 	}
 	
 	@Test
 	public void testForceDigitChoiceShouldPrintErrorWhenInvalidDigitIsTyped() {
-		String input = "eee"+EOL+"5";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains("Invalid digit");
+		checkIfOutputContainsWithGivenInput("eee"+EOL+"5", "Invalid digit");
 	}
 	
 	@Test
 	public void testForceDigitChoiceShouldPrintErrorWhenInvalidIntegerIsTyped() {
-		String input = "8"+EOL+"5";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains("Input should be between 1 and 5");
+		checkIfOutputContainsWithGivenInput("8"+EOL+"5", "Input should be between 1 and 5");
 	}
 	
 	@Test
 	public void testForceDoubleChoiceShouldPrintErrorWhenInputIsANegativeDouble() {
-		String input = "3"+EOL+"1"+EOL+"test"+EOL+"-7"+EOL+"1"+EOL+"1"+EOL+"5";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains("Input should be a positive double");		
+		checkIfOutputContainsWithGivenInput(
+				"3"+EOL+"1"+EOL+"test"+EOL+"-7"+EOL+"1"+EOL+"1"+EOL+"5", 
+				"Input should be a positive double");	
 	}
 	
 	@Test
 	public void testForceDoubleChoiceShouldPrintErrorWhenInputCanNotBeParsedAsDouble() {
-		String input = "3"+EOL+"1"+EOL+"test"+EOL+"NotADouble"+EOL+"1"+EOL+"1"+EOL+"5";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains("Input should be a positive double");	
+		checkIfOutputContainsWithGivenInput(
+				"3"+EOL+"1"+EOL+"test"+EOL+"NotADouble"+EOL+"1"+EOL+"1"+EOL+"5",
+				"Input should be a positive double");
 	}
 	
 	@Test public void testChooseRepetitionMethodAssignsCorrectValue() {
@@ -123,19 +109,12 @@ public class SubscriptionViewCLITest {
 	public void testSpendindWhenThereAreSubsAdded() {
 		cliView.getList().add(SUBSCRIPTION_FIXTURE);
 		cliView.getList().add(SUBSCRIPTION_FIXTURE2);
-		String input = "2"+EOL+"5";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains("Total monthly spending: 5.0"+EOL);
+		checkIfOutputContainsWithGivenInput("2"+EOL+"5", "Total monthly spending: 5.0");
 	}
 	
 	@Test
 	public void testExit() {
-		String input = "5";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString()).contains("Goodbye!");
+		checkIfOutputContainsWithGivenInput("5", "Goodbye!");
 	}
 	
 	@Test
@@ -173,13 +152,13 @@ public class SubscriptionViewCLITest {
 	public void testMonthlySubscriptionAdded() {
 		cliView.subscriptionAdded(SUBSCRIPTION_FIXTURE);
 		assertThat(outContent.toString())
-			.hasToString("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] added"+EOL);	
+			.hasToString(SUBSCRIPTION_FIXTURE.toString()+" added"+EOL);	
 	}
 	
 	@Test
 	public void testSubscriptionRemoved() {
 		cliView.subscriptionRemoved(SUBSCRIPTION_FIXTURE);
 		assertThat(outContent.toString())
-			.hasToString("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] removed"+EOL);		
+			.hasToString(SUBSCRIPTION_FIXTURE.toString()+" removed"+EOL);		
 	}
 }

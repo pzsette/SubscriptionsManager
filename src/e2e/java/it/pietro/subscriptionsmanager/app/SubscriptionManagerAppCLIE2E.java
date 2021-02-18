@@ -69,7 +69,7 @@ public class SubscriptionManagerAppCLIE2E {
 	
 	@Test
 	public void testOnStartAllDatabaseElementsAreLoaded() throws Exception {
-		String output = getOutput("1"+EOL+"5"+EOL+"");
+		String output = getOutputWithGivenInput("1"+EOL+"5"+EOL+"");
 		assertThat(output)
 			.contains("Netflix", "1.0", "Monthly")
 			.contains("Test", "4.0", "Weekly");
@@ -77,8 +77,7 @@ public class SubscriptionManagerAppCLIE2E {
 	
 	@Test
 	public void testAddSubscriptionSucces() throws Exception {
-		String output = getOutput("3"+EOL+"3"+EOL+"TestSub"+EOL+"12"+EOL+"3"+EOL+"1"+EOL+"2"+EOL+"5");
-		
+		String output = getOutputWithGivenInput("3"+EOL+"3"+EOL+"TestSub"+EOL+"12"+EOL+"3"+EOL+"1"+EOL+"2"+EOL+"5");
 		assertThat(output)
 			.contains("TestSub", "12", "Annual")
 			.contains("Total monthly spending: 18.0");
@@ -86,34 +85,28 @@ public class SubscriptionManagerAppCLIE2E {
 	
 	@Test
 	public void testAddSubscriptionError() throws Exception {
-		String output = getOutput("3"+EOL+"1"+EOL+"TestSub"+EOL+"12"+EOL+"3"+EOL+"5");
-		
+		String output = getOutputWithGivenInput("3"+EOL+"1"+EOL+"TestSub"+EOL+"12"+EOL+"3"+EOL+"5");
 		assertThat(output)
 			.contains("Error: Already existing subscription with id 1");
 	}
 	
 	@Test
 	public void testRemoveSubscriptionSucces() throws Exception {
-		String output = getOutput("4"+EOL+"1"+EOL+"5");
-		
+		String output = getOutputWithGivenInput("4"+EOL+"1"+EOL+"5");
 		assertThat(output)
 			.contains("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] removed");
 	}
 	
 	@Test
 	public void testRemoveSubscriptionError() throws Exception {
-		String output = getOutput("4"+EOL+"8"+EOL+"5");
-
+		String output = getOutputWithGivenInput("4"+EOL+"8"+EOL+"5");
 		assertThat(output)
 			.contains("Error: No existing subscription with id 8");
 	}
 	
-	String getOutput(String input) throws Exception {
-
+	private String getOutputWithGivenInput(String input) throws Exception {
 		writer.write(input);
-		writer.flush();
 		writer.close();
-		
 		StringBuilder builder = new StringBuilder();
 		String line = "";
 		while ( (line = reader.readLine()) != null ) {
