@@ -40,6 +40,13 @@ public class SubscriptionViewCLIIT {
 	
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	
+	private void checkOutputWithGivenInput(String input, String output) {
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		cliView.runView();
+		assertThat(outContent.toString())
+			.contains(output);
+	}
+	
 	@Before
 	public void setUp() {
 		client = new MongoClient(new ServerAddress(mongo.getContainerIpAddress(), mongo.getMappedPort(27017)));	
@@ -66,41 +73,29 @@ public class SubscriptionViewCLIIT {
 	
 	@Test
 	public void testAddSubscriptionSucces() {
-		String input = "3"+EOL+"1"+EOL+"Netflix"+EOL+"2.0"+EOL+"2"+EOL+"5"+EOL+"";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains(SUBSCRIPTION_FIXTURE.toString()+" added");
+		checkOutputWithGivenInput(
+				"3"+EOL+"1"+EOL+"Netflix"+EOL+"2.0"+EOL+"2"+EOL+"5"+EOL+"", 
+				SUBSCRIPTION_FIXTURE.toString()+" added");
 	}
 	
 	@Test
 	public void testAddSubscriptionError() {
 		repository.save(SUBSCRIPTION_FIXTURE);
-		String input = "3"+EOL+"1"+EOL+"TestFail"+EOL+"1.0"+EOL+"2"+EOL+"5"+EOL;
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains("Error: Already existing subscription with id 1");
+		checkOutputWithGivenInput(
+				"3"+EOL+"1"+EOL+"TestFail"+EOL+"1.0"+EOL+"2"+EOL+"5"+EOL, 
+				"Error: Already existing subscription with id 1");
 	}
 	
 	@Test
 	public void testRemoveSubscriptionSucces() {
 		controller.addSubscription(SUBSCRIPTION_FIXTURE);
-		String input = "4"+EOL+"1"+EOL+"5";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains(SUBSCRIPTION_FIXTURE.toString()+" removed");	
+		checkOutputWithGivenInput("4"+EOL+"1"+EOL+"5", SUBSCRIPTION_FIXTURE.toString()+" removed");	
 	}
 	
 	@Test
 	public void testRemoveSubscriptionError() {
 		cliView.getList().add(SUBSCRIPTION_FIXTURE);
-		String input = "4"+EOL+"1"+EOL+"5";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		cliView.runView();
-		assertThat(outContent.toString())
-			.contains("Error: No existing subscription with id 1");	
+		checkOutputWithGivenInput("4"+EOL+"1"+EOL+"5", "Error: No existing subscription with id 1");
 	}
 	
 	
