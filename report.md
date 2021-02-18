@@ -1,4 +1,4 @@
-Virtualisationserializationsmethods# Subscriptions Manager
+# Subscriptions Manager
 
 ## Introduction
 
@@ -61,23 +61,23 @@ The whole application is based on the **MVC** (Model-View-Controller) patter. To
 
 ### Model
 
-This class represents a subscription instance. It has four attributes: id, name, price and repetition. The repetition field is a `String` and can assume three values: `"Weekly"`, `"Monthly"`, `"Annual"`. This class contains all the getter/setter and the mothods `hashCode`, `toString`, `equals`.
+This class represents a subscription instance. It has four attributes: id, name, price and repetition. The repetition field is a `String` and can assume three values: `"Weekly"`, `"Monthly"`, `"Annual"`. This class contains all the getter/setter and the methods `hashCode`, `toString`, `equals`.
 
 ### Controller
 
-The Controller acts as a bridge between the view and the model. It retrieves data from the repository (the model) and formats them for dispaly in the view. The `SubscriptionController` class obviously has a reference to a View object and to a Repository object. It has three methods to:
+The Controller acts as a bridge between the view and the model. It retrieves data from the repository (the model) and formats them for display in the view. The `SubscriptionController` class obviously has a reference to a View object and to a Repository object. It has three methods to:
 
 * Load alla elements into the view from the repository.
-* Update the view when a new Subscrition is added.
+* Update the view when a new Subscription is added.
 * Update the view when a Subscription is deleted.
 
 ### Repository
 
 The repository interface provides methods for simple operations on the database.
 
-The `SubscriptionMongoRepository` class implements this interface to use a MongoDB database. The constructor takes a `MongoCLient` object, the database name and the repository name.
+The `SubscriptionMongoRepository` class implements this interface to use a MongoDB database. The constructor takes a `MongoClient` object, the database name and the repository name.
 
-In order to avoid having to manually convert Subscription objects into Mongo documents it was added the POJOs (Plain Old Java Object) support via the PojoCodec, which allows for direct serialization of POJOs to and from BSON.
+In order to avoid having to manually convert Subscription objects into Mongo documents it was added the POJOs (Plain Old Java Object) support via the PojoCodec, which allows for direct serialisation of POJOs to and from BSON.
 
 Automatic POJO support can be provided by building `PojoCodecProvider` by calling `builder.build()` then it can be combined with an existing `CodecRegistry` to create a new registry that will also support the registered POJOs.
 After creating the codec registry, the model type must be passed to the `getCollection` method in `MongoDatabase`, and the registry can then be added using the `withCodecRegistry` modifier of `MongoCollection`.
@@ -99,7 +99,7 @@ public SubscriptionMongoRepository(MongoClient client, String dbName, String col
 The `SubscriptionSpending` class is used to compute the monthly spending amount. It has only one static method `computeSpending` that takes as input a `List<Subscription>` and returns the spending as double.
 The behaviour of this function is tested in the `SubscriptionMongoRepositoryTest` class.
 
-### Docker Virtualization
+### Docker Virtualisation
 
 Usually install a server directly on the development machine is a bad idea, in fact this can cause issues during configuration among all team's members. **Docker** containers are used with aim of virtualising the mongoDB server for this application.
 The main advantage of containers is the high reproducibility, so every one can use the same version of the server.
@@ -249,7 +249,7 @@ Also mutation testing is used in this project thanks to the **PIT** library. In 
 
 To enable the mutation check the following profile is available:
 
-`mvn clean verify -P mutation-testing`
+`mvn clean verify -P pit-mutation`
 
 ### Continous integration
 
@@ -285,8 +285,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
     - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
@@ -318,7 +316,6 @@ jobs:
       matrix:
         java: [8, 9]
     name: Test on older Java versions
-
     steps:
     - uses: actions/checkout@v2
       with:
@@ -342,7 +339,7 @@ jobs:
 
 #### SonarCube
 
-It's possibile too perform a code quality analysis locally running a Docker Container using the **sonarQube Docker image**, then:
+It's possibile too perform a code quality analysis locally building the **SonarQube Docker image**, using this [docker-compose.yml](https://github.com/SonarSource/docker-sonarqube/blob/master/example-compose-files/sq-with-postgres/docker-compose.yml) file, then:
 
 `mvn clean verify sonar:sonar`
 
@@ -356,7 +353,6 @@ mvn clean verify sonar:sonar \
 -D sonar.organization=$SONAR_ORGANIZATION \
 -D sonar.projectKey=$SONAR_PROJECT
 ```
-
 
 ## Execution
 
@@ -378,4 +374,4 @@ or alternatively you can download the **JAR** directly from [here](https://githu
 
 Start the app with:
 
-`Java -jar -target/subscriptionsmanager-0.0.1-SNAPSHOT-jar-with-dependencies.jar [arguments]`
+`Java -jar ./target/subscriptionsmanager-0.0.1-SNAPSHOT-jar-with-dependencies.jar [arguments]`

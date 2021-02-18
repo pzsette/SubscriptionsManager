@@ -11,6 +11,7 @@
 
 A simple Java application to keep track and have an overview of subscriptions and their costs. Built using test driven development (TDD) with Java and Maven. It can be used through a GUI or a CLI interface.
 
+[Full project report](report.md)
 ## Screenshots
 
 <img src="screenshots/sub_gui.png" height=300/>
@@ -44,7 +45,7 @@ alternatively you can execute the **jacoco 100% coverage check** with:
 
 or you can execute **mutation testing** pit with:
 
-`mvn clean verify -P mutation-testing`
+`mvn clean verify -P pit-mutation`
 
 ## Run the app
 
@@ -58,4 +59,4 @@ To build the **fat JAR** package through the command
 
 Start the app with
 
-`Java -jar -target/subscriptionsmanager-0.0.1-SNAPSHOT-jar-with-dependencies.jar [arguments]`
+`Java -jar ./target/subscriptionsmanager-0.0.1-SNAPSHOT-jar-with-dependencies.jar [arguments]`
