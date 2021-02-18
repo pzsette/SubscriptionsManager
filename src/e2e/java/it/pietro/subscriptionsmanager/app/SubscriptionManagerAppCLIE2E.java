@@ -111,7 +111,6 @@ public class SubscriptionManagerAppCLIE2E {
 	String getOutput(String input) throws Exception {
 
 		writer.write(input);
-		writer.flush();
 		writer.close();
 		
 		StringBuilder builder = new StringBuilder();

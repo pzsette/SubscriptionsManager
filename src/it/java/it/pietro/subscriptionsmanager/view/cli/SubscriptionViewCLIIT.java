@@ -33,8 +33,8 @@ public class SubscriptionViewCLIIT {
 	private static final String DB_NAME = "subscriptionsmanager";
 	private static final String DB_COLLECTION = "subscriptions";
 	
-	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 1.0, "Monthly");
-	private static final Subscription SUBSCRIPTION_FIXTURE2 = new Subscription("2", "Test", 1.0, "Monthly");
+	private static final Subscription SUBSCRIPTION_FIXTURE = new Subscription("1", "Netflix", 2.0, "Monthly");
+	private static final Subscription SUBSCRIPTION_FIXTURE2 = new Subscription("2", "Spotify", 1.0, "Monthly");
 	
 	private static final String EOL = System.getProperty("line.separator");
 	
@@ -66,11 +66,11 @@ public class SubscriptionViewCLIIT {
 	
 	@Test
 	public void testAddSubscriptionSucces() {
-		String input = "3"+EOL+"1"+EOL+"Netflix"+EOL+"1.0"+EOL+"2"+EOL+"5"+EOL+"";
+		String input = "3"+EOL+"1"+EOL+"Netflix"+EOL+"2.0"+EOL+"2"+EOL+"5"+EOL+"";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
-			.contains("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] added");
+			.contains(SUBSCRIPTION_FIXTURE.toString()+" added");
 	}
 	
 	@Test
@@ -90,7 +90,7 @@ public class SubscriptionViewCLIIT {
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
-			.contains("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] removed");	
+			.contains(SUBSCRIPTION_FIXTURE.toString()+" removed");	
 	}
 	
 	@Test

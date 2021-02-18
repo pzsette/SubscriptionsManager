@@ -55,7 +55,7 @@ public class SubscriptionViewCLITest {
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
-			.contains("All subscriptions:"+EOL+""+SUBSCRIPTION_FIXTURE.toString()+""+EOL+""+SUBSCRIPTION_FIXTURE2.toString()+""+EOL);
+			.contains("All subscriptions:"+EOL+SUBSCRIPTION_FIXTURE.toString()+EOL+SUBSCRIPTION_FIXTURE2.toString());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class SubscriptionViewCLITest {
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
-			.contains("No subscriptions added"+EOL);
+			.contains("No subscriptions added");
 	}
 	
 	@Test
@@ -73,7 +73,7 @@ public class SubscriptionViewCLITest {
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
-			.contains("Total monthly spending: 0.0"+EOL);
+			.contains("Total monthly spending: 0.0");
 	}
 	
 	@Test
@@ -81,6 +81,7 @@ public class SubscriptionViewCLITest {
 		String input = "eee"+EOL+"5";
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
+		System.out.println(outContent.toString());
 		assertThat(outContent.toString())
 			.contains("Invalid digit");
 	}
@@ -127,7 +128,7 @@ public class SubscriptionViewCLITest {
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		cliView.runView();
 		assertThat(outContent.toString())
-			.contains("Total monthly spending: 5.0"+EOL);
+			.contains("Total monthly spending: 5.0");
 	}
 	
 	@Test
@@ -173,13 +174,13 @@ public class SubscriptionViewCLITest {
 	public void testMonthlySubscriptionAdded() {
 		cliView.subscriptionAdded(SUBSCRIPTION_FIXTURE);
 		assertThat(outContent.toString())
-			.hasToString("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] added"+EOL);	
+			.hasToString(SUBSCRIPTION_FIXTURE.toString()+" added"+EOL);	
 	}
 	
 	@Test
 	public void testSubscriptionRemoved() {
 		cliView.subscriptionRemoved(SUBSCRIPTION_FIXTURE);
 		assertThat(outContent.toString())
-			.hasToString("Subscription [id= 1, name= Netflix, price= 1.0, repetition= Monthly] removed"+EOL);		
+			.hasToString(SUBSCRIPTION_FIXTURE.toString()+" removed"+EOL);		
 	}
 }
