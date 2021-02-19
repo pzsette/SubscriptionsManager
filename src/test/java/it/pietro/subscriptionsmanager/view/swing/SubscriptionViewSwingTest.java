@@ -114,10 +114,11 @@ public class SubscriptionViewSwingTest extends AssertJSwingJUnitTestCase {
 	public void testWhenNegativeDoubleIsUsedAsPriceAddButtonShouldBeDisabled() {
 		window.textBox("idTextField").enterText("1");
 		window.textBox("nameTextField").enterText("test");
-		window.textBox("priceTextField").enterText("/7.0");
-		window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
-		window.textBox("priceTextField").setText("");
-		window.textBox("priceTextField").enterText("-7.0");
+		if (System.getProperty("os.name").equals("Mac OS X")) {
+			window.textBox("priceTextField").enterText("/7.0");
+		} else {
+			window.textBox("priceTextField").enterText("-7.0");
+		}
 		window.button(JButtonMatcher.withName("addBtn")).requireDisabled();
 	}
 	
