@@ -374,4 +374,4 @@ or alternatively you can download the **JAR** directly from [here](https://githu
 
 Start the app with:
 
-`Java -jar ./target/subscriptionsmanager-0.0.1-SNAPSHOT-jar-with-dependencies.jar [arguments]`
+`java -jar ./target/subscriptionsmanager-0.0.1-SNAPSHOT-jar-with-dependencies.jar [arguments]`
