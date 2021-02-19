@@ -74,4 +74,4 @@ jobs:
           xvfb-run --server-args="-screen 0, 1280x720x24" -a \
           mvn -f pom.xml -Dmaven.compiler.source=${{matrix.java}} -Dmaven.compiler.target=${{matrix.java}} clean verify $ENABLED_PROFILES
       env:
-        ENABLED_PROFILES:: -P jacoco,pit-mutation
+        ENABLED_PROFILES:: -P coverage-check,pit-mutation
